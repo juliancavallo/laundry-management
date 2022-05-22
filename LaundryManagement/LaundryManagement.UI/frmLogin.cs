@@ -15,37 +15,61 @@ namespace LaundryManagement.UI
 {
     public partial class frmLogin : Form
     {
-        LoginBLL loginBLL;
+        private LoginBLL loginBLL;
         public frmLogin()
         {
+            loginBLL = new LoginBLL();
+            
             InitializeComponent();
             ApplySetup();
 
-            loginBLL = new LoginBLL();
         }
         private void ApplySetup()
         {
-            this.StartPosition = FormStartPosition.CenterParent;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.ControlBox = false;
             this.txtPassword.PasswordChar = '*';
+
+            this.txtEmail.TabIndex = 0;
+            this.txtPassword.TabIndex = 1;
+            this.btnLogin.TabIndex = 2;
+
+            this.txtEmail.Text = "jcavallo11@gmail.com";
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            var email = this.txtEmail.Text.Trim();
-            var password = this.txtPassword.Text.Trim();
-            
-            var loginDTO = new LoginDTO(email, password);
-            var response = loginBLL.Login(loginDTO);
-
-            if (response.Success)
+            try
             {
-                Session.Login(response.User);
-                this.Close();
-            }
-            else
-                MessageBox.Show(response.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                FormValidation.ValidateTextBoxCompleted(new List<TextBox>
+                {
+                    this.txtEmail, this.txtPassword
+                });
 
+                var loginDTO = new LoginDTO(
+                    this.txtEmail.Text.Trim(), 
+                    this.txtPassword.Text.Trim()
+                    );
+
+                var response = loginBLL.Login(loginDTO);
+
+                if (response.Success)
+                    this.CloseForm();
+                else
+                    FormValidation.ShowError(response.Message);
+            }
+            catch(Exception ex)
+            {
+                FormValidation.ShowError(ex.Message);
+            }
+
+        }
+
+        private void CloseForm()
+        {
+            frmMain frmParent = (frmMain)this.MdiParent;
+            frmParent.ValidateForm();
+            this.Close();
         }
     }
 }

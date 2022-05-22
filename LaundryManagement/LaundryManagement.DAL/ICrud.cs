@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaundryManagement.Interfaces.Domain.Entities
+namespace LaundryManagement.DAL
 {
     public interface ICrud<T>
     {

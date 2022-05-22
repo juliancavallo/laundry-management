@@ -7,9 +7,15 @@ namespace LaundryManagement.Services
 
         private static object _lock = new Object();
         private static Session _session;
+        private static Dictionary<string, int> _loginAttempts = new Dictionary<string, int>();
 
         public IUserDTO User { get; set; }
         public DateTime FechaInicio { get; set; }
+        public static Dictionary<string, int> LoginAttempts 
+        { 
+            get { return _loginAttempts; }
+            set { _loginAttempts = value; }        
+        }
 
         public static Session Instance
         {
@@ -29,6 +35,7 @@ namespace LaundryManagement.Services
                     _session = new Session();
                     _session.User = user;
                     _session.FechaInicio = DateTime.Now;
+                    LoginAttempts.Clear();
                 }
                 else
                 {
@@ -44,19 +51,18 @@ namespace LaundryManagement.Services
                 if (_session != null)
                 {
                     _session = null;
+                    LoginAttempts.Clear();
                 }
                 else
                 {
                     throw new Exception("Sesión no iniciada");
                 }
             }
-
-
         }
 
         private Session()
         {
-
+            
         }
     }
 }

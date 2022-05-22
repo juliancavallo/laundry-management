@@ -1,6 +1,9 @@
-﻿using LaundryManagement.Domain.DTOs;
+﻿using LaundryManagement.BLL.Mappers;
+using LaundryManagement.DAL;
+using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Interfaces.Domain.Entities;
+using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,24 +14,50 @@ namespace LaundryManagement.BLL
 {
     public class UserBLL : ICrud<UserDTO>
     {
-        public void Delete(UserDTO entity)
+        private UserMapper mapper;
+        private UserDAL dal;
+
+        public UserBLL()
         {
-            throw new NotImplementedException();
+            this.dal = new UserDAL();
+            this.mapper = new UserMapper();
+        }
+
+        public void Delete(UserDTO dto)
+        {
+            var entity = mapper.MapToEntity(dto);
+            this.dal.Delete(entity);
         }
 
         public IList<UserDTO> GetAll()
         {
-            throw new NotImplementedException();
+            var list= this.dal.GetAll();
+            return list
+                .Select(x => mapper.MapToDTO(x))
+                .ToList();
         }
 
         public UserDTO GetById(int id)
         {
-            throw new NotImplementedException();
+            var entity = this.dal.GetById(id);
+            return mapper.MapToDTO(entity);
         }
 
-        public void Save(UserDTO entity)
+        public void Save(UserDTO dto)
         {
-            throw new NotImplementedException();
+            var entity = mapper.MapToEntity(dto);
+            this.dal.Save(entity);
+        }
+
+        public string ResetPassword(UserDTO dto)
+        {
+            var newPassword = Encryptor.GenerateRandom();
+
+            var entity = this.dal.GetById(dto.Id);
+            entity.Password = Encryptor.Hash(newPassword);
+            this.dal.Save(entity);
+
+            return newPassword;
         }
     }
 }

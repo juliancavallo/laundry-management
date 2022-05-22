@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\LaundryManagement.DAL\LaundryManagement.DAL.csproj" />
     <ProjectReference Include="..\LaundryManagement.Domain\LaundryManagement.Domain.csproj" />
     <ProjectReference Include="..\LaundryManagement.Services\LaundryManagement.Services.csproj" />
   </ItemGroup>

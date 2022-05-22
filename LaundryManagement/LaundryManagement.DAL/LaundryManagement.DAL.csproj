@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\LaundryManagement.Domain\LaundryManagement.Domain.csproj" />
+    <ProjectReference Include="..\LaundryManagement.Services\LaundryManagement.Services.csproj" />
+  </ItemGroup>
+
 </Project>
