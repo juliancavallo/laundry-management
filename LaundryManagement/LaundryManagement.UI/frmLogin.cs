@@ -22,7 +22,6 @@ namespace LaundryManagement.UI
             
             InitializeComponent();
             ApplySetup();
-
         }
         private void ApplySetup()
         {

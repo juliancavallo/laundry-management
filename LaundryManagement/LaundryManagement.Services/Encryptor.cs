@@ -13,7 +13,7 @@ namespace LaundryManagement.Services
         {
             var md5 = MD5.Create();
             var md5data = md5.ComputeHash(Encoding.ASCII.GetBytes(value));
-            return (new ASCIIEncoding()).GetString(md5data);
+            return Convert.ToBase64String(md5data);
         }
 
         public static string GenerateRandom()

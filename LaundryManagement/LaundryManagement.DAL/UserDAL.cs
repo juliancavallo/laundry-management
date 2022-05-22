@@ -1,48 +1,84 @@
 ﻿using LaundryManagement.Domain.Entities;
 using LaundryManagement.Services;
+using System.Data.SqlClient;
 
 namespace LaundryManagement.DAL
 {
     public class UserDAL : ICrud<User>
     {
-        private IList<User> dbContext;
+        private SqlConnection connection;
 
         public UserDAL()
         {
-            dbContext = new List<User>();
-            dbContext.Add(new User()
-            {
-                Email = "jcavallo11@gmail.com",
-                Id = 1,
-                Name = "Julian",
-                Password = Encryptor.Hash("1234"),
-            });
+            connection = new SqlConnection();
+            connection.ConnectionString = @"Data Source = .\SQLEXPRESS; Initial Catalog=LaundryManagement; User ID=sa;Password=sa";
+            connection.Open();
         }
 
         public void Delete(User entity)
         {
-            this.dbContext.Remove(entity);
+            SqlCommand cmd = new SqlCommand(
+                   $@"
+                        DELETE User WHERE Id = {entity.Id}
+                    ");
+            cmd.Connection = connection;
+            cmd.ExecuteNonQuery();
         }
 
         public IList<User> GetAll()
         {
-            return this.dbContext;
+            SqlCommand cmd = new SqlCommand("SELECT * FROM [User]");
+            cmd.Connection = connection;
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            IList<User> users = new List<User>();
+            while (reader.Read())
+            {
+                users.Add(this.MapFromDatabase(reader));
+            }
+            reader.Close();
+
+            return users;
         }
 
         public User GetById(int id)
         {
-            return this.dbContext.SingleOrDefault(x => x.Id == id);
+            SqlCommand cmd = new SqlCommand($"SELECT * FROM User WHERE Id = {id}");
+            cmd.Connection = connection;
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            User user = new User();
+            while (reader.Read())
+            {
+                user = this.MapFromDatabase(reader);
+            }
+            reader.Close();
+
+            return user;
         }
 
         public void Save(User entity)
         {
-            if(dbContext.Any(x => x.Id == entity.Id)) 
+            SqlCommand cmd = new SqlCommand(
+                $@"
+                    INSERT INTO [User] (Email, Password, UserName, Name, LastName) 
+                    VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}')
+                ");
+            cmd.Connection = connection;
+            cmd.ExecuteNonQuery();
+        }
+
+        private User MapFromDatabase(SqlDataReader reader)
+        {
+            return new User()
             {
-                this.dbContext.Remove(entity);
-                this.dbContext.Add(entity);
-            }
-            else
-                this.dbContext.Add(entity);
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
+                Name = reader.GetString(reader.GetOrdinal("Name")),
+                Email = reader.GetString(reader.GetOrdinal("Email")),
+                LastName = reader.GetString(reader.GetOrdinal("LastName")),
+                UserName = reader.GetString(reader.GetOrdinal("UserName")),
+                Password = reader.GetString(reader.GetOrdinal("Password")),
+            };
         }
     }
 }

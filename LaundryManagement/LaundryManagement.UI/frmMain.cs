@@ -54,5 +54,12 @@ namespace LaundryManagement.UI
             frmLogin.MdiParent = this;
             frmLogin.Show();
         }
+
+        private void menuAdministrationUsers_Click(object sender, EventArgs e)
+        {
+            var frmAdmUsers = new frmAdministrationUsers();
+            frmAdmUsers.MdiParent = this;
+            frmAdmUsers.Show();
+        }
     }
 }

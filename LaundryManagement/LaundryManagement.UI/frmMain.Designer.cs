@@ -29,19 +29,20 @@
         private void InitializeComponent()
         {
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-            this.administraciónToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.processesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reportsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAdministration = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuProcesses = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReports = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLogout = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAdministrationUsers = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.administraciónToolStripMenuItem,
-            this.processesToolStripMenuItem,
-            this.reportsToolStripMenuItem,
+            this.menuAdministration,
+            this.menuProcesses,
+            this.menuReports,
             this.menuLogout});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -49,23 +50,25 @@
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
-            // administraciónToolStripMenuItem
+            // menuAdministration
             // 
-            this.administraciónToolStripMenuItem.Name = "administraciónToolStripMenuItem";
-            this.administraciónToolStripMenuItem.Size = new System.Drawing.Size(98, 20);
-            this.administraciónToolStripMenuItem.Text = "Administration";
+            this.menuAdministration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuAdministrationUsers});
+            this.menuAdministration.Name = "menuAdministration";
+            this.menuAdministration.Size = new System.Drawing.Size(98, 20);
+            this.menuAdministration.Text = "Administration";
             // 
-            // processesToolStripMenuItem
+            // menuProcesses
             // 
-            this.processesToolStripMenuItem.Name = "processesToolStripMenuItem";
-            this.processesToolStripMenuItem.Size = new System.Drawing.Size(70, 20);
-            this.processesToolStripMenuItem.Text = "Processes";
+            this.menuProcesses.Name = "menuProcesses";
+            this.menuProcesses.Size = new System.Drawing.Size(70, 20);
+            this.menuProcesses.Text = "Processes";
             // 
-            // reportsToolStripMenuItem
+            // menuReports
             // 
-            this.reportsToolStripMenuItem.Name = "reportsToolStripMenuItem";
-            this.reportsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            this.reportsToolStripMenuItem.Text = "Reports";
+            this.menuReports.Name = "menuReports";
+            this.menuReports.Size = new System.Drawing.Size(59, 20);
+            this.menuReports.Text = "Reports";
             // 
             // menuLogout
             // 
@@ -73,6 +76,13 @@
             this.menuLogout.Size = new System.Drawing.Size(57, 20);
             this.menuLogout.Text = "Logout";
             this.menuLogout.Click += new System.EventHandler(this.menuLogout_Click);
+            // 
+            // menuAdministrationUsers
+            // 
+            this.menuAdministrationUsers.Name = "menuAdministrationUsers";
+            this.menuAdministrationUsers.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationUsers.Text = "Usuarios";
+            this.menuAdministrationUsers.Click += new System.EventHandler(this.menuAdministrationUsers_Click);
             // 
             // frmMain
             // 
@@ -93,9 +103,10 @@
         #endregion
 
         private MenuStrip menuStrip1;
-        private ToolStripMenuItem administraciónToolStripMenuItem;
-        private ToolStripMenuItem processesToolStripMenuItem;
-        private ToolStripMenuItem reportsToolStripMenuItem;
+        private ToolStripMenuItem menuAdministration;
+        private ToolStripMenuItem menuProcesses;
+        private ToolStripMenuItem menuReports;
         private ToolStripMenuItem menuLogout;
+        private ToolStripMenuItem menuAdministrationUsers;
     }
 }
