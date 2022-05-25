@@ -34,6 +34,7 @@ namespace LaundryManagement.UI
             this.btnLogin.TabIndex = 2;
 
             this.txtEmail.Text = "jcavallo11@gmail.com";
+            this.txtPassword.Text = "1234";
         }
 
         private void btnLogin_Click(object sender, EventArgs e)

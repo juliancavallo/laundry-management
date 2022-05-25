@@ -47,13 +47,15 @@ namespace LaundryManagement.UI
                     this.txtEmail, this.txtPassword, this.txtLastName, this.txtName, this.txtUserName
                 });
 
+                var password = _userDTO?.Id == null ? Encryptor.Hash(this.txtPassword.Text.Trim()) : this.txtPassword.Text.Trim();
+
                 var userDTO = new UserDTO()
                 {
                     Id = _userDTO?.Id ?? 0,
                     Email = this.txtEmail.Text.Trim(),
                     LastName = this.txtLastName.Text.Trim(),
                     Name = this.txtName.Text.Trim(),
-                    Password = Encryptor.Hash(this.txtPassword.Text.Trim()),
+                    Password = password,
                     UserName = this.txtUserName.Text.Trim(),
                 };
 

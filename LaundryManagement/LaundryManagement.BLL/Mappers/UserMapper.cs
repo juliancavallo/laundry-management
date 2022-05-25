@@ -35,7 +35,17 @@ namespace LaundryManagement.BLL.Mappers
                 UserName = entity.UserName,
                 LastName = entity.LastName, 
             };
+        }
 
+        public UserViewDTO MapToViewDTO(UserDTO dto)
+        {
+            return new UserViewDTO()
+            {
+                Email = dto.Email,
+                FullName = dto.Name + " " + dto.LastName,
+                UserName = dto.UserName,
+                Id = dto.Id,
+            };
         }
     }
 }

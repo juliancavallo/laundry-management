@@ -59,5 +59,12 @@ namespace LaundryManagement.BLL
 
             return newPassword;
         }
+
+        public IList<UserViewDTO> GetAllForView()
+        {
+            return this.GetAll()
+                .Select(x => mapper.MapToViewDTO(x))
+                .ToList();
+        }
     }
 }

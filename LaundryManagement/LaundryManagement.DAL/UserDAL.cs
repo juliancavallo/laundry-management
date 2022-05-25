@@ -1,5 +1,5 @@
 ﻿using LaundryManagement.Domain.Entities;
-using LaundryManagement.Services;
+using LaundryManagement.Domain;
 using System.Data.SqlClient;
 
 namespace LaundryManagement.DAL
@@ -7,11 +7,14 @@ namespace LaundryManagement.DAL
     public class UserDAL : ICrud<User>
     {
         private SqlConnection connection;
+        private Configuration configuration;
 
         public UserDAL()
         {
+            configuration = new Configuration();
+
             connection = new SqlConnection();
-            connection.ConnectionString = @"Data Source = .\SQLEXPRESS; Initial Catalog=LaundryManagement; User ID=sa;Password=sa";
+            connection.ConnectionString = configuration.GetValue("connectionString");
             connection.Open();
         }
 
@@ -19,7 +22,7 @@ namespace LaundryManagement.DAL
         {
             SqlCommand cmd = new SqlCommand(
                    $@"
-                        DELETE User WHERE Id = {entity.Id}
+                        DELETE [User] WHERE Id = {entity.Id}
                     ");
             cmd.Connection = connection;
             cmd.ExecuteNonQuery();
@@ -43,7 +46,7 @@ namespace LaundryManagement.DAL
 
         public User GetById(int id)
         {
-            SqlCommand cmd = new SqlCommand($"SELECT * FROM User WHERE Id = {id}");
+            SqlCommand cmd = new SqlCommand($"SELECT * FROM [User] WHERE Id = {id}");
             cmd.Connection = connection;
             SqlDataReader reader = cmd.ExecuteReader();
 
@@ -59,11 +62,29 @@ namespace LaundryManagement.DAL
 
         public void Save(User entity)
         {
-            SqlCommand cmd = new SqlCommand(
-                $@"
-                    INSERT INTO [User] (Email, Password, UserName, Name, LastName) 
-                    VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}')
-                ");
+            SqlCommand cmd = null;
+            
+            if (entity.Id == 0)
+            {
+                cmd = new SqlCommand(
+                    $@"
+                        INSERT INTO [User] (Email, Password, UserName, Name, LastName) 
+                        VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}')
+                    ");
+            }
+            else
+            {
+                cmd = new SqlCommand(
+                    $@"
+                        UPDATE [User] SET
+	                        Email = '{entity.Email}',
+	                        Password = '{entity.Password}',
+	                        Name = '{entity.Name}',
+	                        LastName = '{entity.LastName}',
+	                        UserName = '{entity.UserName}'
+                        WHERE Id = {entity.Id}
+                        ");
+            }
             cmd.Connection = connection;
             cmd.ExecuteNonQuery();
         }

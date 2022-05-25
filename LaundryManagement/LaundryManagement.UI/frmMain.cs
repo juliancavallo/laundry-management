@@ -1,15 +1,17 @@
 ﻿using LaundryManagement.BLL;
-using LaundryManagement.Services;
+using LaundryManagement.Domain;
 
 namespace LaundryManagement.UI
 {
     public partial class frmMain : Form
     {
         private LoginBLL loginBLL;
+        private Configuration configuration;
         public frmMain()
         {
             loginBLL = new LoginBLL();
-            
+            configuration = new Configuration();
+
             InitializeComponent();
             ApplySetup();
             ValidateForm();
@@ -20,6 +22,9 @@ namespace LaundryManagement.UI
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             this.IsMdiContainer = true;
+
+            this.BackgroundImage = Image.FromFile(Path.GetFullPath(@"..\..\..\") + configuration.GetValue("imagePath"));
+            this.BackgroundImageLayout = ImageLayout.Stretch;
         }
 
         public void ValidateForm()

@@ -26,43 +26,62 @@ namespace LaundryManagement.UI
         private void ApplySetup()
         {
             this.StartPosition = FormStartPosition.CenterScreen;
+
             this.gridUsers.AllowUserToAddRows = false;
             this.gridUsers.AllowUserToDeleteRows = false;
             this.gridUsers.EditMode = DataGridViewEditMode.EditProgrammatically;
             this.gridUsers.MultiSelect = false;
             this.gridUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            this.gridUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
             this.lblSelectedUser.Text = "";
+
+        }
+
+        private void ReloadGridEvent(object sender, EventArgs e)
+        {
+            this.gridUsers.DataSource = null;
+            this.gridUsers.DataSource = userBLL.GetAllForView();
+            this.gridUsers.Columns["Id"].Visible = false;
+        }
+
+        private void frmAdministrationUsers_Load(object sender, EventArgs e)
+        {
+            this.ReloadGridEvent(sender, e);
         }
 
         private void btnNewUser_Click(object sender, EventArgs e)
         {
             var frmNewUser = new frmNewUser(null);
+            frmNewUser.FormClosed += ReloadGridEvent;
             frmNewUser.ShowDialog();
-        }
-
-        private void frmAdministrationUsers_Load(object sender, EventArgs e)
-        {
-            this.gridUsers.DataSource = null;
-            this.gridUsers.DataSource = userBLL.GetAll();
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            var selected = (UserDTO)this.gridUsers.CurrentRow.DataBoundItem;
-            var frmNewUser = new frmNewUser(selected);
-            frmNewUser.ShowDialog();
-        }
+            var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
+            var dto = userBLL.GetById(selectedId);
 
-        private void gridUsers_SelectionChanged(object sender, EventArgs e)
-        {
-            var selected = (UserDTO)this.gridUsers.CurrentRow.DataBoundItem;
-            this.lblSelectedUser.Text = selected.UserName;
+            var frmNewUser = new frmNewUser(dto);
+            frmNewUser.FormClosed += ReloadGridEvent;
+            frmNewUser.ShowDialog();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            var selected = (UserDTO)this.gridUsers.CurrentRow.DataBoundItem;
-            userBLL.Delete(selected);
+            var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
+            var dto = userBLL.GetById(selectedId);
+            userBLL.Delete(dto);
         }
+
+        private void gridUsers_SelectionChanged(object sender, EventArgs e)
+        {
+            if(this.gridUsers.CurrentRow != null)
+            {
+                var selected = (UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem;
+                this.lblSelectedUser.Text = selected.UserName;
+            }
+        }
+
     }
 }
