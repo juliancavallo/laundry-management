@@ -40,6 +40,7 @@ namespace LaundryManagement.DAL
                 users.Add(this.MapFromDatabase(reader));
             }
             reader.Close();
+            connection.Close();
 
             return users;
         }
@@ -56,6 +57,7 @@ namespace LaundryManagement.DAL
                 user = this.MapFromDatabase(reader);
             }
             reader.Close();
+            connection.Close();
 
             return user;
         }
@@ -87,6 +89,8 @@ namespace LaundryManagement.DAL
             }
             cmd.Connection = connection;
             cmd.ExecuteNonQuery();
+
+            connection.Close();
         }
 
         private User MapFromDatabase(SqlDataReader reader)

@@ -16,9 +16,11 @@ namespace LaundryManagement.BLL
     {
         private UserMapper mapper;
         private UserDAL dal;
+        private PermissionDAL permissionDAL;
 
         public UserBLL()
         {
+            this.permissionDAL = new PermissionDAL();
             this.dal = new UserDAL();
             this.mapper = new UserMapper();
         }
@@ -31,7 +33,9 @@ namespace LaundryManagement.BLL
 
         public IList<UserDTO> GetAll()
         {
-            var list= this.dal.GetAll();
+            var list = this.dal.GetAll().ToList();
+            list.ForEach(x => permissionDAL.SetPermissions(x));
+
             return list
                 .Select(x => mapper.MapToDTO(x))
                 .ToList();
