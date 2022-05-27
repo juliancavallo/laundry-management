@@ -36,6 +36,9 @@ namespace LaundryManagement.UI
 
             this.lblSelectedUser.Text = "";
 
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
         }
 
         private void ReloadGridEvent(object sender, EventArgs e)

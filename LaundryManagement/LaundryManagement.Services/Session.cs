@@ -1,4 +1,6 @@
 ﻿using LaundryManagement.Interfaces.Domain.DTOs;
+using System;
+using System.Collections.Generic;
 
 namespace LaundryManagement.Services
 {

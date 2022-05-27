@@ -1,6 +1,8 @@
 ﻿using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain;
 using System.Data.SqlClient;
+using System.Collections.Generic;
+using System;
 
 namespace LaundryManagement.DAL
 {
@@ -12,85 +14,139 @@ namespace LaundryManagement.DAL
         public UserDAL()
         {
             configuration = new Configuration();
-
             connection = new SqlConnection();
+
             connection.ConnectionString = configuration.GetValue("connectionString");
-            connection.Open();
         }
 
         public void Delete(User entity)
         {
-            SqlCommand cmd = new SqlCommand(
-                   $@"
-                        DELETE [User] WHERE Id = {entity.Id}
-                    ");
-            cmd.Connection = connection;
-            cmd.ExecuteNonQuery();
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                       $@"
+                            DELETE [User] WHERE Id = {entity.Id}
+                        ");
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         public IList<User> GetAll()
         {
-            SqlCommand cmd = new SqlCommand("SELECT * FROM [User]");
-            cmd.Connection = connection;
-            SqlDataReader reader = cmd.ExecuteReader();
+            SqlDataReader reader = null;
+            try 
+            { 
+                connection.Open();
 
-            IList<User> users = new List<User>();
-            while (reader.Read())
-            {
-                users.Add(this.MapFromDatabase(reader));
+                SqlCommand cmd = new SqlCommand("SELECT * FROM [User]");
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                IList<User> users = new List<User>();
+                while (reader.Read())
+                {
+                    users.Add(this.MapFromDatabase(reader));
+                }
+
+
+                return users;
             }
-            reader.Close();
-            connection.Close();
-
-            return users;
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
         }
 
         public User GetById(int id)
         {
-            SqlCommand cmd = new SqlCommand($"SELECT * FROM [User] WHERE Id = {id}");
-            cmd.Connection = connection;
-            SqlDataReader reader = cmd.ExecuteReader();
-
-            User user = new User();
-            while (reader.Read())
+            SqlDataReader reader = null;
+            try
             {
-                user = this.MapFromDatabase(reader);
-            }
-            reader.Close();
-            connection.Close();
+                connection.Open();
 
-            return user;
+                SqlCommand cmd = new SqlCommand($"SELECT * FROM [User] WHERE Id = {id}");
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                User user = new User();
+                while (reader.Read())
+                {
+                    user = this.MapFromDatabase(reader);
+                }
+                reader.Close();
+                connection.Close();
+
+                return user;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
         }
 
         public void Save(User entity)
         {
-            SqlCommand cmd = null;
-            
-            if (entity.Id == 0)
+            try
             {
-                cmd = new SqlCommand(
-                    $@"
-                        INSERT INTO [User] (Email, Password, UserName, Name, LastName) 
-                        VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}')
-                    ");
-            }
-            else
-            {
-                cmd = new SqlCommand(
-                    $@"
-                        UPDATE [User] SET
-	                        Email = '{entity.Email}',
-	                        Password = '{entity.Password}',
-	                        Name = '{entity.Name}',
-	                        LastName = '{entity.LastName}',
-	                        UserName = '{entity.UserName}'
-                        WHERE Id = {entity.Id}
-                        ");
-            }
-            cmd.Connection = connection;
-            cmd.ExecuteNonQuery();
+                connection.Open();
 
-            connection.Close();
+                SqlCommand cmd = null;
+            
+                if (entity.Id == 0)
+                {
+                    cmd = new SqlCommand(
+                        $@"
+                            INSERT INTO [User] (Email, Password, UserName, Name, LastName) 
+                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}')
+                        ");
+                }
+                else
+                {
+                    cmd = new SqlCommand(
+                        $@"
+                            UPDATE [User] SET
+	                            Email = '{entity.Email}',
+	                            Password = '{entity.Password}',
+	                            Name = '{entity.Name}',
+	                            LastName = '{entity.LastName}',
+	                            UserName = '{entity.UserName}'
+                            WHERE Id = {entity.Id}
+                            ");
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
 
         private User MapFromDatabase(SqlDataReader reader)

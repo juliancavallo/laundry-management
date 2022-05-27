@@ -1,4 +1,6 @@
-﻿namespace LaundryManagement.UI
+﻿using System.Windows.Forms;
+
+namespace LaundryManagement.UI
 {
     partial class frmLogin
     {

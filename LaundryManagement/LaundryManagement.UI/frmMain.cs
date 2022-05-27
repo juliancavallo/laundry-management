@@ -1,5 +1,9 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain;
+using System;
+using System.Drawing;
+using System.IO;
+using System.Windows.Forms;
 
 namespace LaundryManagement.UI
 {
@@ -25,6 +29,10 @@ namespace LaundryManagement.UI
 
             this.BackgroundImage = Image.FromFile(Path.GetFullPath(@"..\..\..\") + configuration.GetValue("imagePath"));
             this.BackgroundImageLayout = ImageLayout.Stretch;
+
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
         }
 
         public void ValidateForm()

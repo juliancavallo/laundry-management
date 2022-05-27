@@ -1,4 +1,7 @@
 ﻿
+using System;
+using System.Collections.Generic;
+
 namespace LaundryManagement.Domain.DTOs
 {
     public class LeafDTO : ComponentDTO

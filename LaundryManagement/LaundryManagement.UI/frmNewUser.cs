@@ -3,12 +3,6 @@ using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LaundryManagement.UI
@@ -36,6 +30,12 @@ namespace LaundryManagement.UI
 
             this.txtPassword.PasswordChar = '*';
             this.txtPassword.Enabled = _userDTO == null;
+
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+
+            this.StartPosition = FormStartPosition.CenterParent;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
