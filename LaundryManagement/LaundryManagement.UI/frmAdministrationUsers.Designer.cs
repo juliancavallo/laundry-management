@@ -34,7 +34,6 @@ namespace LaundryManagement.UI
             this.btnNewUser = new System.Windows.Forms.Button();
             this.btnEdit = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.lblSelectedUser = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).BeginInit();
             this.SuspendLayout();
             // 
@@ -46,7 +45,6 @@ namespace LaundryManagement.UI
             this.gridUsers.RowTemplate.Height = 25;
             this.gridUsers.Size = new System.Drawing.Size(588, 272);
             this.gridUsers.TabIndex = 0;
-            this.gridUsers.SelectionChanged += new System.EventHandler(this.gridUsers_SelectionChanged);
             // 
             // btnNewUser
             // 
@@ -78,21 +76,11 @@ namespace LaundryManagement.UI
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // lblSelectedUser
-            // 
-            this.lblSelectedUser.AutoSize = true;
-            this.lblSelectedUser.Location = new System.Drawing.Point(56, 340);
-            this.lblSelectedUser.Name = "lblSelectedUser";
-            this.lblSelectedUser.Size = new System.Drawing.Size(38, 15);
-            this.lblSelectedUser.TabIndex = 4;
-            this.lblSelectedUser.Text = "label1";
-            // 
             // frmAdministrationUsers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 510);
-            this.Controls.Add(this.lblSelectedUser);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnEdit);
             this.Controls.Add(this.btnNewUser);
@@ -102,7 +90,6 @@ namespace LaundryManagement.UI
             this.Load += new System.EventHandler(this.frmAdministrationUsers_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -112,6 +99,5 @@ namespace LaundryManagement.UI
         private Button btnNewUser;
         private Button btnEdit;
         private Button btnDelete;
-        private Label lblSelectedUser;
     }
 }

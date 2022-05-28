@@ -11,7 +11,7 @@ namespace LaundryManagement.Domain.DTOs
     {
         public UserDTO()
         {
-            Permissions = new List<ComponentDTO>();
+            Permissions = new List<IComponentDTO>();
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -19,6 +19,6 @@ namespace LaundryManagement.Domain.DTOs
         public string Email { get; set; }
         public string Password { get; set; }
         public string UserName { get; set; }
-        public IList<ComponentDTO> Permissions { get; set; }
+        public IList<IComponentDTO> Permissions { get; set; }
     }
 }

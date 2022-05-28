@@ -24,7 +24,10 @@ namespace LaundryManagement.Domain
             configuration = JsonConvert.DeserializeObject<JObject>(json);
         }
 
-
-        public string GetValue(string property) => configuration[property]?.Value<string>();
+        public T GetValue<T>(string property)
+        {
+            var value = configuration[property]?.Value<string>() ?? "";
+            return (T)Convert.ChangeType(value, typeof(T));
+        }
     }
 }

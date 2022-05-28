@@ -1,5 +1,8 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -34,8 +37,6 @@ namespace LaundryManagement.UI
             this.gridUsers.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             this.gridUsers.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-            this.lblSelectedUser.Text = "";
-
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -62,29 +63,48 @@ namespace LaundryManagement.UI
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
-            var dto = userBLL.GetById(selectedId);
+            try
+            {
+                FormValidation.ValidateGridSelectedRow(this.gridUsers);
 
-            var frmNewUser = new frmNewUser(dto);
-            frmNewUser.FormClosed += ReloadGridEvent;
-            frmNewUser.ShowDialog();
+                var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
+                if(selectedId == Session.Instance.User.Id)
+                    throw new ValidationException("Cannot edit the user with which you are logged in", ValidationType.Warning);
+
+                var dto = userBLL.GetById(selectedId);
+
+                var frmNewUser = new frmNewUser(dto);
+                frmNewUser.FormClosed += ReloadGridEvent;
+                frmNewUser.ShowDialog();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
-            var dto = userBLL.GetById(selectedId);
-            userBLL.Delete(dto);
-        }
-
-        private void gridUsers_SelectionChanged(object sender, EventArgs e)
-        {
-            if(this.gridUsers.CurrentRow != null)
+            try
             {
-                var selected = (UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem;
-                this.lblSelectedUser.Text = selected.UserName;
+                FormValidation.ValidateGridSelectedRow(this.gridUsers);
+
+                var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
+                var dto = userBLL.GetById(selectedId);
+                userBLL.Delete(dto);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
         }
-
     }
 }

@@ -1,5 +1,7 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
@@ -53,16 +55,17 @@ namespace LaundryManagement.UI
                     this.txtPassword.Text.Trim()
                     );
 
-                var response = loginBLL.Login(loginDTO);
+                loginBLL.Login(loginDTO);
 
-                if (response.Success)
-                    this.CloseForm();
-                else
-                    FormValidation.ShowError(response.Message);
+                this.CloseForm();
             }
-            catch(Exception ex)
+            catch (ValidationException ex)
             {
-                FormValidation.ShowError(ex.Message);
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
 
         }

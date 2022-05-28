@@ -16,7 +16,7 @@ namespace LaundryManagement.DAL
             configuration = new Configuration();
             connection = new SqlConnection();
 
-            connection.ConnectionString = configuration.GetValue("connectionString");
+            connection.ConnectionString = configuration.GetValue<string>("connectionString");
         }
 
         public void Delete(User entity)

@@ -1,5 +1,7 @@
-﻿using LaundryManagement.Domain.DTOs;
-using LaundryManagement.Domain.Responses;
+﻿using LaundryManagement.Domain;
+using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Services;
 using System;
 using System.Linq;
@@ -8,40 +10,43 @@ namespace LaundryManagement.BLL
 {
     public class LoginBLL
     {
+        private Configuration configuration;
         private UserBLL userBLL;
+        private int maxLoginAttempts = 1;
 
         public LoginBLL()
         {
+            configuration = new Configuration();
             userBLL = new UserBLL();
+            maxLoginAttempts = configuration.GetValue<int>("maxLoginAttempts");
         }
 
-        public LoginResponse Login(LoginDTO dto)
+        public void Login(LoginDTO dto)
         {
             if (Session.Instance != null)
-                throw new Exception("Ya hay una sesión iniciada");
+                throw new ValidationException("A session is already open", ValidationType.Error);
 
-            var userDTO = userBLL.GetAll().Where(x => x.Email == dto.Email).FirstOrDefault();
+            var userDTO = userBLL.GetByEmail(dto.Email);
             if (userDTO == null)
-                return new LoginResponse(false, "El susuario no existe");
+                throw new ValidationException("User does not exists", ValidationType.Error);
 
             if(Encryptor.Hash(dto.Password) != userDTO.Password)
             {
                 RegisterAttempt(dto.Email);
 
-                if (Session.LoginAttempts[dto.Email] == 3)
+                if (Session.LoginAttempts[dto.Email] == maxLoginAttempts)
                 {
                     this.ResetPassword(userDTO);
-                    return new LoginResponse(false, @"Ha superado el limite máximo de intentos de " +
+                    throw new ValidationException(@"Ha superado el limite máximo de intentos de " +
                        "inicio de sesión para el usuario " + dto.Email + ". " +
                        "Le enviaremos a su correo su nueva contraseña," +
-                       "la cual recomendamos cambiar la proxima vez que ingrese.");
+                       "la cual recomendamos cambiar la proxima vez que ingrese.", ValidationType.Warning);
                 }
                 
-                return new LoginResponse(false, "La contraseña es incorrecta");
+                throw new ValidationException("The password is incorrect", ValidationType.Error);
             }
 
             Session.Login(userDTO);
-            return new LoginResponse(true);
 
         }
 

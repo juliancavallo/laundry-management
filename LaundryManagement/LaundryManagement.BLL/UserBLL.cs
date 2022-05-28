@@ -2,6 +2,8 @@
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -27,6 +29,9 @@ namespace LaundryManagement.BLL
 
         public void Delete(UserDTO dto)
         {
+            if (dto.Id == Session.Instance.User.Id)
+                throw new ValidationException("Cannot delete the user with which you are logged in", ValidationType.Warning);
+
             var entity = mapper.MapToEntity(dto);
             this.dal.Delete(entity);
         }
@@ -47,8 +52,23 @@ namespace LaundryManagement.BLL
             return mapper.MapToDTO(entity);
         }
 
+        public UserDTO GetByEmail(string email)
+        {
+            var user = this.dal.GetAll().FirstOrDefault(x => x.Email == email);
+
+            if(user == null)
+                return null;
+
+            permissionDAL.SetPermissions(user);
+
+            return mapper.MapToDTO(user);
+        }
+
         public void Save(UserDTO dto)
         {
+            if (dto.Id == Session.Instance.User.Id)
+                throw new ValidationException("Cannot edit the user with which you are logged in", ValidationType.Warning);
+
             var entity = mapper.MapToEntity(dto);
             this.dal.Save(entity);
         }

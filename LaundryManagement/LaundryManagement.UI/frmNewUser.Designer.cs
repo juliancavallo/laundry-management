@@ -48,18 +48,18 @@ namespace LaundryManagement.UI
             this.txtName.Location = new System.Drawing.Point(56, 93);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(197, 23);
-            this.txtName.TabIndex = 0;
+            this.txtName.TabIndex = 1;
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(331, 96);
+            this.txtUserName.Location = new System.Drawing.Point(56, 166);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(197, 23);
-            this.txtUserName.TabIndex = 1;
+            this.txtUserName.TabIndex = 3;
             // 
             // txtLastName
             // 
-            this.txtLastName.Location = new System.Drawing.Point(56, 166);
+            this.txtLastName.Location = new System.Drawing.Point(331, 93);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(197, 23);
             this.txtLastName.TabIndex = 2;
@@ -69,7 +69,7 @@ namespace LaundryManagement.UI
             this.txtPassword.Location = new System.Drawing.Point(331, 166);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(197, 23);
-            this.txtPassword.TabIndex = 3;
+            this.txtPassword.TabIndex = 4;
             // 
             // label1
             // 
@@ -77,13 +77,13 @@ namespace LaundryManagement.UI
             this.label1.Location = new System.Drawing.Point(57, 73);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(39, 15);
-            this.label1.TabIndex = 4;
+            this.label1.TabIndex = 1;
             this.label1.Text = "Name";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(57, 148);
+            this.label2.Location = new System.Drawing.Point(332, 75);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 15);
             this.label2.TabIndex = 5;
@@ -92,7 +92,7 @@ namespace LaundryManagement.UI
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(331, 78);
+            this.label3.Location = new System.Drawing.Point(56, 148);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 15);
             this.label3.TabIndex = 6;
@@ -121,14 +121,14 @@ namespace LaundryManagement.UI
             this.txtEmail.Location = new System.Drawing.Point(57, 234);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(197, 23);
-            this.txtEmail.TabIndex = 8;
+            this.txtEmail.TabIndex = 5;
             // 
             // btnSave
             // 
             this.btnSave.Location = new System.Drawing.Point(179, 305);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(181, 49);
-            this.btnSave.TabIndex = 10;
+            this.btnSave.TabIndex = 6;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using LaundryManagement.Interfaces.Domain.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,19 +9,19 @@ namespace LaundryManagement.Domain.DTOs
 {
     public class CompositeDTO : ComponentDTO
     {
-        private IList<ComponentDTO> _children;
+        private IList<IComponentDTO> _children;
 
         public CompositeDTO()
         {
-            _children = new List<ComponentDTO>();
+            _children = new List<IComponentDTO>();
         }
-        public override IList<ComponentDTO> Children
+        public override IList<IComponentDTO> Children
         {
             get { return _children; }
         }
 
-        public override void AddChildren(ComponentDTO dto) => _children.Add(dto);
+        public override void AddChildren(IComponentDTO dto) => _children.Add(dto);
         
-        public override void RemoveChildren(ComponentDTO dto) => _children.Remove(dto);
+        public override void RemoveChildren(IComponentDTO dto) => _children.Remove(dto);
     }
 }

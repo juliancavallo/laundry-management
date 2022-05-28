@@ -14,13 +14,15 @@ namespace LaundryManagement.DAL
     {
         private SqlConnection connection;
         private Configuration configuration;
+        private string connectionString;
 
         public PermissionDAL()
         {
             configuration = new Configuration();
 
             connection = new SqlConnection();
-            connection.ConnectionString = configuration.GetValue("connectionString");
+            connectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = connectionString;
         }
 
         public void SetPermissions(User user)
@@ -83,7 +85,7 @@ namespace LaundryManagement.DAL
             SqlDataReader reader = null;
             try 
             { 
-                newConnection = new SqlConnection(configuration.GetValue("connectionString"));
+                newConnection = new SqlConnection(connectionString);
                 newConnection.Open();
 
                 SqlCommand cmd = new SqlCommand($@"
