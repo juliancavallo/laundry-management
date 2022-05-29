@@ -24,6 +24,8 @@ namespace LaundryManagement.UI
             
             InitializeComponent();
             ApplySetup();
+
+            loginBLL.SeedData();
         }
         private void ApplySetup()
         {

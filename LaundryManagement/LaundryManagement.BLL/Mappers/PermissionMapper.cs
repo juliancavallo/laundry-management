@@ -13,7 +13,7 @@ namespace LaundryManagement.BLL.Mappers
         public ComponentDTO MapToDTO(Component component)
         {
             ComponentDTO result;
-            if(component.Permission == null)
+            if(component is Composite)
             {
                 result = new CompositeDTO();
                 result.Name = component.Name;

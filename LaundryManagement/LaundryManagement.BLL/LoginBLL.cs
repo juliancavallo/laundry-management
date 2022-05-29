@@ -2,6 +2,7 @@
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Domain.Filters;
 using LaundryManagement.Services;
 using System;
 using System.Linq;
@@ -13,11 +14,14 @@ namespace LaundryManagement.BLL
         private Configuration configuration;
         private UserBLL userBLL;
         private int maxLoginAttempts = 1;
+        private SeedService seedService;
 
         public LoginBLL()
         {
             configuration = new Configuration();
             userBLL = new UserBLL();
+            seedService = new SeedService(configuration.GetValue<string>("connectionString"));
+
             maxLoginAttempts = configuration.GetValue<int>("maxLoginAttempts");
         }
 
@@ -26,7 +30,8 @@ namespace LaundryManagement.BLL
             if (Session.Instance != null)
                 throw new ValidationException("A session is already open", ValidationType.Error);
 
-            var userDTO = userBLL.GetByEmail(dto.Email);
+            var filter = new UserFilter(email: dto.Email);
+            var userDTO = userBLL.GetByFilter(filter).FirstOrDefault();
             if (userDTO == null)
                 throw new ValidationException("User does not exists", ValidationType.Error);
 
@@ -77,5 +82,7 @@ namespace LaundryManagement.BLL
             EmailService emailService = new EmailService();
             //emailService.SendMail(dto.Email, "Password Reset", message);
         }
+
+        public void SeedData() => seedService.SeedData();
     }
 }

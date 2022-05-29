@@ -3,6 +3,7 @@ using LaundryManagement.Domain;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System;
+using LaundryManagement.Services;
 
 namespace LaundryManagement.DAL
 {

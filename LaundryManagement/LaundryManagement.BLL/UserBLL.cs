@@ -4,6 +4,7 @@ using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Domain.Filters;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -52,16 +53,31 @@ namespace LaundryManagement.BLL
             return mapper.MapToDTO(entity);
         }
 
-        public UserDTO GetByEmail(string email)
+        public IList<UserDTO> GetByFilter(UserFilter filter)
         {
-            var user = this.dal.GetAll().FirstOrDefault(x => x.Email == email);
+            var list = this.dal.GetAll().AsEnumerable();
 
-            if(user == null)
-                return null;
+            if (!string.IsNullOrWhiteSpace(filter.UserName))
+                list = list.Where(x => x.UserName.Contains(filter.UserName));
 
-            permissionDAL.SetPermissions(user);
+            if (!string.IsNullOrWhiteSpace(filter.Name))
+                list = list.Where(x => x.Name.Contains(filter.Name));
 
-            return mapper.MapToDTO(user);
+            if (!string.IsNullOrWhiteSpace(filter.LastName))
+                list = list.Where(x => x.LastName.Contains(filter.LastName));
+
+            if (!string.IsNullOrWhiteSpace(filter.Email))
+                list = list.Where(x => x.Email.Contains(filter.Email));
+
+            var dtoList = new List<UserDTO>();
+
+            foreach(var item in list)
+            {
+                permissionDAL.SetPermissions(item);
+                dtoList.Add(mapper.MapToDTO(item));
+            }
+
+            return dtoList;
         }
 
         public void Save(UserDTO dto)
