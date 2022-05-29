@@ -50,6 +50,7 @@ namespace LaundryManagement.BLL
         public UserDTO GetById(int id)
         {
             var entity = this.dal.GetById(id);
+            permissionDAL.SetPermissions(entity);
             return mapper.MapToDTO(entity);
         }
 

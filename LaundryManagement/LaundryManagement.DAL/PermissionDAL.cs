@@ -62,6 +62,11 @@ namespace LaundryManagement.DAL
                             component.Id = permissionId;
                             component.Permission = permission?.ToString();
                             AddCompositeChildren((Composite)component, user.Id);
+
+                            foreach (var item in component.Children)
+                            {
+                                user.Permissions.RemoveAll(x => x.Id == item.Id);
+                            }
                         }
                         else
                         {
@@ -70,6 +75,7 @@ namespace LaundryManagement.DAL
                             component.Id = permissionId;
                             component.Permission = permission?.ToString();
                         }
+                        
                         user.Permissions.Add(component);
                     }
 

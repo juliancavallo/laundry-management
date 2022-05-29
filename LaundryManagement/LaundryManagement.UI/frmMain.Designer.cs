@@ -33,28 +33,28 @@ namespace LaundryManagement.UI
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.menuAdministration = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAdministrationUsers = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuProcesses = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuReports = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuLogout = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.menuAdministrationArticles = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAdministrationCategories = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAdministrationItemTypes = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.locationsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuProcesses = new System.Windows.Forms.ToolStripMenuItem();
             this.menuProcessesLaundryShipping = new System.Windows.Forms.ToolStripMenuItem();
             this.menuProcessesClinicShipping = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuProcessesRoadMap = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuProcessesItemCreation = new System.Windows.Forms.ToolStripMenuItem();
             this.menuProcessesInternalShipping = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuProcessesItemRemoval = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuReportsMovements = new System.Windows.Forms.ToolStripMenuItem();
-            this.shippingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuProcessesRoadMap = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.menuProcessesLaundryReception = new System.Windows.Forms.ToolStripMenuItem();
             this.menuProcessesClinicReception = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuProcessesItemRemoval = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuProcessesItemCreation = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReports = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReportsMovements = new System.Windows.Forms.ToolStripMenuItem();
+            this.shippingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuLogout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -88,9 +88,43 @@ namespace LaundryManagement.UI
             // menuAdministrationUsers
             // 
             this.menuAdministrationUsers.Name = "menuAdministrationUsers";
-            this.menuAdministrationUsers.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationUsers.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationUsers.Text = "Users";
             this.menuAdministrationUsers.Click += new System.EventHandler(this.menuAdministrationUsers_Click);
+            // 
+            // toolStripSeparator4
+            // 
+            this.toolStripSeparator4.Name = "toolStripSeparator4";
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            // 
+            // menuAdministrationArticles
+            // 
+            this.menuAdministrationArticles.Name = "menuAdministrationArticles";
+            this.menuAdministrationArticles.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationArticles.Text = "Articles";
+            // 
+            // menuAdministrationCategories
+            // 
+            this.menuAdministrationCategories.Name = "menuAdministrationCategories";
+            this.menuAdministrationCategories.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationCategories.Text = "Categories";
+            // 
+            // menuAdministrationItemTypes
+            // 
+            this.menuAdministrationItemTypes.Name = "menuAdministrationItemTypes";
+            this.menuAdministrationItemTypes.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationItemTypes.Text = "Item Types";
+            // 
+            // toolStripSeparator5
+            // 
+            this.toolStripSeparator5.Name = "toolStripSeparator5";
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            // 
+            // locationsToolStripMenuItem
+            // 
+            this.locationsToolStripMenuItem.Name = "locationsToolStripMenuItem";
+            this.locationsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.locationsToolStripMenuItem.Text = "Locations";
             // 
             // menuProcesses
             // 
@@ -110,46 +144,6 @@ namespace LaundryManagement.UI
             this.menuProcesses.Size = new System.Drawing.Size(70, 20);
             this.menuProcesses.Text = "Processes";
             // 
-            // menuReports
-            // 
-            this.menuReports.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.menuReportsMovements,
-            this.shippingsToolStripMenuItem});
-            this.menuReports.Name = "menuReports";
-            this.menuReports.Size = new System.Drawing.Size(59, 20);
-            this.menuReports.Text = "Reports";
-            // 
-            // menuLogout
-            // 
-            this.menuLogout.Name = "menuLogout";
-            this.menuLogout.Size = new System.Drawing.Size(57, 20);
-            this.menuLogout.Text = "Logout";
-            this.menuLogout.Click += new System.EventHandler(this.menuLogout_Click);
-            // 
-            // menuAdministrationArticles
-            // 
-            this.menuAdministrationArticles.Name = "menuAdministrationArticles";
-            this.menuAdministrationArticles.Size = new System.Drawing.Size(130, 22);
-            this.menuAdministrationArticles.Text = "Articles";
-            // 
-            // menuAdministrationCategories
-            // 
-            this.menuAdministrationCategories.Name = "menuAdministrationCategories";
-            this.menuAdministrationCategories.Size = new System.Drawing.Size(130, 22);
-            this.menuAdministrationCategories.Text = "Categories";
-            // 
-            // menuAdministrationItemTypes
-            // 
-            this.menuAdministrationItemTypes.Name = "menuAdministrationItemTypes";
-            this.menuAdministrationItemTypes.Size = new System.Drawing.Size(130, 22);
-            this.menuAdministrationItemTypes.Text = "Item Types";
-            // 
-            // locationsToolStripMenuItem
-            // 
-            this.locationsToolStripMenuItem.Name = "locationsToolStripMenuItem";
-            this.locationsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
-            this.locationsToolStripMenuItem.Text = "Locations";
-            // 
             // menuProcessesLaundryShipping
             // 
             this.menuProcessesLaundryShipping.Name = "menuProcessesLaundryShipping";
@@ -162,41 +156,27 @@ namespace LaundryManagement.UI
             this.menuProcessesClinicShipping.Size = new System.Drawing.Size(173, 22);
             this.menuProcessesClinicShipping.Text = "Clinic Shipping";
             // 
-            // menuProcessesRoadMap
-            // 
-            this.menuProcessesRoadMap.Name = "menuProcessesRoadMap";
-            this.menuProcessesRoadMap.Size = new System.Drawing.Size(173, 22);
-            this.menuProcessesRoadMap.Text = "Road Map";
-            // 
-            // menuProcessesItemCreation
-            // 
-            this.menuProcessesItemCreation.Name = "menuProcessesItemCreation";
-            this.menuProcessesItemCreation.Size = new System.Drawing.Size(173, 22);
-            this.menuProcessesItemCreation.Text = "Item Creation";
-            // 
             // menuProcessesInternalShipping
             // 
             this.menuProcessesInternalShipping.Name = "menuProcessesInternalShipping";
             this.menuProcessesInternalShipping.Size = new System.Drawing.Size(173, 22);
             this.menuProcessesInternalShipping.Text = "Internal Shipping";
             // 
-            // menuProcessesItemRemoval
+            // toolStripSeparator1
             // 
-            this.menuProcessesItemRemoval.Name = "menuProcessesItemRemoval";
-            this.menuProcessesItemRemoval.Size = new System.Drawing.Size(173, 22);
-            this.menuProcessesItemRemoval.Text = "Item Removal";
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
             // 
-            // menuReportsMovements
+            // menuProcessesRoadMap
             // 
-            this.menuReportsMovements.Name = "menuReportsMovements";
-            this.menuReportsMovements.Size = new System.Drawing.Size(180, 22);
-            this.menuReportsMovements.Text = "Movements";
+            this.menuProcessesRoadMap.Name = "menuProcessesRoadMap";
+            this.menuProcessesRoadMap.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesRoadMap.Text = "Road Map";
             // 
-            // shippingsToolStripMenuItem
+            // toolStripSeparator2
             // 
-            this.shippingsToolStripMenuItem.Name = "shippingsToolStripMenuItem";
-            this.shippingsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.shippingsToolStripMenuItem.Text = "Shippings";
+            this.toolStripSeparator2.Name = "toolStripSeparator2";
+            this.toolStripSeparator2.Size = new System.Drawing.Size(170, 6);
             // 
             // menuProcessesLaundryReception
             // 
@@ -210,30 +190,50 @@ namespace LaundryManagement.UI
             this.menuProcessesClinicReception.Size = new System.Drawing.Size(173, 22);
             this.menuProcessesClinicReception.Text = "Clinic Reception";
             // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(170, 6);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(170, 6);
             // 
-            // toolStripSeparator4
+            // menuProcessesItemRemoval
             // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(127, 6);
+            this.menuProcessesItemRemoval.Name = "menuProcessesItemRemoval";
+            this.menuProcessesItemRemoval.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesItemRemoval.Text = "Item Removal";
             // 
-            // toolStripSeparator5
+            // menuProcessesItemCreation
             // 
-            this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(127, 6);
+            this.menuProcessesItemCreation.Name = "menuProcessesItemCreation";
+            this.menuProcessesItemCreation.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesItemCreation.Text = "Item Creation";
+            // 
+            // menuReports
+            // 
+            this.menuReports.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuReportsMovements,
+            this.shippingsToolStripMenuItem});
+            this.menuReports.Name = "menuReports";
+            this.menuReports.Size = new System.Drawing.Size(59, 20);
+            this.menuReports.Text = "Reports";
+            // 
+            // menuReportsMovements
+            // 
+            this.menuReportsMovements.Name = "menuReportsMovements";
+            this.menuReportsMovements.Size = new System.Drawing.Size(137, 22);
+            this.menuReportsMovements.Text = "Movements";
+            // 
+            // shippingsToolStripMenuItem
+            // 
+            this.shippingsToolStripMenuItem.Name = "shippingsToolStripMenuItem";
+            this.shippingsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
+            this.shippingsToolStripMenuItem.Text = "Shippings";
+            // 
+            // menuLogout
+            // 
+            this.menuLogout.Name = "menuLogout";
+            this.menuLogout.Size = new System.Drawing.Size(57, 20);
+            this.menuLogout.Text = "Logout";
+            this.menuLogout.Click += new System.EventHandler(this.menuLogout_Click);
             // 
             // frmMain
             // 

@@ -106,5 +106,28 @@ namespace LaundryManagement.UI
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
         }
+
+        private void btnViewRoles_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FormValidation.ValidateGridSelectedRow(this.gridUsers);
+
+                var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
+
+                var dto = userBLL.GetById(selectedId);
+
+                var frmUserRoles = new frmUserRoles(dto, false);
+                frmUserRoles.ShowDialog();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
     }
 }
