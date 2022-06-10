@@ -71,13 +71,15 @@ namespace LaundryManagement.BLL
         {
             Session.LoginAttempts.Remove(dto.Email);
 
-            var password = userBLL.ResetPassword(dto);
+            var newPassword = Encryptor.GenerateRandom();
+            dto.Password = Encryptor.Hash(newPassword);
+            userBLL.Save(dto);
 
             string message = string.Format(
                     @"<p>Su nueva contraseña es <h1>{0}</h1> </p> " +
                     "<p>Recuerde cambiarla cuando inicie sesión nuevamente</p>" +
                     "<p>Muchas gracias</p>",
-                    password);
+                    newPassword);
 
             EmailService emailService = new EmailService();
             //emailService.SendMail(dto.Email, "Password Reset", message);

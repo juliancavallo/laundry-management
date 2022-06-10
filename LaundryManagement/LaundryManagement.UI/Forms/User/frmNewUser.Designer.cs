@@ -41,40 +41,43 @@ namespace LaundryManagement.UI
             this.label5 = new System.Windows.Forms.Label();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.btnSave = new System.Windows.Forms.Button();
+            this.label6 = new System.Windows.Forms.Label();
+            this.txtConfirmPassword = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtName
             // 
-            this.txtName.Location = new System.Drawing.Point(56, 93);
+            this.txtName.Location = new System.Drawing.Point(53, 75);
             this.txtName.Name = "txtName";
             this.txtName.Size = new System.Drawing.Size(197, 23);
             this.txtName.TabIndex = 1;
             // 
             // txtUserName
             // 
-            this.txtUserName.Location = new System.Drawing.Point(56, 166);
+            this.txtUserName.Location = new System.Drawing.Point(53, 148);
             this.txtUserName.Name = "txtUserName";
             this.txtUserName.Size = new System.Drawing.Size(197, 23);
             this.txtUserName.TabIndex = 3;
             // 
             // txtLastName
             // 
-            this.txtLastName.Location = new System.Drawing.Point(331, 93);
+            this.txtLastName.Location = new System.Drawing.Point(328, 75);
             this.txtLastName.Name = "txtLastName";
             this.txtLastName.Size = new System.Drawing.Size(197, 23);
             this.txtLastName.TabIndex = 2;
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(331, 166);
+            this.txtPassword.Location = new System.Drawing.Point(328, 148);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(197, 23);
             this.txtPassword.TabIndex = 4;
+            this.txtPassword.TextChanged += new System.EventHandler(this.txtPassword_TextChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(57, 73);
+            this.label1.Location = new System.Drawing.Point(54, 55);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(39, 15);
             this.label1.TabIndex = 1;
@@ -83,7 +86,7 @@ namespace LaundryManagement.UI
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(332, 75);
+            this.label2.Location = new System.Drawing.Point(329, 57);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(63, 15);
             this.label2.TabIndex = 5;
@@ -92,7 +95,7 @@ namespace LaundryManagement.UI
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(56, 148);
+            this.label3.Location = new System.Drawing.Point(53, 130);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(65, 15);
             this.label3.TabIndex = 6;
@@ -101,7 +104,7 @@ namespace LaundryManagement.UI
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(332, 148);
+            this.label4.Location = new System.Drawing.Point(329, 130);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 15);
             this.label4.TabIndex = 7;
@@ -110,7 +113,7 @@ namespace LaundryManagement.UI
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(58, 216);
+            this.label5.Location = new System.Drawing.Point(55, 198);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(36, 15);
             this.label5.TabIndex = 9;
@@ -118,7 +121,7 @@ namespace LaundryManagement.UI
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(57, 234);
+            this.txtEmail.Location = new System.Drawing.Point(54, 216);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(197, 23);
             this.txtEmail.TabIndex = 5;
@@ -133,11 +136,29 @@ namespace LaundryManagement.UI
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(329, 198);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(104, 15);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Confirm password";
+            // 
+            // txtConfirmPassword
+            // 
+            this.txtConfirmPassword.Location = new System.Drawing.Point(328, 216);
+            this.txtConfirmPassword.Name = "txtConfirmPassword";
+            this.txtConfirmPassword.Size = new System.Drawing.Size(197, 23);
+            this.txtConfirmPassword.TabIndex = 10;
+            // 
             // frmNewUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(587, 374);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.txtConfirmPassword);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtEmail);
@@ -169,5 +190,7 @@ namespace LaundryManagement.UI
         private Label label5;
         private TextBox txtEmail;
         private Button btnSave;
+        private Label label6;
+        private TextBox txtConfirmPassword;
     }
 }

@@ -96,6 +96,7 @@ namespace LaundryManagement.UI
                 var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
                 var dto = userBLL.GetById(selectedId);
                 userBLL.Delete(dto);
+                ReloadGridEvent(sender, e);
             }
             catch (ValidationException ex)
             {

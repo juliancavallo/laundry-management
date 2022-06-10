@@ -35,6 +35,7 @@ namespace LaundryManagement.UI
             this.btnLogin = new System.Windows.Forms.Button();
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
+            this.lblResetPassword = new System.Windows.Forms.LinkLabel();
             this.SuspendLayout();
             // 
             // txtEmail
@@ -55,7 +56,7 @@ namespace LaundryManagement.UI
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(81, 197);
+            this.btnLogin.Location = new System.Drawing.Point(80, 207);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(122, 38);
             this.btnLogin.TabIndex = 2;
@@ -79,11 +80,23 @@ namespace LaundryManagement.UI
             this.txtPassword.Size = new System.Drawing.Size(228, 23);
             this.txtPassword.TabIndex = 3;
             // 
+            // lblResetPassword
+            // 
+            this.lblResetPassword.AutoSize = true;
+            this.lblResetPassword.Location = new System.Drawing.Point(35, 160);
+            this.lblResetPassword.Name = "lblResetPassword";
+            this.lblResetPassword.Size = new System.Drawing.Size(98, 15);
+            this.lblResetPassword.TabIndex = 5;
+            this.lblResetPassword.TabStop = true;
+            this.lblResetPassword.Text = "lblResetPassword";
+            this.lblResetPassword.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblResetPassword_LinkClicked);
+            // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(305, 258);
+            this.ClientSize = new System.Drawing.Size(305, 263);
+            this.Controls.Add(this.lblResetPassword);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.txtPassword);
             this.Controls.Add(this.btnLogin);
@@ -103,5 +116,6 @@ namespace LaundryManagement.UI
         private Button btnLogin;
         private Label lblPassword;
         private TextBox txtPassword;
+        private LinkLabel lblResetPassword;
     }
 }

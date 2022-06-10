@@ -11,12 +11,14 @@ namespace LaundryManagement.UI
 {
     public partial class frmNewUser : Form
     {
-        private UserBLL userBLL;
         public UserDTO _userDTO;
+        private UserBLL userBLL;
+        private SecurityService securityService;
         public frmNewUser(UserDTO paramDTO)
         {
             userBLL = new UserBLL();
             _userDTO = paramDTO;
+            securityService = new SecurityService();
 
             InitializeComponent();
             ApplySetup();
@@ -25,13 +27,15 @@ namespace LaundryManagement.UI
         private void ApplySetup()
         {
             this.txtEmail.Text = _userDTO?.Email;
-            this.txtPassword.Text = _userDTO?.Password;
             this.txtLastName.Text = _userDTO?.LastName;
             this.txtName.Text = _userDTO?.Name;
             this.txtUserName.Text = _userDTO?.UserName;
 
             this.txtPassword.PasswordChar = '*';
-            this.txtPassword.Enabled = _userDTO == null;
+            this.txtConfirmPassword.PasswordChar = '*';
+            this.txtPassword.PlaceholderText = _userDTO?.Id == null ? "" : "Type here to change the password";
+            this.txtConfirmPassword.Enabled = false;
+
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -44,12 +48,33 @@ namespace LaundryManagement.UI
         {
             try
             {
-                FormValidation.ValidateTextBoxCompleted(new List<TextBox>
+                bool validatePasswords = this.txtPassword.Text.Length > 0 || _userDTO == null;
+                var textboxes = new List<TextBox>
                 {
-                    this.txtEmail, this.txtPassword, this.txtLastName, this.txtName, this.txtUserName
-                });
+                    this.txtEmail, this.txtLastName, this.txtName, this.txtUserName
+                };
 
-                var password = _userDTO?.Id == null ? Encryptor.Hash(this.txtPassword.Text.Trim()) : this.txtPassword.Text.Trim();
+                if(validatePasswords)
+                {
+                    textboxes.Add(this.txtPassword);
+                    textboxes.Add(this.txtConfirmPassword);
+                }
+
+                FormValidation.ValidateTextBoxCompleted(textboxes);
+                FormValidation.ValidateEmailFormat(this.txtEmail.Text);
+
+                if (validatePasswords)
+                {
+                    FormValidation.ValidatePasswordMatch(this.txtConfirmPassword.Text, this.txtPassword.Text);
+
+                    if (!securityService.CheckPasswordSecurity(this.txtPassword.Text))
+                    {
+                        FormValidation.ShowMessage("The password is not secure", ValidationType.Error);
+                        return;
+                    }
+                }
+
+                var password = validatePasswords ? Encryptor.Hash(this.txtPassword.Text.Trim()) : _userDTO.Password;
 
                 var userDTO = new UserDTO()
                 {
@@ -73,6 +98,12 @@ namespace LaundryManagement.UI
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
+        }
+
+        private void txtPassword_TextChanged(object sender, EventArgs e)
+        {
+            this.txtConfirmPassword.Enabled = this.txtPassword.Text.Length > 0;
+            
         }
     }
 }

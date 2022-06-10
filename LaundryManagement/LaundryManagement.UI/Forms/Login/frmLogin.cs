@@ -39,6 +39,7 @@ namespace LaundryManagement.UI
 
             this.txtEmail.Text = "jcavallo11@gmail.com";
             this.txtPassword.Text = "1234";
+            this.lblResetPassword.Text = "Reset password";
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
@@ -77,6 +78,17 @@ namespace LaundryManagement.UI
             frmMain frmParent = (frmMain)this.MdiParent;
             frmParent.ValidateForm();
             this.Close();
+        }
+
+        private void lblResetPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            frmResetPassword frm = new frmResetPassword();
+            frm.FormClosed += (sernder, e) => 
+            { 
+                this.txtEmail.Clear();
+                this.txtPassword.Clear();
+            };
+            frm.ShowDialog();
         }
     }
 }

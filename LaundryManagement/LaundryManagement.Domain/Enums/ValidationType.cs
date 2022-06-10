@@ -9,6 +9,7 @@ namespace LaundryManagement.Domain.Enums
     public enum ValidationType
     {
         Error = 0,
-        Warning = 1
+        Warning = 1,
+        Info = 2,
     }
 }

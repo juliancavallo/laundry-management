@@ -54,6 +54,16 @@ namespace LaundryManagement.BLL
             return mapper.MapToDTO(entity);
         }
 
+        public void Save(UserDTO dto)
+        {
+            var existingUser = this.dal.GetAll().Where(x => x.UserName == dto.UserName || x.Email == dto.Email);
+            if (existingUser.Any(x => x.Id != dto.Id || dto.Id == 0))
+                throw new ValidationException("There is already a user with the same name or email", ValidationType.Warning);
+
+            var entity = mapper.MapToEntity(dto);
+            this.dal.Save(entity);
+        }
+
         public IList<UserDTO> GetByFilter(UserFilter filter)
         {
             var list = this.dal.GetAll().AsEnumerable();
@@ -81,22 +91,14 @@ namespace LaundryManagement.BLL
             return dtoList;
         }
 
-        public void Save(UserDTO dto)
+        public string ResetPassword(string email, string newPassword)
         {
-            if (dto.Id == Session.Instance.User.Id)
-                throw new ValidationException("Cannot edit the user with which you are logged in", ValidationType.Warning);
+            var user = this.dal.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            if (user == null)
+                throw new ValidationException("User does not exists", ValidationType.Error);
 
-            var entity = mapper.MapToEntity(dto);
-            this.dal.Save(entity);
-        }
-
-        public string ResetPassword(UserDTO dto)
-        {
-            var newPassword = Encryptor.GenerateRandom();
-
-            var entity = this.dal.GetById(dto.Id);
-            entity.Password = Encryptor.Hash(newPassword);
-            this.dal.Save(entity);
+            user.Password = Encryptor.Hash(newPassword);
+            dal.Save(user);
 
             return newPassword;
         }
