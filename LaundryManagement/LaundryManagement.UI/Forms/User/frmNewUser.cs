@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Services;
@@ -36,6 +37,13 @@ namespace LaundryManagement.UI
             this.txtPassword.PlaceholderText = _userDTO?.Id == null ? "" : "Type here to change the password";
             this.txtConfirmPassword.Enabled = false;
 
+            this.txtName.TabIndex = 0;
+            this.txtLastName.TabIndex = 1;
+            this.txtUserName.TabIndex = 2;
+            this.txtEmail.TabIndex = 3;
+            this.txtPassword.TabIndex = 4;
+            this.txtConfirmPassword.TabIndex = 5;
+            this.btnSave.TabIndex = 6;
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -67,9 +75,10 @@ namespace LaundryManagement.UI
                 {
                     FormValidation.ValidatePasswordMatch(this.txtConfirmPassword.Text, this.txtPassword.Text);
 
-                    if (!securityService.CheckPasswordSecurity(this.txtPassword.Text))
+                    var securityParams = new PasswordPolicies();
+                    if (!securityService.CheckPasswordSecurity(this.txtPassword.Text, securityParams))
                     {
-                        FormValidation.ShowMessage("The password is not secure", ValidationType.Error);
+                        FormValidation.ShowPasswordUnsecureMessage(securityParams);
                         return;
                     }
                 }

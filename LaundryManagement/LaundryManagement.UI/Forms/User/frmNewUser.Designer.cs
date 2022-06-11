@@ -68,7 +68,7 @@ namespace LaundryManagement.UI
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(328, 148);
+            this.txtPassword.Location = new System.Drawing.Point(54, 216);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(197, 23);
             this.txtPassword.TabIndex = 4;
@@ -104,7 +104,7 @@ namespace LaundryManagement.UI
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(329, 130);
+            this.label4.Location = new System.Drawing.Point(55, 198);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(57, 15);
             this.label4.TabIndex = 7;
@@ -113,7 +113,7 @@ namespace LaundryManagement.UI
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(55, 198);
+            this.label5.Location = new System.Drawing.Point(329, 130);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(36, 15);
             this.label5.TabIndex = 9;
@@ -121,7 +121,7 @@ namespace LaundryManagement.UI
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(54, 216);
+            this.txtEmail.Location = new System.Drawing.Point(328, 148);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(197, 23);
             this.txtEmail.TabIndex = 5;

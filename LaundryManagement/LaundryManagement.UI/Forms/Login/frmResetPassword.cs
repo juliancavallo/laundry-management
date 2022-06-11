@@ -1,4 +1,5 @@
 ﻿using LaundryManagement.BLL;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
@@ -47,9 +48,10 @@ namespace LaundryManagement.UI
                 });
                 FormValidation.ValidatePasswordMatch(this.txtNewPassword.Text, this.txtNewPasswordRepeated.Text);
 
-                if (!securityService.CheckPasswordSecurity(this.txtNewPassword.Text))
+                var policies = new PasswordPolicies();
+                if (!securityService.CheckPasswordSecurity(this.txtNewPassword.Text, policies))
                 {
-                    FormValidation.ShowMessage("The password is not secure", ValidationType.Error);
+                    FormValidation.ShowPasswordUnsecureMessage(policies);
                     return;
                 }
 

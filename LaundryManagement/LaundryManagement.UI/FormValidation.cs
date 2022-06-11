@@ -1,5 +1,7 @@
 ﻿using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Interfaces.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -45,6 +47,28 @@ namespace LaundryManagement.UI
 
             if(result == null)
                 throw new ValidationException("The email is not in a valid format", ValidationType.Error);
+        }
+
+        public static void ShowPasswordUnsecureMessage(IPasswordPolicies policies)
+        {
+            string message = "The password is not secure. It requires: ";
+
+            if (policies.MinLength > 0)
+                message += Environment.NewLine + $"At least {policies.MinLength} characters long";
+
+            if (policies.MinLowercase > 0)
+                message += Environment.NewLine + $"At least {policies.MinLowercase} lowercase letters";
+
+            if (policies.MinUppercase > 0)
+                message += Environment.NewLine + $"At least {policies.MinUppercase} uppercase letters";
+
+            if (policies.MinSpecialCharacters > 0)
+                message += Environment.NewLine + $"At least {policies.MinSpecialCharacters} special characters";
+
+            if (policies.MinNumbers > 0)
+                message += Environment.NewLine + $"At least {policies.MinNumbers} numbers";
+
+            MessageBox.Show(message, "Notification", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 }
