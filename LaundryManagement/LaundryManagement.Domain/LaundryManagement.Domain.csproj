@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\LaundryManagement.Interfaces\LaundryManagement.Interfaces.csproj" />
+    <ProjectReference Include="..\LaundryManagement.Services\LaundryManagement.Services.csproj" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties /></VisualStudio></ProjectExtensions>

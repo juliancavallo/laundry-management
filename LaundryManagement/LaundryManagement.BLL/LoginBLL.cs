@@ -13,6 +13,8 @@ namespace LaundryManagement.BLL
     {
         private Configuration configuration;
         private UserBLL userBLL;
+        private TranslatorBLL translatorBLL;
+
         private int maxLoginAttempts = 1;
         private SeedService seedService;
 
@@ -20,6 +22,7 @@ namespace LaundryManagement.BLL
         {
             configuration = new Configuration();
             userBLL = new UserBLL();
+            translatorBLL = new TranslatorBLL();
             seedService = new SeedService(configuration.GetValue<string>("connectionString"));
 
             maxLoginAttempts = configuration.GetValue<int>("maxLoginAttempts");
@@ -55,7 +58,7 @@ namespace LaundryManagement.BLL
 
         }
 
-        public void Logout() => Session.Logout();
+        public void Logout() => Session.Logout(translatorBLL.GetDefaultLanguage());
 
         public bool IsLogged() => Session.Instance != null;
 

@@ -1,4 +1,5 @@
-﻿using LaundryManagement.Domain.Enums;
+﻿using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using System;
@@ -69,6 +70,15 @@ namespace LaundryManagement.UI
                 message += Environment.NewLine + $"At least {policies.MinNumbers} numbers";
 
             MessageBox.Show(message, "Notification", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        }
+
+        public static void Translate(IDictionary<string, Translation> translations, IList<Control> controls)
+        {
+            foreach(var control in controls)
+            {
+                if (control.Tag != null && translations.ContainsKey(control.Tag.ToString()))
+                    control.Text = translations[control.Tag.ToString()].Text;
+            }
         }
     }
 }

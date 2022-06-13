@@ -2,36 +2,42 @@
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LaundryManagement.UI
 {
-    public partial class frmLogin : Form
+    public partial class frmLogin : Form, ILanguageObserver
     {
         private LoginBLL loginBLL;
+        private TranslatorBLL translatorBLL;
+        private IList<Control> controls;
         public frmLogin()
         {
             loginBLL = new LoginBLL();
-            
+            translatorBLL = new TranslatorBLL();
+
             InitializeComponent();
             ApplySetup();
 
             loginBLL.SeedData();
+
+            controls = new List<Control>() { this, this.lblEmail, this.lblPassword, this.lblResetPassword, this.btnLogin};
+
+            Translate();
+            PopulateComboLanguages();
         }
+
         private void ApplySetup()
         {
             this.StartPosition = FormStartPosition.CenterScreen;
             this.ControlBox = false;
             this.txtPassword.PasswordChar = '*';
+            this.comboLanguages.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.txtEmail.TabIndex = 0;
             this.txtPassword.TabIndex = 1;
@@ -39,7 +45,12 @@ namespace LaundryManagement.UI
 
             this.txtEmail.Text = "jcavallo11@gmail.com";
             this.txtPassword.Text = "1234";
-            this.lblResetPassword.Text = "Reset password";
+
+            this.Tag = "Login";
+            this.lblEmail.Tag = "Email";
+            this.lblPassword.Tag = "Password";
+            this.lblResetPassword.Tag = "ResetPassword";
+            this.btnLogin.Tag = "Login";
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
@@ -89,6 +100,34 @@ namespace LaundryManagement.UI
                 this.txtPassword.Clear();
             };
             frm.ShowDialog();
+        }
+
+        public void UpdateLanguage(ILanguage language)
+        {
+            Translate(language);
+        }
+
+        private void Translate(ILanguage language = null)
+        {
+            var translations = translatorBLL.GetTranslations(language);
+
+            FormValidation.Translate(translations, controls);
+        }
+
+        private void PopulateComboLanguages()
+        {
+            this.comboLanguages.DataSource = null;
+            this.comboLanguages.DataSource = translatorBLL.GetAllLanguages();
+            this.comboLanguages.DisplayMember = "Name";
+            this.comboLanguages.ValueMember = "Id";
+
+            this.comboLanguages.SelectedValue = translatorBLL.GetDefaultLanguage().Id;
+        }
+
+        private void comboLanguages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var selectedItem = ((ComboBox)sender).SelectedItem as ILanguage;
+            Translate(translatorBLL.GetById(selectedItem.Id));
         }
     }
 }

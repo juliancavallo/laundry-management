@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.DAL
 {
-    
     public class PermissionDAL
     {
         private SqlConnection connection;

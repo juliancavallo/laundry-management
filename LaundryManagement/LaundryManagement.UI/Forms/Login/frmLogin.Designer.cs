@@ -36,11 +36,12 @@ namespace LaundryManagement.UI
             this.lblPassword = new System.Windows.Forms.Label();
             this.txtPassword = new System.Windows.Forms.TextBox();
             this.lblResetPassword = new System.Windows.Forms.LinkLabel();
+            this.comboLanguages = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // txtEmail
             // 
-            this.txtEmail.Location = new System.Drawing.Point(35, 52);
+            this.txtEmail.Location = new System.Drawing.Point(35, 57);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(228, 23);
             this.txtEmail.TabIndex = 0;
@@ -48,7 +49,7 @@ namespace LaundryManagement.UI
             // lblEmail
             // 
             this.lblEmail.AutoSize = true;
-            this.lblEmail.Location = new System.Drawing.Point(35, 34);
+            this.lblEmail.Location = new System.Drawing.Point(35, 39);
             this.lblEmail.Name = "lblEmail";
             this.lblEmail.Size = new System.Drawing.Size(36, 15);
             this.lblEmail.TabIndex = 1;
@@ -56,7 +57,7 @@ namespace LaundryManagement.UI
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(80, 207);
+            this.btnLogin.Location = new System.Drawing.Point(80, 212);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(122, 38);
             this.btnLogin.TabIndex = 2;
@@ -67,7 +68,7 @@ namespace LaundryManagement.UI
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(35, 109);
+            this.lblPassword.Location = new System.Drawing.Point(35, 114);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(57, 15);
             this.lblPassword.TabIndex = 4;
@@ -75,7 +76,7 @@ namespace LaundryManagement.UI
             // 
             // txtPassword
             // 
-            this.txtPassword.Location = new System.Drawing.Point(35, 127);
+            this.txtPassword.Location = new System.Drawing.Point(35, 132);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.Size = new System.Drawing.Size(228, 23);
             this.txtPassword.TabIndex = 3;
@@ -83,7 +84,7 @@ namespace LaundryManagement.UI
             // lblResetPassword
             // 
             this.lblResetPassword.AutoSize = true;
-            this.lblResetPassword.Location = new System.Drawing.Point(35, 160);
+            this.lblResetPassword.Location = new System.Drawing.Point(35, 165);
             this.lblResetPassword.Name = "lblResetPassword";
             this.lblResetPassword.Size = new System.Drawing.Size(98, 15);
             this.lblResetPassword.TabIndex = 5;
@@ -91,11 +92,21 @@ namespace LaundryManagement.UI
             this.lblResetPassword.Text = "lblResetPassword";
             this.lblResetPassword.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.lblResetPassword_LinkClicked);
             // 
+            // comboLanguages
+            // 
+            this.comboLanguages.FormattingEnabled = true;
+            this.comboLanguages.Location = new System.Drawing.Point(81, 282);
+            this.comboLanguages.Name = "comboLanguages";
+            this.comboLanguages.Size = new System.Drawing.Size(121, 23);
+            this.comboLanguages.TabIndex = 6;
+            this.comboLanguages.SelectedIndexChanged += new System.EventHandler(this.comboLanguages_SelectedIndexChanged);
+            // 
             // frmLogin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(305, 263);
+            this.ClientSize = new System.Drawing.Size(308, 317);
+            this.Controls.Add(this.comboLanguages);
             this.Controls.Add(this.lblResetPassword);
             this.Controls.Add(this.lblPassword);
             this.Controls.Add(this.txtPassword);
@@ -117,5 +128,6 @@ namespace LaundryManagement.UI
         private Label lblPassword;
         private TextBox txtPassword;
         private LinkLabel lblResetPassword;
+        private ComboBox comboLanguages;
     }
 }

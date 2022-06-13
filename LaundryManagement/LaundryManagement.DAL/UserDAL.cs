@@ -50,7 +50,20 @@ namespace LaundryManagement.DAL
             { 
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand("SELECT * FROM [User]");
+                SqlCommand cmd = new SqlCommand(@"
+                    SELECT 
+	                       u.[Id]
+                          ,[Email]
+                          ,[Password]
+                          ,[UserName]
+                          ,[FirstName]
+                          ,[LastName]
+                          ,l.Id as IdLanguage
+	                      ,l.Name as LanguageName
+	                      ,l.[Default] as LanguageDefault
+                      FROM [User] u
+                      INNER JOIN [Language] L ON U.IdLanguage = l.Id");
+
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
 
@@ -81,7 +94,21 @@ namespace LaundryManagement.DAL
             {
                 connection.Open();
 
-                SqlCommand cmd = new SqlCommand($"SELECT * FROM [User] WHERE Id = {id}");
+                SqlCommand cmd = new SqlCommand(@$"
+                    SELECT 
+                        u.[Id]
+                        ,[Email]
+                        ,[Password]
+                        ,[UserName]
+                        ,[FirstName]
+                        ,[LastName]
+                        , l.Id as IdLanguage
+                        , l.Name as LanguageName
+                        , l.[Default] as LanguageDefault
+                    FROM[User] u
+                    INNER JOIN[Language] L ON U.IdLanguage = l.Id
+                    WHERE u.Id = {id}");
+
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
 
@@ -118,8 +145,8 @@ namespace LaundryManagement.DAL
                 {
                     cmd = new SqlCommand(
                         $@"
-                            INSERT INTO [User] (Email, Password, UserName, Name, LastName) 
-                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}')
+                            INSERT INTO [User] (Email, Password, UserName, FirstName, LastName, IdLanguage) 
+                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}', '{entity.Language.Id}')
                         ");
                 }
                 else
@@ -129,9 +156,10 @@ namespace LaundryManagement.DAL
                             UPDATE [User] SET
 	                            Email = '{entity.Email}',
 	                            Password = '{entity.Password}',
-	                            Name = '{entity.Name}',
+	                            FirstName = '{entity.Name}',
 	                            LastName = '{entity.LastName}',
-	                            UserName = '{entity.UserName}'
+	                            UserName = '{entity.UserName}',
+                                IdLanguage = '{entity.Language.Id}'
                             WHERE Id = {entity.Id}
                             ");
                 }
@@ -155,11 +183,17 @@ namespace LaundryManagement.DAL
             return new User()
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                Name = reader.GetString(reader.GetOrdinal("Name")),
+                Name = reader.GetString(reader.GetOrdinal("FirstName")),
                 Email = reader.GetString(reader.GetOrdinal("Email")),
                 LastName = reader.GetString(reader.GetOrdinal("LastName")),
                 UserName = reader.GetString(reader.GetOrdinal("UserName")),
                 Password = reader.GetString(reader.GetOrdinal("Password")),
+                Language = new Language()
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("IdLanguage")),
+                    Name = reader.GetString(reader.GetOrdinal("LanguageName")),
+                    Default = reader.GetBoolean(reader.GetOrdinal("LanguageDefault"))
+                }
             };
         }
     }

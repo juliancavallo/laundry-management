@@ -25,7 +25,8 @@ namespace LaundryManagement.BLL.Mappers
                 Name = dto.Name,
                 Password = dto.Password,
                 LastName = dto.LastName,
-                UserName = dto.UserName,    
+                UserName = dto.UserName,
+                Language = dto.Language as Language
             };
 
         }
@@ -39,7 +40,8 @@ namespace LaundryManagement.BLL.Mappers
                 Name = entity.Name,
                 Password = entity.Password,
                 UserName = entity.UserName,
-                LastName = entity.LastName
+                LastName = entity.LastName,
+                Language = entity.Language,
             };
 
             foreach(var item in entity.Permissions)

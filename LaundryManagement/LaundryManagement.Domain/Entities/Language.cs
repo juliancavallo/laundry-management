@@ -5,14 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaundryManagement.Interfaces.Domain.DTOs
+namespace LaundryManagement.Domain.Entities
 {
-    public interface IUserDTO
+    public class Language : ILanguage
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public IList<IComponentDTO> Permissions { get; set; }
-        public ILanguage Language { get; set; }
+        public bool Default { get; set; }
     }
 }

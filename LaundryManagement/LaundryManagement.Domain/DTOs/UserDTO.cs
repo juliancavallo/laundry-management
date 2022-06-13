@@ -1,4 +1,5 @@
 ﻿using LaundryManagement.Interfaces.Domain.DTOs;
+using LaundryManagement.Interfaces.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,5 +21,6 @@ namespace LaundryManagement.Domain.DTOs
         public string Password { get; set; }
         public string UserName { get; set; }
         public IList<IComponentDTO> Permissions { get; set; }
+        public ILanguage Language { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LaundryManagement.Interfaces.Domain.DTOs;
+using LaundryManagement.Interfaces.Domain.Entities;
 using System;
 using System.Collections.Generic;
 
@@ -10,9 +11,9 @@ namespace LaundryManagement.Services
         private static object _lock = new Object();
         private static Session _session;
         private static Dictionary<string, int> _loginAttempts = new Dictionary<string, int>();
+        private static IList<ILanguageObserver> _observers = new List<ILanguageObserver>();
 
         public IUserDTO User { get; set; }
-        public DateTime FechaInicio { get; set; }
         public static Dictionary<string, int> LoginAttempts 
         { 
             get { return _loginAttempts; }
@@ -36,7 +37,6 @@ namespace LaundryManagement.Services
                 {
                     _session = new Session();
                     _session.User = user;
-                    _session.FechaInicio = DateTime.Now;
                     LoginAttempts.Clear();
                 }
                 else
@@ -46,7 +46,7 @@ namespace LaundryManagement.Services
             }
         }
 
-        public static void Logout()
+        public static void Logout(ILanguage defaultLanguage)
         {
             lock (_lock)
             {
@@ -54,11 +54,30 @@ namespace LaundryManagement.Services
                 {
                     _session = null;
                     LoginAttempts.Clear();
+                    Notify(defaultLanguage);
                 }
                 else
                 {
                     throw new Exception("Sesión no iniciada");
                 }
+            }
+        }
+
+        public static void SubsribeObserver(ILanguageObserver observer) => _observers.Add(observer);
+        public static void UnsubsribeObserver(ILanguageObserver observer) => _observers.Remove(observer);
+        private static void Notify(ILanguage language)
+        {
+            foreach (var observer in _observers)
+            {
+                observer.UpdateLanguage(language);
+            }
+        }
+        public static void ChangeLanguage(ILanguage language)
+        {
+            if(_session != null)
+            {
+                _session.User.Language = language;
+                Notify(language);
             }
         }
 
