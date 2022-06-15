@@ -24,7 +24,72 @@ namespace LaundryManagement.DAL
             connection.ConnectionString = connectionString;
         }
 
-        public void SetPermissions(User user)
+        public IList<Component> GetAllPermissions()
+        {
+            SqlDataReader reader = null;
+            List<Component> permissions = new List<Component>();
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                    $@"
+                    SELECT DISTINCT p.Id, p.Name as PermissionName, p.Permission as Permission, pf.IdPermissionParent, 
+	                    case when pf2.IdPermission is not null then 1 else 0 end as IsFamily
+                    FROM Permission p 
+                    LEFT JOIN PermissionFamily pf on p.Id = pf.IdPermission
+                    LEFT JOIN PermissionFamily pf2 on p.Id = pf2.IdPermissionParent"
+                );
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var isFamily = reader.GetInt32(reader.GetOrdinal("IsFamily")) == 1;
+                    var permissionId = reader.GetInt32(reader.GetOrdinal("Id"));
+
+                    if (!PermissionExists(permissions, permissionId))
+                    {
+                        Component component = null;
+                        if (isFamily)
+                        {
+                            component = new Composite();
+                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Id = permissionId;
+                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                            AddCompositeChildren((Composite)component);
+
+                            foreach (var item in component.Children)
+                            {
+                                permissions.RemoveAll(x => x.Id == item.Id);
+                            }
+                        }
+                        else
+                        {
+                            component = new Leaf();
+                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Id = permissionId;
+                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                        }
+
+                        permissions.Add(component);
+                    }
+                }
+
+                return permissions;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
+
+        public void GetPermissions(User user)
         {
             SqlDataReader reader = null;
             try
@@ -79,7 +144,7 @@ namespace LaundryManagement.DAL
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
@@ -90,7 +155,7 @@ namespace LaundryManagement.DAL
             }
         }
 
-        private void AddCompositeChildren(Composite composite, int userId)
+        private void AddCompositeChildren(Composite composite, int? userId = null)
         {
             SqlConnection newConnection = null;
             SqlDataReader reader = null;
@@ -99,24 +164,42 @@ namespace LaundryManagement.DAL
                 newConnection = new SqlConnection(connectionString);
                 newConnection.Open();
 
-                SqlCommand cmd = new SqlCommand($@"
-                    WITH [recursive] AS (
-                                    SELECT pf2.IdPermissionParent, pf2.IdPermission
-	                                FROM PermissionFamily pf2
-                                    WHERE pf2.IdPermissionParent = {composite.Id}
-                                    UNION ALL 
-                                    SELECT pf.IdPermissionParent, pf.IdPermission
-	                                FROM PermissionFamily pf 
-                                    INNER JOIN [recursive] r on r.IdPermission= pf.IdPermissionParent)
-                    SELECT r.IdPermissionParent,  p.Id, p.Name, p.Permission,case when max(up2.IdPermission) is not null then 1 else 0 end as IsFamily
-                    FROM [recursive] r 
-                    INNER JOIN Permission p on r.IdPermission = p.Id
-                    INNER JOIN UserPermission up on p.Id = up.IdPermission
-					LEFT JOIN PermissionFamily pf on pf.IdPermissionParent = up.IdPermission
-					LEFT JOIN UserPermission up2 on pf.IdPermission = up2.IdPermission
-					WHERE up.IdUser = {userId}
-					group by r.IdPermissionParent, r.IdPermission, p.Id, p.Name, p.Permission
-                ");
+                SqlCommand cmd =
+                    userId.HasValue ?
+                    new SqlCommand($@"
+                        WITH [recursive] AS (
+                                        SELECT pf2.IdPermissionParent, pf2.IdPermission
+	                                    FROM PermissionFamily pf2
+                                        WHERE pf2.IdPermissionParent = {composite.Id}
+                                        UNION ALL 
+                                        SELECT pf.IdPermissionParent, pf.IdPermission
+	                                    FROM PermissionFamily pf 
+                                        INNER JOIN [recursive] r on r.IdPermission= pf.IdPermissionParent)
+                        SELECT r.IdPermissionParent,  p.Id, p.Name, p.Permission,case when max(up2.IdPermission) is not null then 1 else 0 end as IsFamily
+                        FROM [recursive] r 
+                        INNER JOIN Permission p on r.IdPermission = p.Id
+                        INNER JOIN UserPermission up on p.Id = up.IdPermission
+					    LEFT JOIN PermissionFamily pf on pf.IdPermissionParent = up.IdPermission
+					    LEFT JOIN UserPermission up2 on pf.IdPermission = up2.IdPermission
+					    WHERE up.IdUser = {userId}
+					    group by r.IdPermissionParent, r.IdPermission, p.Id, p.Name, p.Permission
+                    ") :
+                    new SqlCommand($@"
+                        WITH [recursive] AS (
+                                        SELECT pf2.IdPermissionParent, pf2.IdPermission
+	                                    FROM PermissionFamily pf2
+                                        WHERE pf2.IdPermissionParent = {composite.Id}
+                                        UNION ALL 
+                                        SELECT pf.IdPermissionParent, pf.IdPermission
+	                                    FROM PermissionFamily pf 
+                                        INNER JOIN [recursive] r on r.IdPermission= pf.IdPermissionParent)
+                        SELECT r.IdPermissionParent,  p.Id, p.Name, p.Permission,case when max(p2.Id) is not null then 1 else 0 end as IsFamily
+                        FROM [recursive] r 
+                        INNER JOIN Permission p on r.IdPermission = p.Id
+                        LEFT JOIN PermissionFamily pf on pf.IdPermissionParent = p.Id
+                        LEFT JOIN Permission p2 on pf.IdPermission = p2.Id
+                        group by r.IdPermissionParent, r.IdPermission, p.Id, p.Name, p.Permission
+                    ");
 
                 cmd.Connection = newConnection;
                 reader = cmd.ExecuteReader();
@@ -200,6 +283,37 @@ namespace LaundryManagement.DAL
             }
 
             return false;
+        }
+
+        public void SavePermissions(int userId, IEnumerable<Component> permissions)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                       $@"
+                            DELETE [UserPermission] WHERE IdUser = {userId}
+                        ");
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                cmd.CommandText = @"INSERT INTO UserPermission (IdUser, IdPermission) VALUES ";
+                foreach(var item in permissions)
+                {
+                    cmd.CommandText += $"({userId}, {item.Id}),";
+                }
+                cmd.CommandText = cmd.CommandText.TrimEnd(',');
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
         }
     }
 }

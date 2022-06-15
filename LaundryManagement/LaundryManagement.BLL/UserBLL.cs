@@ -5,6 +5,7 @@ using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
+using LaundryManagement.Interfaces.Domain.DTOs;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -40,7 +41,7 @@ namespace LaundryManagement.BLL
         public IList<UserDTO> GetAll()
         {
             var list = this.dal.GetAll().ToList();
-            list.ForEach(x => permissionDAL.SetPermissions(x));
+            list.ForEach(x => permissionDAL.GetPermissions(x));
 
             return list
                 .Select(x => mapper.MapToDTO(x))
@@ -50,7 +51,7 @@ namespace LaundryManagement.BLL
         public UserDTO GetById(int id)
         {
             var entity = this.dal.GetById(id);
-            permissionDAL.SetPermissions(entity);
+            permissionDAL.GetPermissions(entity);
             return mapper.MapToDTO(entity);
         }
 
@@ -84,7 +85,7 @@ namespace LaundryManagement.BLL
 
             foreach(var item in list)
             {
-                permissionDAL.SetPermissions(item);
+                permissionDAL.GetPermissions(item);
                 dtoList.Add(mapper.MapToDTO(item));
             }
 
@@ -108,6 +109,36 @@ namespace LaundryManagement.BLL
             return this.GetAll()
                 .Select(x => mapper.MapToViewDTO(x))
                 .ToList();
+        }
+
+        public bool HasPermission(UserDTO userDto, int permissionId)
+        {
+            foreach (var item in userDto.Permissions)
+            {
+                if (CheckPermissionRecursively(item, permissionId))
+                    return true;
+            }
+            return false;
+        }
+        
+        private bool CheckPermissionRecursively(IComponentDTO permission, int permissionId)
+        {
+            bool exists = false;
+            if (permission.Id == permissionId)
+                exists = true;
+            else
+            {
+                if (permission is CompositeDTO)
+                {
+                    foreach (var child in permission.Children)
+                    {
+                        exists = CheckPermissionRecursively(child, permissionId);
+                        if (exists) return true;
+                    }
+                }
+            }
+
+            return exists;
         }
     }
 }

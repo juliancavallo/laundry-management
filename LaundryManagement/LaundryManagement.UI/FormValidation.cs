@@ -80,5 +80,13 @@ namespace LaundryManagement.UI
                     control.Text = translations[control.Tag.ToString()].Text;
             }
         }
+        public static void Translate(IDictionary<string, Translation> translations, IList<ToolStripItem> controls)
+        {
+            foreach (var control in controls)
+            {
+                if (control.Tag != null && translations.ContainsKey(control.Tag.ToString()))
+                    control.Text = translations[control.Tag.ToString()].Text;
+            }
+        }
     }
 }

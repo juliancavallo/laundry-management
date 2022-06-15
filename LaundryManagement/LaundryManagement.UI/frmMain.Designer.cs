@@ -53,7 +53,7 @@ namespace LaundryManagement.UI
             this.menuProcessesItemCreation = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReports = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReportsMovements = new System.Windows.Forms.ToolStripMenuItem();
-            this.shippingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReportsShippings = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLogout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
@@ -213,7 +213,7 @@ namespace LaundryManagement.UI
             // 
             this.menuReports.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuReportsMovements,
-            this.shippingsToolStripMenuItem});
+            this.menuReportsShippings});
             this.menuReports.Name = "menuReports";
             this.menuReports.Size = new System.Drawing.Size(59, 20);
             this.menuReports.Text = "Reports";
@@ -224,11 +224,11 @@ namespace LaundryManagement.UI
             this.menuReportsMovements.Size = new System.Drawing.Size(137, 22);
             this.menuReportsMovements.Text = "Movements";
             // 
-            // shippingsToolStripMenuItem
+            // menuReportsShippings
             // 
-            this.shippingsToolStripMenuItem.Name = "shippingsToolStripMenuItem";
-            this.shippingsToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.shippingsToolStripMenuItem.Text = "Shippings";
+            this.menuReportsShippings.Name = "menuReportsShippings";
+            this.menuReportsShippings.Size = new System.Drawing.Size(137, 22);
+            this.menuReportsShippings.Text = "Shippings";
             // 
             // menuLogout
             // 
@@ -247,11 +247,13 @@ namespace LaundryManagement.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1010, 597);
+            this.ClientSize = new System.Drawing.Size(1010, 689);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";
             this.Text = "frmMain";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.Load += new System.EventHandler(this.frmMain_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
@@ -285,7 +287,7 @@ namespace LaundryManagement.UI
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem menuProcessesItemRemoval;
         private ToolStripMenuItem menuReportsMovements;
-        private ToolStripMenuItem shippingsToolStripMenuItem;
+        private ToolStripMenuItem menuReportsShippings;
         private ToolStripMenuItem menuLanguage;
     }
 }

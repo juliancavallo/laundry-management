@@ -30,6 +30,7 @@
         {
             this.treeView1 = new System.Windows.Forms.TreeView();
             this.lblUser = new System.Windows.Forms.Label();
+            this.btnSave = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // treeView1
@@ -48,11 +49,22 @@
             this.lblUser.TabIndex = 1;
             this.lblUser.Text = "lblUser";
             // 
+            // btnSave
+            // 
+            this.btnSave.Location = new System.Drawing.Point(181, 521);
+            this.btnSave.Name = "btnSave";
+            this.btnSave.Size = new System.Drawing.Size(181, 49);
+            this.btnSave.TabIndex = 7;
+            this.btnSave.Text = "Save";
+            this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
             // frmUserRoles
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(584, 521);
+            this.ClientSize = new System.Drawing.Size(584, 595);
+            this.Controls.Add(this.btnSave);
             this.Controls.Add(this.lblUser);
             this.Controls.Add(this.treeView1);
             this.Name = "frmUserRoles";
@@ -67,5 +79,6 @@
 
         private System.Windows.Forms.TreeView treeView1;
         private System.Windows.Forms.Label lblUser;
+        private System.Windows.Forms.Button btnSave;
     }
 }

@@ -33,7 +33,7 @@
             this.lblEmail = new System.Windows.Forms.Label();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.btnAccept = new System.Windows.Forms.Button();
-            this.label1 = new System.Windows.Forms.Label();
+            this.lblRepeatPassword = new System.Windows.Forms.Label();
             this.txtNewPasswordRepeated = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
@@ -79,14 +79,14 @@
             this.btnAccept.UseVisualStyleBackColor = true;
             this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
             // 
-            // label1
+            // lblRepeatPassword
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(38, 190);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(141, 15);
-            this.label1.TabIndex = 11;
-            this.label1.Text = "Repeat the new password";
+            this.lblRepeatPassword.AutoSize = true;
+            this.lblRepeatPassword.Location = new System.Drawing.Point(38, 190);
+            this.lblRepeatPassword.Name = "lblRepeatPassword";
+            this.lblRepeatPassword.Size = new System.Drawing.Size(141, 15);
+            this.lblRepeatPassword.TabIndex = 11;
+            this.lblRepeatPassword.Text = "Repeat the new password";
             // 
             // txtNewPasswordRepeated
             // 
@@ -101,7 +101,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(316, 328);
             this.ControlBox = false;
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.lblRepeatPassword);
             this.Controls.Add(this.txtNewPasswordRepeated);
             this.Controls.Add(this.btnAccept);
             this.Controls.Add(this.lblPassword);
@@ -111,6 +111,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "frmResetPassword";
             this.Text = "frmResetPassword";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmResetPassword_FormClosing);
+            this.Load += new System.EventHandler(this.frmResetPassword_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,7 +125,7 @@
         private System.Windows.Forms.Label lblEmail;
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.Button btnAccept;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label lblRepeatPassword;
         private System.Windows.Forms.TextBox txtNewPasswordRepeated;
     }
 }

@@ -71,6 +71,8 @@ namespace LaundryManagement.UI
 
                 loginBLL.Login(loginDTO);
 
+                Session.ChangeLanguage(Session.Instance.User.Language);
+
                 this.CloseForm();
             }
             catch (ValidationException ex)
@@ -93,7 +95,7 @@ namespace LaundryManagement.UI
 
         private void lblResetPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            frmResetPassword frm = new frmResetPassword();
+            frmResetPassword frm = new frmResetPassword(this.comboLanguages.SelectedItem as ILanguage);
             frm.FormClosed += (sernder, e) => 
             { 
                 this.txtEmail.Clear();
@@ -102,6 +104,7 @@ namespace LaundryManagement.UI
             frm.ShowDialog();
         }
 
+        #region Language
         public void UpdateLanguage(ILanguage language)
         {
             Translate(language);
@@ -128,6 +131,17 @@ namespace LaundryManagement.UI
         {
             var selectedItem = ((ComboBox)sender).SelectedItem as ILanguage;
             Translate(translatorBLL.GetById(selectedItem.Id));
+        }
+        #endregion
+
+        private void frmLogin_Load(object sender, EventArgs e)
+        {
+            Session.SubsribeObserver(this);
+        }
+
+        private void frmLogin_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Session.UnsubsribeObserver(this);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace LaundryManagement.Domain.DTOs
 {
     public abstract class ComponentDTO : IComponentDTO
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Permission { get; set; }
 

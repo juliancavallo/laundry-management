@@ -96,6 +96,7 @@ namespace LaundryManagement.UI
             this.btnEditRoles.TabIndex = 5;
             this.btnEditRoles.Text = "Edit Roles";
             this.btnEditRoles.UseVisualStyleBackColor = true;
+            this.btnEditRoles.Click += new System.EventHandler(this.btnEditRoles_Click);
             // 
             // frmAdministrationUsers
             // 
@@ -110,6 +111,7 @@ namespace LaundryManagement.UI
             this.Controls.Add(this.gridUsers);
             this.Name = "frmAdministrationUsers";
             this.Text = "frmAdministrationUsers";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmAdministrationUsers_FormClosing);
             this.Load += new System.EventHandler(this.frmAdministrationUsers_Load);
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).EndInit();
             this.ResumeLayout(false);

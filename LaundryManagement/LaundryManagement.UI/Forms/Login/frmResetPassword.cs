@@ -3,6 +3,7 @@ using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
+using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
@@ -10,16 +11,23 @@ using System.Windows.Forms;
 
 namespace LaundryManagement.UI
 {
-    public partial class frmResetPassword : Form
+    public partial class frmResetPassword : Form, ILanguageObserver
     {
         private UserBLL userBLL;
+        private TranslatorBLL translatorBLL;
+        private IList<Control> controls;
         private SecurityService securityService;
-        public frmResetPassword()
+        public frmResetPassword(ILanguage language)
         {
             userBLL = new UserBLL();
+            translatorBLL = new TranslatorBLL();
             securityService = new SecurityService();
+
             InitializeComponent();
-            this.ApplySetup();
+            ApplySetup();
+
+            controls = new List<Control>() { this.lblEmail, this.lblPassword, this.lblRepeatPassword, this, this.btnAccept};
+            Translate(language);
         }
 
         private void ApplySetup()
@@ -34,6 +42,11 @@ namespace LaundryManagement.UI
             this.txtEmail.TabIndex = 0;
             this.txtNewPassword.TabIndex = 1;
             this.txtNewPasswordRepeated.TabIndex = 2;
+            this.lblEmail.Tag = "Email";
+            this.lblPassword.Tag = "NewPassword";
+            this.lblRepeatPassword.Tag = "RepeatPassword";
+            this.btnAccept.Tag = "Accept";
+            this.Tag = "ResetPassword";
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
         }
@@ -69,6 +82,28 @@ namespace LaundryManagement.UI
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
+        }
+
+        public void UpdateLanguage(ILanguage language)
+        {
+            Translate(language);
+        }
+
+        private void Translate(ILanguage language = null)
+        {
+            var translations = translatorBLL.GetTranslations(language);
+
+            FormValidation.Translate(translations, controls);
+        }
+
+        private void frmResetPassword_Load(object sender, EventArgs e)
+        {
+            Session.SubsribeObserver(this);
+        }
+
+        private void frmResetPassword_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Session.UnsubsribeObserver(this);
         }
     }
 }

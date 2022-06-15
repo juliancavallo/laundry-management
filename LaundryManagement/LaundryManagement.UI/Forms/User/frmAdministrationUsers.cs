@@ -2,28 +2,29 @@
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LaundryManagement.UI
 {
-    public partial class frmAdministrationUsers : Form
+    public partial class frmAdministrationUsers : Form, ILanguageObserver
     {
         UserBLL userBLL;
+        private TranslatorBLL translatorBLL;
+        private IList<Control> controls;
         public frmAdministrationUsers()
         {
             InitializeComponent();
             ApplySetup();
 
             userBLL = new UserBLL();
+            translatorBLL = new TranslatorBLL();
+
+            controls = new List<Control>() { this, this.btnDelete, this.btnEdit, this.btnEditRoles, this.btnNewUser, this.btnViewRoles};
+            Translate(Session.Instance.User.Language);
         }
 
         private void ApplySetup()
@@ -40,6 +41,18 @@ namespace LaundryManagement.UI
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+
+            this.btnNewUser.TabIndex = 0;
+            this.btnEdit.TabIndex  = 1;
+            this.btnDelete.TabIndex = 2;
+            this.btnViewRoles.TabIndex = 3;
+            this.btnEditRoles.TabIndex = 4;
+
+            this.btnNewUser.Tag = "Create";
+            this.btnEdit.Tag = "Edit";
+            this.btnDelete.Tag = "Delete";
+            this.btnViewRoles.Tag = "ViewRoles";
+            this.btnEditRoles.Tag = "EditRoles";
         }
 
         private void ReloadGridEvent(object sender, EventArgs e)
@@ -52,6 +65,7 @@ namespace LaundryManagement.UI
         private void frmAdministrationUsers_Load(object sender, EventArgs e)
         {
             this.ReloadGridEvent(sender, e);
+            Session.SubsribeObserver(this);
         }
 
         private void btnNewUser_Click(object sender, EventArgs e)
@@ -110,6 +124,16 @@ namespace LaundryManagement.UI
 
         private void btnViewRoles_Click(object sender, EventArgs e)
         {
+            ShowRolesForm(false);
+        }
+
+        private void btnEditRoles_Click(object sender, EventArgs e)
+        {
+            ShowRolesForm(true);
+        }
+
+        public void ShowRolesForm(bool edit)
+        {
             try
             {
                 FormValidation.ValidateGridSelectedRow(this.gridUsers);
@@ -118,7 +142,7 @@ namespace LaundryManagement.UI
 
                 var dto = userBLL.GetById(selectedId);
 
-                var frmUserRoles = new frmUserRoles(dto, false);
+                var frmUserRoles = new frmUserRoles(dto, edit);
                 frmUserRoles.ShowDialog();
             }
             catch (ValidationException ex)
@@ -130,5 +154,23 @@ namespace LaundryManagement.UI
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
         }
+
+        public void UpdateLanguage(ILanguage language)
+        {
+            Translate(language);
+        }
+
+        private void Translate(ILanguage language = null)
+        {
+            var translations = translatorBLL.GetTranslations(language);
+
+            FormValidation.Translate(translations, controls);
+        }
+
+        private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Session.UnsubsribeObserver(this);
+        }
+
     }
 }
