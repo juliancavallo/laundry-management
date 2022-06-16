@@ -84,15 +84,9 @@ namespace LaundryManagement.UI
             return components;
         }
 
-        public void UpdateLanguage(ILanguage language)
-        {
-            Translate();
-        }
+        public void UpdateLanguage(ILanguage language) => Translate();
 
-        private void Translate()
-        {
-            FormValidation.Translate(Session.Translations, controls);
-        }
+        private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
         private void frmUserRoles_Load(object sender, EventArgs e)
         {
@@ -104,9 +98,6 @@ namespace LaundryManagement.UI
             Session.SubsribeObserver(this);
         }
 
-        private void frmUserRoles_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Session.UnsubsribeObserver(this);
-        }
+        private void frmUserRoles_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
     }
 }

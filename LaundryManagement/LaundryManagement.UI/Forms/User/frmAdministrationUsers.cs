@@ -122,15 +122,9 @@ namespace LaundryManagement.UI
             }
         }
 
-        private void btnViewRoles_Click(object sender, EventArgs e)
-        {
-            ShowRolesForm(false);
-        }
+        private void btnViewRoles_Click(object sender, EventArgs e) => ShowRolesForm(false);
 
-        private void btnEditRoles_Click(object sender, EventArgs e)
-        {
-            ShowRolesForm(true);
-        }
+        private void btnEditRoles_Click(object sender, EventArgs e) => ShowRolesForm(true);
 
         public void ShowRolesForm(bool edit)
         {
@@ -155,20 +149,11 @@ namespace LaundryManagement.UI
             }
         }
 
-        public void UpdateLanguage(ILanguage language)
-        {
-            Translate();
-        }
+        public void UpdateLanguage(ILanguage language) => Translate();
 
-        private void Translate()
-        {
-            FormValidation.Translate(Session.Translations, controls);
-        }
+        private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
-        private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Session.UnsubsribeObserver(this);
-        }
+        private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
 
     }
 }

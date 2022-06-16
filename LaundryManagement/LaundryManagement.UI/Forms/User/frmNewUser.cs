@@ -124,29 +124,14 @@ namespace LaundryManagement.UI
             }
         }
 
-        private void txtPassword_TextChanged(object sender, EventArgs e)
-        {
-            this.txtConfirmPassword.Enabled = this.txtPassword.Text.Length > 0;
-        }
+        private void txtPassword_TextChanged(object sender, EventArgs e) => this.txtConfirmPassword.Enabled = this.txtPassword.Text.Length > 0;
 
-        public void UpdateLanguage(ILanguage language)
-        {
-            Translate();
-        }
+        public void UpdateLanguage(ILanguage language) => Translate();
 
-        private void Translate()
-        {
-            FormValidation.Translate(Session.Translations, controls);
-        }
+        private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
-        private void frmNewUser_Load(object sender, EventArgs e)
-        {
-            Session.SubsribeObserver(this);
-        }
+        private void frmNewUser_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
 
-        private void frmNewUser_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Session.UnsubsribeObserver(this);
-        }
+        private void frmNewUser_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
     }
 }

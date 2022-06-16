@@ -32,12 +32,12 @@ namespace LaundryManagement.BLL
         public void Login(LoginDTO dto)
         {
             if (Session.Instance != null)
-                throw new ValidationException("A session is already open", ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.SessionAlreadyOpen].Text, ValidationType.Error);
 
             var filter = new UserFilter(email: dto.Email);
             var userDTO = userBLL.GetByFilter(filter).FirstOrDefault();
             if (userDTO == null)
-                throw new ValidationException("User does not exists", ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.NonexistentUser].Text, ValidationType.Error);
 
             if(Encryptor.Hash(dto.Password) != userDTO.Password)
             {
@@ -52,12 +52,10 @@ namespace LaundryManagement.BLL
                        "la cual recomendamos cambiar la proxima vez que ingrese.", ValidationType.Warning);
                 }
                 
-                throw new ValidationException("The password is incorrect", ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.IncorrectPassword].Text, ValidationType.Error);
             }
 
             Session.Login(userDTO);
-            Session.Translations = translatorBLL.GetTranslations((Language)userDTO.Language);
-
         }
 
         public void Logout() => Session.Logout(translatorBLL.GetDefaultLanguage());

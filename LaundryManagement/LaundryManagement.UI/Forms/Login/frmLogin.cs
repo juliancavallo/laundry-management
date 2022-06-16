@@ -106,17 +106,9 @@ namespace LaundryManagement.UI
         }
 
         #region Language
-        public void UpdateLanguage(ILanguage language)
-        {
-            Translate(language);
-        }
+        public void UpdateLanguage(ILanguage language) => Translate(language);
 
-        private void Translate(ILanguage language = null)
-        {
-            var translations = translatorBLL.GetTranslations((Language)language);
-
-            FormValidation.Translate(translations, controls);
-        }
+        private void Translate(ILanguage language = null) => FormValidation.Translate(Session.Translations, controls);
 
         private void PopulateComboLanguages()
         {
@@ -131,18 +123,19 @@ namespace LaundryManagement.UI
         private void comboLanguages_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedItem = ((ComboBox)sender).SelectedItem as ILanguage;
+
+            Session.Translations = translatorBLL.GetTranslations((Language)selectedItem);
+
             Translate(translatorBLL.GetById(selectedItem.Id));
         }
         #endregion
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
+            Session.Translations = translatorBLL.GetTranslations();
             Session.SubsribeObserver(this);
         }
 
-        private void frmLogin_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Session.UnsubsribeObserver(this);
-        }
+        private void frmLogin_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
     }
 }

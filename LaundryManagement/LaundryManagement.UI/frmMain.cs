@@ -6,10 +6,8 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Windows.Forms;
 
 namespace LaundryManagement.UI
@@ -174,14 +172,8 @@ namespace LaundryManagement.UI
             CheckLanguage(language);
         }
 
-        private void frmMain_Load(object sender, EventArgs e)
-        {
-            Session.SubsribeObserver(this);
-        }
+        private void frmMain_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Session.UnsubsribeObserver(this);
-        }
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
     }
 }
