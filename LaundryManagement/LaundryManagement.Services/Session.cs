@@ -12,12 +12,18 @@ namespace LaundryManagement.Services
         private static Session _session;
         private static Dictionary<string, int> _loginAttempts = new Dictionary<string, int>();
         private static IList<ILanguageObserver> _observers = new List<ILanguageObserver>();
+        private static IDictionary<string, ITranslation> _translations = new Dictionary<string, ITranslation>();
 
         public IUserDTO User { get; set; }
         public static Dictionary<string, int> LoginAttempts 
         { 
             get { return _loginAttempts; }
             set { _loginAttempts = value; }        
+        }
+        public static IDictionary<string, ITranslation> Translations
+        {
+            get { return _translations; }
+            set { _translations = value; }
         }
 
         public static Session Instance

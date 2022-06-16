@@ -91,7 +91,7 @@ namespace LaundryManagement.UI
 
         private void Translate(ILanguage language = null)
         {
-            var translations = translatorBLL.GetTranslations(language);
+            var translations = translatorBLL.GetTranslations((Language)language);
 
             FormValidation.Translate(translations, controls);
         }

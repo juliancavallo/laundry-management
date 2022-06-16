@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
@@ -112,7 +113,7 @@ namespace LaundryManagement.UI
 
         private void Translate(ILanguage language = null)
         {
-            var translations = translatorBLL.GetTranslations(language);
+            var translations = translatorBLL.GetTranslations((Language)language);
 
             FormValidation.Translate(translations, controls);
         }

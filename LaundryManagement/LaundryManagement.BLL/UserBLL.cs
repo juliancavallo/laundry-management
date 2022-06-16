@@ -1,18 +1,12 @@
 ﻿using LaundryManagement.BLL.Mappers;
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
-using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
-using LaundryManagement.Interfaces.Domain.DTOs;
-using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LaundryManagement.BLL
 {
@@ -115,13 +109,13 @@ namespace LaundryManagement.BLL
         {
             foreach (var item in userDto.Permissions)
             {
-                if (CheckPermissionRecursively(item, permissionId))
+                if (CheckPermissionRecursively((ComponentDTO)item, permissionId))
                     return true;
             }
             return false;
         }
         
-        private bool CheckPermissionRecursively(IComponentDTO permission, int permissionId)
+        private bool CheckPermissionRecursively(ComponentDTO permission, int permissionId)
         {
             bool exists = false;
             if (permission.Id == permissionId)
@@ -132,7 +126,7 @@ namespace LaundryManagement.BLL
                 {
                     foreach (var child in permission.Children)
                     {
-                        exists = CheckPermissionRecursively(child, permissionId);
+                        exists = CheckPermissionRecursively((ComponentDTO)child, permissionId);
                         if (exists) return true;
                     }
                 }

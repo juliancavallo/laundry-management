@@ -97,10 +97,10 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public IDictionary<string, Translation> GetTranslations(ILanguage language)
+        public IDictionary<string, ITranslation> GetTranslations(ILanguage language)
         {
             SqlDataReader reader = null;
-            IDictionary<string, Translation> translations = new Dictionary<string, Translation>();
+            IDictionary<string, ITranslation> translations = new Dictionary<string, ITranslation>();
             try
             {
                 connection.Open();

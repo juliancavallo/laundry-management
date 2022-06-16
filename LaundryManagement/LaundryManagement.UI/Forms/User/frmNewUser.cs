@@ -15,13 +15,12 @@ namespace LaundryManagement.UI
     {
         public UserDTO _userDTO;
         private UserBLL userBLL;
-        private TranslatorBLL translatorBLL;
+
         private IList<Control> controls;
         private SecurityService securityService;
         public frmNewUser(UserDTO paramDTO)
         {
             userBLL = new UserBLL();
-            translatorBLL = new TranslatorBLL();
             _userDTO = paramDTO;
             securityService = new SecurityService();
 
@@ -29,7 +28,7 @@ namespace LaundryManagement.UI
             ApplySetup();
 
             controls = new List<Control>() { this, this.btnSave, this.lblConfirmPassword, this.lblEmail, this.lblFirstName, this.lblLastName, this.lblPassword, this.lblUserName };
-            Translate(Session.Instance.User.Language);
+            Translate();
         }
 
         private void ApplySetup()
@@ -132,14 +131,12 @@ namespace LaundryManagement.UI
 
         public void UpdateLanguage(ILanguage language)
         {
-            Translate(language);
+            Translate();
         }
 
-        private void Translate(ILanguage language = null)
+        private void Translate()
         {
-            var translations = translatorBLL.GetTranslations(language);
-
-            FormValidation.Translate(translations, controls);
+            FormValidation.Translate(Session.Translations, controls);
         }
 
         private void frmNewUser_Load(object sender, EventArgs e)

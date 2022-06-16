@@ -1,11 +1,8 @@
 ﻿using LaundryManagement.BLL.Mappers;
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace LaundryManagement.BLL
 {
@@ -26,10 +23,10 @@ namespace LaundryManagement.BLL
             return entities.Select(x => mapper.MapToDTO(x)).ToList();
         }
 
-        public void SavePermissions(UserDTO userDTO)
+        public void SavePermissions(int userId, List<ComponentDTO> components)
         {
-            var entities = userDTO.Permissions.Select(x => mapper.MapToEntity(x as ComponentDTO));
-            permissionDAL.SavePermissions(userDTO.Id, entities);
+            var entities = components.Select(x => mapper.MapToEntity(x));
+            permissionDAL.SavePermissions(userId, entities);
         }
     }
 }

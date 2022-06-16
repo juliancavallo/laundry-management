@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.Domain;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
@@ -55,6 +56,7 @@ namespace LaundryManagement.BLL
             }
 
             Session.Login(userDTO);
+            Session.Translations = translatorBLL.GetTranslations((Language)userDTO.Language);
 
         }
 

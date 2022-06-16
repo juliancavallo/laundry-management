@@ -72,7 +72,7 @@ namespace LaundryManagement.UI
             MessageBox.Show(message, "Notification", MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        public static void Translate(IDictionary<string, Translation> translations, IList<Control> controls)
+        public static void Translate(IDictionary<string, ITranslation> translations, IList<Control> controls)
         {
             foreach(var control in controls)
             {
@@ -80,7 +80,7 @@ namespace LaundryManagement.UI
                     control.Text = translations[control.Tag.ToString()].Text;
             }
         }
-        public static void Translate(IDictionary<string, Translation> translations, IList<ToolStripItem> controls)
+        public static void Translate(IDictionary<string, ITranslation> translations, IList<ToolStripItem> controls)
         {
             foreach (var control in controls)
             {

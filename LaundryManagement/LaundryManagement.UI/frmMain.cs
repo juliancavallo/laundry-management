@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -17,8 +18,9 @@ namespace LaundryManagement.UI
     {
         private LoginBLL loginBLL;
         private TranslatorBLL translatorBLL;
-        private Configuration configuration;
         private UserBLL userBLL;
+
+        private Configuration configuration;
         private IList<Control> controls;
         private IList<ToolStripItem> toolStripItems;
         public frmMain()
@@ -38,7 +40,6 @@ namespace LaundryManagement.UI
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsShippings, this.menuLanguage, this.menuLogout };
-
 
             PopulateLanguageMenu();
             Translate();
@@ -136,7 +137,11 @@ namespace LaundryManagement.UI
 
         private void languageItem_Click(object sender, EventArgs e)
         {
-            Session.ChangeLanguage((ILanguage)((ToolStripMenuItem)sender).Tag);
+            var language = (Language)((ToolStripMenuItem)sender).Tag;
+
+            Session.Translations = translatorBLL.GetTranslations(language);
+            Session.ChangeLanguage(language);
+            
             userBLL.Save((UserDTO)Session.Instance.User);
             CheckLanguage(Session.Instance.User.Language);
         }
@@ -157,17 +162,15 @@ namespace LaundryManagement.UI
                 CheckLanguage(Session.Instance.User.Language);
         }
 
-        private void Translate(ILanguage language = null)
+        private void Translate()
         {
-            var translations = translatorBLL.GetTranslations(language);
-
-            FormValidation.Translate(translations, controls);
-            FormValidation.Translate(translations, toolStripItems);
+            FormValidation.Translate(Session.Translations, controls);
+            FormValidation.Translate(Session.Translations, toolStripItems);
         }
 
         public void UpdateLanguage(ILanguage language)
         {
-            Translate(language);
+            Translate();
             CheckLanguage(language);
         }
 

@@ -16,13 +16,13 @@ namespace LaundryManagement.BLL
             dal = new TranslationDAL();
         }
 
-        public ILanguage GetDefaultLanguage()
+        public Language GetDefaultLanguage()
         {
             return GetAllLanguages().Where(i => i.Default).First();
         }
 
-        public IList<ILanguage> GetAllLanguages() => dal.GetAllLanguages().ToList<ILanguage>();
-        public ILanguage GetById(int id) => dal.GetLanguageById(id);
-        public IDictionary<string, Translation> GetTranslations(ILanguage idioma = null) => dal.GetTranslations(idioma ?? GetDefaultLanguage());
+        public IList<Language> GetAllLanguages() => dal.GetAllLanguages();
+        public Language GetById(int id) => dal.GetLanguageById(id);
+        public IDictionary<string, ITranslation> GetTranslations(Language idioma = null) => dal.GetTranslations(idioma ?? GetDefaultLanguage());
     }
 }

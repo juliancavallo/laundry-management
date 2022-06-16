@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
@@ -13,7 +14,6 @@ namespace LaundryManagement.UI
     public partial class frmAdministrationUsers : Form, ILanguageObserver
     {
         UserBLL userBLL;
-        private TranslatorBLL translatorBLL;
         private IList<Control> controls;
         public frmAdministrationUsers()
         {
@@ -21,10 +21,9 @@ namespace LaundryManagement.UI
             ApplySetup();
 
             userBLL = new UserBLL();
-            translatorBLL = new TranslatorBLL();
 
             controls = new List<Control>() { this, this.btnDelete, this.btnEdit, this.btnEditRoles, this.btnNewUser, this.btnViewRoles};
-            Translate(Session.Instance.User.Language);
+            Translate();
         }
 
         private void ApplySetup()
@@ -48,6 +47,7 @@ namespace LaundryManagement.UI
             this.btnViewRoles.TabIndex = 3;
             this.btnEditRoles.TabIndex = 4;
 
+            this.Tag = "Users";
             this.btnNewUser.Tag = "Create";
             this.btnEdit.Tag = "Edit";
             this.btnDelete.Tag = "Delete";
@@ -157,14 +157,12 @@ namespace LaundryManagement.UI
 
         public void UpdateLanguage(ILanguage language)
         {
-            Translate(language);
+            Translate();
         }
 
-        private void Translate(ILanguage language = null)
+        private void Translate()
         {
-            var translations = translatorBLL.GetTranslations(language);
-
-            FormValidation.Translate(translations, controls);
+            FormValidation.Translate(Session.Translations, controls);
         }
 
         private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e)
