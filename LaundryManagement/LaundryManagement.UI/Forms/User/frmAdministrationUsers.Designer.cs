@@ -52,7 +52,7 @@ namespace LaundryManagement.UI
             // 
             this.btnNewUser.Location = new System.Drawing.Point(53, 369);
             this.btnNewUser.Name = "btnNewUser";
-            this.btnNewUser.Size = new System.Drawing.Size(138, 49);
+            this.btnNewUser.Size = new System.Drawing.Size(138, 35);
             this.btnNewUser.TabIndex = 1;
             this.btnNewUser.Text = "New";
             this.btnNewUser.UseVisualStyleBackColor = true;
@@ -62,7 +62,7 @@ namespace LaundryManagement.UI
             // 
             this.btnEdit.Location = new System.Drawing.Point(271, 369);
             this.btnEdit.Name = "btnEdit";
-            this.btnEdit.Size = new System.Drawing.Size(138, 49);
+            this.btnEdit.Size = new System.Drawing.Size(138, 35);
             this.btnEdit.TabIndex = 2;
             this.btnEdit.Text = "Edit";
             this.btnEdit.UseVisualStyleBackColor = true;
@@ -72,7 +72,7 @@ namespace LaundryManagement.UI
             // 
             this.btnDelete.Location = new System.Drawing.Point(503, 369);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(138, 49);
+            this.btnDelete.Size = new System.Drawing.Size(138, 35);
             this.btnDelete.TabIndex = 3;
             this.btnDelete.Text = "Delete";
             this.btnDelete.UseVisualStyleBackColor = true;
@@ -80,9 +80,9 @@ namespace LaundryManagement.UI
             // 
             // btnViewRoles
             // 
-            this.btnViewRoles.Location = new System.Drawing.Point(53, 440);
+            this.btnViewRoles.Location = new System.Drawing.Point(53, 428);
             this.btnViewRoles.Name = "btnViewRoles";
-            this.btnViewRoles.Size = new System.Drawing.Size(138, 49);
+            this.btnViewRoles.Size = new System.Drawing.Size(138, 35);
             this.btnViewRoles.TabIndex = 4;
             this.btnViewRoles.Text = "View Roles";
             this.btnViewRoles.UseVisualStyleBackColor = true;
@@ -90,9 +90,9 @@ namespace LaundryManagement.UI
             // 
             // btnEditRoles
             // 
-            this.btnEditRoles.Location = new System.Drawing.Point(271, 440);
+            this.btnEditRoles.Location = new System.Drawing.Point(271, 428);
             this.btnEditRoles.Name = "btnEditRoles";
-            this.btnEditRoles.Size = new System.Drawing.Size(138, 49);
+            this.btnEditRoles.Size = new System.Drawing.Size(138, 35);
             this.btnEditRoles.TabIndex = 5;
             this.btnEditRoles.Text = "Edit Roles";
             this.btnEditRoles.UseVisualStyleBackColor = true;
@@ -102,7 +102,7 @@ namespace LaundryManagement.UI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(701, 510);
+            this.ClientSize = new System.Drawing.Size(701, 482);
             this.Controls.Add(this.btnEditRoles);
             this.Controls.Add(this.btnViewRoles);
             this.Controls.Add(this.btnDelete);

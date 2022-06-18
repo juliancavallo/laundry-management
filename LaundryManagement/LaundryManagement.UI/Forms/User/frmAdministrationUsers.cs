@@ -83,7 +83,7 @@ namespace LaundryManagement.UI
 
                 var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
                 if(selectedId == Session.Instance.User.Id)
-                    throw new ValidationException("Cannot edit the user with which you are logged in", ValidationType.Warning);
+                    throw new ValidationException(Session.Translations[Tags.EditLoggedUser].Text, ValidationType.Warning);
 
                 var dto = userBLL.GetById(selectedId);
 

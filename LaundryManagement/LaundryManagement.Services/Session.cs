@@ -23,7 +23,6 @@ namespace LaundryManagement.Services
         public static IDictionary<string, ITranslation> Translations
         {
             get { return _translations; }
-            set { _translations = value; }
         }
 
         public static Session Instance
@@ -86,6 +85,8 @@ namespace LaundryManagement.Services
                 Notify(language);
             }
         }
+
+        public static void SetTranslations(IDictionary<string, ITranslation> translations) => _translations = translations;
 
         private Session()
         {

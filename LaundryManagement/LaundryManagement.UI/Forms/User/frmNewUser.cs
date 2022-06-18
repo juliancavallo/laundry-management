@@ -15,19 +15,22 @@ namespace LaundryManagement.UI
     {
         public UserDTO _userDTO;
         private UserBLL userBLL;
+        private TranslatorBLL translatorBLL;
 
         private IList<Control> controls;
         private SecurityService securityService;
         public frmNewUser(UserDTO paramDTO)
         {
             userBLL = new UserBLL();
+            translatorBLL = new TranslatorBLL();
             _userDTO = paramDTO;
             securityService = new SecurityService();
 
             InitializeComponent();
+            PopulateComboLanguages();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.btnSave, this.lblConfirmPassword, this.lblEmail, this.lblFirstName, this.lblLastName, this.lblPassword, this.lblUserName };
+            controls = new List<Control>() { this, this.btnSave, this.lblConfirmPassword, this.lblEmail, this.lblFirstName, this.lblLastName, this.lblLanguage, this.lblPassword, this.lblUserName };
             Translate();
         }
 
@@ -37,11 +40,14 @@ namespace LaundryManagement.UI
             this.txtLastName.Text = _userDTO?.LastName;
             this.txtFirstName.Text = _userDTO?.Name;
             this.txtUserName.Text = _userDTO?.UserName;
+            if(_userDTO != null)
+                this.comboLanguage.SelectedValue = _userDTO.Language.Id;
 
             this.txtPassword.PasswordChar = '*';
             this.txtConfirmPassword.PasswordChar = '*';
-            this.txtPassword.PlaceholderText = _userDTO?.Id == null ? "" : "Type here to change the password";
+            this.txtPassword.PlaceholderText = _userDTO?.Id == null ? "" : Session.Translations[Tags.PasswordPlaceholder].Text;
             this.txtConfirmPassword.Enabled = false;
+            this.comboLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.txtFirstName.TabIndex = 0;
             this.txtLastName.TabIndex = 1;
@@ -57,6 +63,7 @@ namespace LaundryManagement.UI
             this.lblEmail.Tag = "Email";
             this.lblPassword.Tag = "Password";
             this.lblConfirmPassword.Tag = "RepeatPassword";
+            this.lblLanguage.Tag = "Language";
             this.btnSave.Tag = "Save";
             this.Tag = "User";
 
@@ -108,6 +115,7 @@ namespace LaundryManagement.UI
                     Name = this.txtFirstName.Text.Trim(),
                     Password = password,
                     UserName = this.txtUserName.Text.Trim(),
+                    Language = comboLanguage.SelectedItem as ILanguage
                 };
 
                 userBLL.Save(userDTO);
@@ -133,5 +141,15 @@ namespace LaundryManagement.UI
         private void frmNewUser_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
 
         private void frmNewUser_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+
+        private void PopulateComboLanguages()
+        {
+            this.comboLanguage.DataSource = null;
+            this.comboLanguage.DataSource = translatorBLL.GetAllLanguages();
+            this.comboLanguage.DisplayMember = "Name";
+            this.comboLanguage.ValueMember = "Id";
+
+            this.comboLanguage.SelectedValue = translatorBLL.GetDefaultLanguage().Id;
+        }
     }
 }

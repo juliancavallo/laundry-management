@@ -56,6 +56,8 @@ namespace LaundryManagement.UI
             this.menuReportsShippings = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLogout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuLanguageManage = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -69,7 +71,7 @@ namespace LaundryManagement.UI
             this.menuLanguage});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1010, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1005, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -221,13 +223,13 @@ namespace LaundryManagement.UI
             // menuReportsMovements
             // 
             this.menuReportsMovements.Name = "menuReportsMovements";
-            this.menuReportsMovements.Size = new System.Drawing.Size(137, 22);
+            this.menuReportsMovements.Size = new System.Drawing.Size(180, 22);
             this.menuReportsMovements.Text = "Movements";
             // 
             // menuReportsShippings
             // 
             this.menuReportsShippings.Name = "menuReportsShippings";
-            this.menuReportsShippings.Size = new System.Drawing.Size(137, 22);
+            this.menuReportsShippings.Size = new System.Drawing.Size(180, 22);
             this.menuReportsShippings.Text = "Shippings";
             // 
             // menuLogout
@@ -239,15 +241,30 @@ namespace LaundryManagement.UI
             // 
             // menuLanguage
             // 
+            this.menuLanguage.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.menuLanguageManage,
+            this.toolStripSeparator6});
             this.menuLanguage.Name = "menuLanguage";
             this.menuLanguage.Size = new System.Drawing.Size(71, 20);
             this.menuLanguage.Text = "Language";
+            // 
+            // menuLanguageManage
+            // 
+            this.menuLanguageManage.Name = "menuLanguageManage";
+            this.menuLanguageManage.Size = new System.Drawing.Size(180, 22);
+            this.menuLanguageManage.Text = "Manage";
+            this.menuLanguageManage.Click += new System.EventHandler(this.menuLanguageManage_Click);
+            // 
+            // toolStripSeparator6
+            // 
+            this.toolStripSeparator6.Name = "toolStripSeparator6";
+            this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
             // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1010, 689);
+            this.ClientSize = new System.Drawing.Size(1005, 623);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";
@@ -289,5 +306,7 @@ namespace LaundryManagement.UI
         private ToolStripMenuItem menuReportsMovements;
         private ToolStripMenuItem menuReportsShippings;
         private ToolStripMenuItem menuLanguage;
+        private ToolStripMenuItem menuLanguageManage;
+        private ToolStripSeparator toolStripSeparator6;
     }
 }

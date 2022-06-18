@@ -107,9 +107,10 @@ namespace LaundryManagement.DAL
 
                 SqlCommand cmd = new SqlCommand($@"
                     SELECT 
+                        t.Id as IdTranslation,
                         t.IdLanguage,
                         t.Description,
-                        Tag.Id as TagId,
+                        Tag.Id as IdTag,
                         Tag.Name as TagName
                     FROM Translations t
                     INNER JOIN Tag on t.IdTag = Tag.Id
@@ -124,10 +125,11 @@ namespace LaundryManagement.DAL
                     translations.Add(tag,
                     new Translation()
                     {
+                        Id = int.Parse(reader["IdTranslation"].ToString()),
                         Text = reader["Description"].ToString(),
                         Tag = new Tag()
                         {
-                            Id = int.Parse(reader["TagId"].ToString()),
+                            Id = int.Parse(reader["IdTag"].ToString()),
                             Name = tag
                         }
                     });
@@ -141,6 +143,116 @@ namespace LaundryManagement.DAL
             finally
             {
                 reader?.Close();
+                connection.Close();
+            }
+        }
+
+        public void SaveTags(IList<ITag> list)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                foreach(var item in list)
+                {
+                    cmd.CommandText += $@"
+                        if ({item.Id} = 0 and (select Id from Tag where Name = '{item.Name}') is null)
+                            insert into Tag (Name) values ('{item.Name}')
+                        else
+	                        update Tag set Name = '{item.Name}' where Id = {item.Id}";
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void DeleteTags(IList<ITag> list, int languageId)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                foreach (var item in list)
+                {
+                    cmd.CommandText += $@"
+                        if not exists (select Id from Translations where IdTag = {item.Id} and IdLanguage != {languageId})
+                            delete Tag where Id = {item.Id}";
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void SaveTranslations(IList<Translation> list, int languageId)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                foreach (var item in list)
+                {
+                    cmd.CommandText += $@"
+                        if ({item.Id} = 0)
+                            insert into Translations (IdTag, IdLanguage, Description) 
+                            values (
+                                (select Id from Tag where Name = '{item.Tag.Name}'), 
+                                {languageId}, 
+                                '{item.Text}')
+                        else
+	                        update Translations set Description = '{item.Text}' where Id = {item.Id}";
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void DeleteTranslations(IList<Translation> list)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                foreach (var item in list)
+                {
+                    cmd.CommandText += $@"delete Translations where Id = {item.Id}";
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
                 connection.Close();
             }
         }

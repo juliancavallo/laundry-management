@@ -29,7 +29,7 @@ namespace LaundryManagement.BLL
             maxLoginAttempts = configuration.GetValue<int>("maxLoginAttempts");
         }
 
-        public void Login(LoginDTO dto)
+        public UserDTO Login(LoginDTO dto)
         {
             if (Session.Instance != null)
                 throw new ValidationException(Session.Translations[Tags.SessionAlreadyOpen].Text, ValidationType.Error);
@@ -56,6 +56,8 @@ namespace LaundryManagement.BLL
             }
 
             Session.Login(userDTO);
+
+            return userDTO;
         }
 
         public void Logout() => Session.Logout(translatorBLL.GetDefaultLanguage());

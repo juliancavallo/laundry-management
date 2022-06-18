@@ -4,6 +4,7 @@ using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.Translations;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -37,7 +38,7 @@ namespace LaundryManagement.UI
                 this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesClinicReception, 
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
-                this.menuReportsMovements, this.menuReportsShippings, this.menuLanguage, this.menuLogout };
+                this.menuReportsMovements, this.menuReportsShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage };
 
             PopulateLanguageMenu();
             Translate();
@@ -78,6 +79,7 @@ namespace LaundryManagement.UI
             this.menuReportsShippings.Tag = "Shippings";
             this.menuLanguage.Tag = "Language";
             this.menuLogout.Tag = "Logout";
+            this.menuLanguageManage.Tag = "Administration";
         }
 
         public void ValidateForm()
@@ -124,20 +126,18 @@ namespace LaundryManagement.UI
             frmAdmUsers.MdiParent = this;
             frmAdmUsers.Show();
         }
-
-        private void CheckLanguage(ILanguage language)
+        private void menuLanguageManage_Click(object sender, EventArgs e)
         {
-            foreach (var item in this.menuLanguage.DropDownItems)
-            {
-                ((ToolStripMenuItem)item).Checked = language.Id.Equals(((ILanguage)((ToolStripMenuItem)item).Tag).Id);
-            }
+            var frm = new frmTranslations();
+            frm.MdiParent = this;   
+            frm.Show();
         }
 
         private void languageItem_Click(object sender, EventArgs e)
         {
             var language = (Language)((ToolStripMenuItem)sender).Tag;
 
-            Session.Translations = translatorBLL.GetTranslations(language);
+            Session.SetTranslations(translatorBLL.GetTranslations(language));
             Session.ChangeLanguage(language);
             
             userBLL.Save((UserDTO)Session.Instance.User);
@@ -147,6 +147,8 @@ namespace LaundryManagement.UI
         private void PopulateLanguageMenu()
         {
             this.menuLanguage.DropDownItems.Clear();
+            menuLanguage.DropDownItems.Add(menuLanguageManage);
+            menuLanguage.DropDownItems.Add(new ToolStripSeparator());
 
             foreach (var language in translatorBLL.GetAllLanguages())
             {
@@ -158,6 +160,18 @@ namespace LaundryManagement.UI
             }
             if (loginBLL.IsLogged())
                 CheckLanguage(Session.Instance.User.Language);
+        }
+
+        private void CheckLanguage(ILanguage language)
+        {
+            foreach (var item in this.menuLanguage.DropDownItems)
+            {
+                if(item is ToolStripMenuItem)
+                {
+                    if((item as ToolStripMenuItem).Tag is ILanguage)
+                        (item as ToolStripMenuItem).Checked = language.Id.Equals(((ILanguage)(item as ToolStripMenuItem).Tag).Id);
+                }
+            }
         }
 
         private void Translate()
@@ -175,5 +189,6 @@ namespace LaundryManagement.UI
         private void frmMain_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+
     }
 }

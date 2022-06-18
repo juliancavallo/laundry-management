@@ -70,7 +70,7 @@ namespace LaundryManagement.UI
 
                 userBLL.ResetPassword(this.txtEmail.Text, this.txtNewPassword.Text);
 
-                FormValidation.ShowMessage("The password was successfully reset", ValidationType.Info);
+                FormValidation.ShowMessage(Session.Translations[Tags.PasswordReset].Text, ValidationType.Info);
 
                 this.Close();
             }

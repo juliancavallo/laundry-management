@@ -26,7 +26,7 @@ namespace LaundryManagement.BLL
         public void Delete(UserDTO dto)
         {
             if (dto.Id == Session.Instance.User.Id)
-                throw new ValidationException("Cannot delete the user with which you are logged in", ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.DeleteLoggedUser].Text, ValidationType.Warning);
 
             var entity = mapper.MapToEntity(dto);
             this.dal.Delete(entity);
@@ -53,7 +53,7 @@ namespace LaundryManagement.BLL
         {
             var existingUser = this.dal.GetAll().Where(x => x.UserName == dto.UserName || x.Email == dto.Email);
             if (existingUser.Any(x => x.Id != dto.Id || dto.Id == 0))
-                throw new ValidationException("There is already a user with the same name or email", ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.UserDuplicate].Text, ValidationType.Warning);
 
             var entity = mapper.MapToEntity(dto);
             this.dal.Save(entity);
@@ -90,7 +90,7 @@ namespace LaundryManagement.BLL
         {
             var user = this.dal.GetAll().Where(x => x.Email == email).FirstOrDefault();
             if (user == null)
-                throw new ValidationException("User does not exists", ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.NonexistentUser].Text, ValidationType.Error);
 
             user.Password = Encryptor.Hash(newPassword);
             dal.Save(user);

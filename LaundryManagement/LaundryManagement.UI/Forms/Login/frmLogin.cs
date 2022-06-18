@@ -70,8 +70,9 @@ namespace LaundryManagement.UI
                     this.txtPassword.Text.Trim()
                     );
 
-                loginBLL.Login(loginDTO);
+                var user = loginBLL.Login(loginDTO);
 
+                Session.SetTranslations(translatorBLL.GetTranslations(user.Language as Language));
                 Session.ChangeLanguage(Session.Instance.User.Language);
 
                 this.CloseForm();
@@ -124,7 +125,7 @@ namespace LaundryManagement.UI
         {
             var selectedItem = ((ComboBox)sender).SelectedItem as ILanguage;
 
-            Session.Translations = translatorBLL.GetTranslations((Language)selectedItem);
+            Session.SetTranslations(translatorBLL.GetTranslations((Language)selectedItem));
 
             Translate(translatorBLL.GetById(selectedItem.Id));
         }
@@ -132,7 +133,7 @@ namespace LaundryManagement.UI
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
-            Session.Translations = translatorBLL.GetTranslations();
+            Session.SetTranslations(translatorBLL.GetTranslations());
             Session.SubsribeObserver(this);
         }
 

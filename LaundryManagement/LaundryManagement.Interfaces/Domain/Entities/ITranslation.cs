@@ -8,6 +8,7 @@ namespace LaundryManagement.Interfaces.Domain.Entities
 {
     public interface ITranslation
     {
+        public int Id { get; set; }
         ITag Tag { get; set; }
         string Text { get; }
     }
