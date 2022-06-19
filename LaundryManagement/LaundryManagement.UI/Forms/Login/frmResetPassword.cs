@@ -88,9 +88,20 @@ namespace LaundryManagement.UI
 
         private void Translate(ILanguage language = null)
         {
-            var translations = translatorBLL.GetTranslations((Language)language);
+            try
+            {
+                var translations = translatorBLL.GetTranslations((Language)language);
 
-            FormValidation.Translate(translations, controls);
+                FormValidation.Translate(translations, controls);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void frmResetPassword_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);

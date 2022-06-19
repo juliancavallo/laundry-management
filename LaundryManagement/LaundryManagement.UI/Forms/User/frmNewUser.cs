@@ -144,12 +144,23 @@ namespace LaundryManagement.UI
 
         private void PopulateComboLanguages()
         {
-            this.comboLanguage.DataSource = null;
-            this.comboLanguage.DataSource = translatorBLL.GetAllLanguages();
-            this.comboLanguage.DisplayMember = "Name";
-            this.comboLanguage.ValueMember = "Id";
+            try 
+            {
+                this.comboLanguage.DataSource = null;
+                this.comboLanguage.DataSource = translatorBLL.GetAllLanguages();
+                this.comboLanguage.DisplayMember = "Name";
+                this.comboLanguage.ValueMember = "Id";
 
-            this.comboLanguage.SelectedValue = translatorBLL.GetDefaultLanguage().Id;
+                this.comboLanguage.SelectedValue = translatorBLL.GetDefaultLanguage().Id;
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
     }
 }

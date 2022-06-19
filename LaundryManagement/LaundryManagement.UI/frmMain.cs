@@ -2,6 +2,8 @@
 using LaundryManagement.Domain;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Translations;
@@ -91,6 +93,25 @@ namespace LaundryManagement.UI
 
         }
 
+        private void ShowMenus()
+        {
+            //Mostrar según los permisos del usuario
+            foreach (ToolStripItem item in this.menuStrip1.Items)
+            {
+                item.Visible = loginBLL.IsLogged();
+            }
+
+            this.menuStrip1.Enabled = loginBLL.IsLogged();
+        }
+
+        private void ShowLogin()
+        {
+            var frmLogin = new frmLogin();
+            frmLogin.MdiParent = this;
+            frmLogin.Show();
+        }
+
+        #region Menus
         private void menuLogout_Click(object sender, EventArgs e)
         {
             loginBLL.Logout();
@@ -100,24 +121,6 @@ namespace LaundryManagement.UI
             }
             ShowMenus();
             ShowLogin();
-        }
-
-        private void ShowMenus()
-        {
-            //Mostrar según los permisos del usuario
-            foreach (ToolStripItem item in this.menuStrip1.Items)
-            {
-                item.Visible = loginBLL.IsLogged();
-            }
-            
-            this.menuStrip1.Enabled = loginBLL.IsLogged();
-        }
-
-        private void ShowLogin()
-        {
-            var frmLogin = new frmLogin();
-            frmLogin.MdiParent = this;
-            frmLogin.Show();
         }
 
         private void menuAdministrationUsers_Click(object sender, EventArgs e)
@@ -144,34 +147,59 @@ namespace LaundryManagement.UI
             userBLL.Save((UserDTO)Session.Instance.User);
             CheckLanguage(Session.Instance.User.Language);
         }
+        #endregion
+
+        #region Language
 
         private void PopulateLanguageMenu()
         {
-            this.menuLanguage.DropDownItems.Clear();
-            menuLanguage.DropDownItems.Add(menuLanguageManage);
-            menuLanguage.DropDownItems.Add(new ToolStripSeparator());
-
-            foreach (var language in translatorBLL.GetAllLanguages())
+            try
             {
-                var item = new ToolStripMenuItem();
-                item.Text = language.Name;
-                item.Tag = language;
-                item.Click += languageItem_Click;
-                this.menuLanguage.DropDownItems.Add(item);
+                this.menuLanguage.DropDownItems.Clear();
+                menuLanguage.DropDownItems.Add(menuLanguageManage);
+                menuLanguage.DropDownItems.Add(new ToolStripSeparator());
+
+                foreach (var language in translatorBLL.GetAllLanguages())
+                {
+                    var item = new ToolStripMenuItem();
+                    item.Text = language.Name;
+                    item.Tag = language;
+                    item.Click += languageItem_Click;
+                    this.menuLanguage.DropDownItems.Add(item);
+                }
+                if (loginBLL.IsLogged())
+                    CheckLanguage(Session.Instance.User.Language);
             }
-            if (loginBLL.IsLogged())
-                CheckLanguage(Session.Instance.User.Language);
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void CheckLanguage(ILanguage language)
         {
-            foreach (var item in this.menuLanguage.DropDownItems)
+            try
             {
-                if(item is ToolStripMenuItem)
+                foreach (var item in this.menuLanguage.DropDownItems)
                 {
-                    if((item as ToolStripMenuItem).Tag is ILanguage)
-                        (item as ToolStripMenuItem).Checked = language.Id.Equals(((ILanguage)(item as ToolStripMenuItem).Tag).Id);
+                    if(item is ToolStripMenuItem)
+                    {
+                        if((item as ToolStripMenuItem).Tag is ILanguage)
+                            (item as ToolStripMenuItem).Checked = language.Id.Equals(((ILanguage)(item as ToolStripMenuItem).Tag).Id);
+                    }
                 }
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
         }
 
@@ -183,10 +211,21 @@ namespace LaundryManagement.UI
 
         public void UpdateLanguage(ILanguage language)
         {
-            Translate();
-            CheckLanguage(language);
+            try
+            {
+                Translate();
+                CheckLanguage(language);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
-
+        #endregion
         private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);

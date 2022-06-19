@@ -1,6 +1,8 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -49,37 +51,71 @@ namespace LaundryManagement.UI
 
         private void AddChildrenToTree(IEnumerable<ComponentDTO> permissions, TreeNodeCollection nodes)
         {
-            foreach (var permission in permissions)
+            try 
+            { 
+                foreach (var permission in permissions)
+                {
+                    var newNode = new TreeNode(permission.Name);
+                    newNode.Tag = permission;
+                    newNode.Checked = userBLL.HasPermission(_userDTO, permission.Id);
+
+                    if(permission is CompositeDTO)
+                        AddChildrenToTree(permission.Children.Cast<ComponentDTO>(), newNode.Nodes);
+
+                    nodes.Add(newNode);
+                }
+            }
+            catch (ValidationException ex)
             {
-                var newNode = new TreeNode(permission.Name);
-                newNode.Tag = permission;
-                newNode.Checked = userBLL.HasPermission(_userDTO, permission.Id);
-
-                if(permission is CompositeDTO)
-                    AddChildrenToTree(permission.Children.Cast<ComponentDTO>(), newNode.Nodes);
-
-                nodes.Add(newNode);
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var components = new List<ComponentDTO>();
-            components.AddRange(GetCheckedNodesRecursively(this.treeView1.Nodes));
+            try
+            {
+                var components = new List<ComponentDTO>();
+                components.AddRange(GetCheckedNodesRecursively(this.treeView1.Nodes));
 
-            permissionBLL.SavePermissions(_userDTO.Id, components);
-            this.Close();
+                permissionBLL.SavePermissions(_userDTO.Id, components);
+                this.Close();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         public List<ComponentDTO> GetCheckedNodesRecursively(TreeNodeCollection nodes)
         {
             var components = new List<ComponentDTO>();
-            foreach(TreeNode node in nodes)
+            try
             {
-                if (node.Checked)
-                    components.Add(node.Tag as ComponentDTO);
+                
+                foreach(TreeNode node in nodes)
+                {
+                    if (node.Checked)
+                        components.Add(node.Tag as ComponentDTO);
 
-                components.AddRange(GetCheckedNodesRecursively(node.Nodes));
+                    components.AddRange(GetCheckedNodesRecursively(node.Nodes));
+                }
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
             return components;
         }
@@ -90,12 +126,23 @@ namespace LaundryManagement.UI
 
         private void frmUserRoles_Load(object sender, EventArgs e)
         {
-            var permissions = isEdit ? permissionBLL.GetAll() : _userDTO.Permissions.Cast<ComponentDTO>();
-            AddChildrenToTree(permissions, this.treeView1.Nodes);
+            try
+            {
+                var permissions = isEdit ? permissionBLL.GetAll() : _userDTO.Permissions.Cast<ComponentDTO>();
+                AddChildrenToTree(permissions, this.treeView1.Nodes);
 
-            this.treeView1.ExpandAll();
+                this.treeView1.ExpandAll();
 
-            Session.SubscribeObserver(this);
+                Session.SubscribeObserver(this);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void frmUserRoles_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);

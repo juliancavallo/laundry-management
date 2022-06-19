@@ -97,13 +97,24 @@ namespace LaundryManagement.UI
 
         private void lblResetPassword_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            frmResetPassword frm = new frmResetPassword(this.comboLanguages.SelectedItem as ILanguage);
-            frm.FormClosed += (sernder, e) => 
-            { 
-                this.txtEmail.Clear();
-                this.txtPassword.Clear();
-            };
-            frm.ShowDialog();
+            try
+            {
+                frmResetPassword frm = new frmResetPassword(this.comboLanguages.SelectedItem as ILanguage);
+                frm.FormClosed += (sernder, e) => 
+                { 
+                    this.txtEmail.Clear();
+                    this.txtPassword.Clear();
+                };
+                frm.ShowDialog();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         #region Language
@@ -123,18 +134,40 @@ namespace LaundryManagement.UI
 
         private void comboLanguages_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selectedItem = ((ComboBox)sender).SelectedItem as ILanguage;
+            try
+            {
+                var selectedItem = ((ComboBox)sender).SelectedItem as ILanguage;
 
-            Session.SetTranslations(translatorBLL.GetTranslations((Language)selectedItem));
+                Session.SetTranslations(translatorBLL.GetTranslations((Language)selectedItem));
 
-            Translate(translatorBLL.GetById(selectedItem.Id));
+                Translate(translatorBLL.GetById(selectedItem.Id));
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
         #endregion
 
         private void frmLogin_Load(object sender, EventArgs e)
         {
-            Session.SetTranslations(translatorBLL.GetTranslations());
-            Session.SubscribeObserver(this);
+            try
+            {
+                Session.SetTranslations(translatorBLL.GetTranslations());
+                Session.SubscribeObserver(this);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void frmLogin_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);

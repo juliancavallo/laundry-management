@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -68,36 +69,69 @@ namespace LaundryManagement.UI.Forms.Translations
 
         private void btnAddRow_Click(object sender, EventArgs e)
         {
-            var newRow = new Language() { Id = 0, Name = "", Default = false };
-            var source = this.dataGridView1.DataSource as List<Language>;
-            source.Add(newRow);
+            try
+            {
+                var newRow = new Language() { Id = 0, Name = "", Default = false };
+                var source = this.dataGridView1.DataSource as List<Language>;
+                source.Add(newRow);
 
-            this.LoadGridData(source);
-            this.dataGridView1.FirstDisplayedScrollingRowIndex = source.Count - 1;
+                this.LoadGridData(source);
+                this.dataGridView1.FirstDisplayedScrollingRowIndex = source.Count - 1;
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnDeleteRow_Click(object sender, EventArgs e)
         {
-            var source = this.dataGridView1.DataSource as List<Language>;
-            var item = this.dataGridView1.CurrentRow.DataBoundItem as Language;
-            if (item.Default)
+            try
             {
-                FormValidation.ShowMessage(Session.Translations[Tags.DeleteDefaultLanguage].Text, ValidationType.Warning);
-                return;
+                var source = this.dataGridView1.DataSource as List<Language>;
+                var item = this.dataGridView1.CurrentRow.DataBoundItem as Language;
+                if (item.Default)
+                {
+                    FormValidation.ShowMessage(Session.Translations[Tags.DeleteDefaultLanguage].Text, ValidationType.Warning);
+                    return;
+                }
+
+                itemsToDelete.Add(item);
+                source.Remove(item);
+
+                this.LoadGridData(source);
             }
-
-            itemsToDelete.Add(item);
-            source.Remove(item);
-
-            this.LoadGridData(source);
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var source = this.dataGridView1.DataSource as List<Language>;
-            translatorBLL.Save(source);
-            translatorBLL.Delete(itemsToDelete);
-            this.Close();
+            try
+            {
+                var source = this.dataGridView1.DataSource as List<Language>;
+                translatorBLL.Save(source);
+                translatorBLL.Delete(itemsToDelete);
+                this.Close();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         #region Language

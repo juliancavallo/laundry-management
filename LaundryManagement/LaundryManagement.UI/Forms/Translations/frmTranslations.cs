@@ -1,6 +1,8 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -77,14 +79,25 @@ namespace LaundryManagement.UI.Forms.Translations
 
         private void PopulateComboLanguages()
         {
-            var defaultLanguage = translatorBLL.GetDefaultLanguage();
-            this.comboLanguage.DataSource = null;
-            this.comboLanguage.DataSource = translatorBLL.GetAllLanguages();
-            this.comboLanguage.DisplayMember = "Name";
-            this.comboLanguage.ValueMember = "Id";
+            try
+            {
+                var defaultLanguage = translatorBLL.GetDefaultLanguage();
+                this.comboLanguage.DataSource = null;
+                this.comboLanguage.DataSource = translatorBLL.GetAllLanguages();
+                this.comboLanguage.DisplayMember = "Name";
+                this.comboLanguage.ValueMember = "Id";
 
-            this.comboLanguage.SelectedValue = defaultLanguage.Id;
-            this.LoadGridData(translatorBLL.GetTranslationsForView(defaultLanguage));
+                this.comboLanguage.SelectedValue = defaultLanguage.Id;
+                this.LoadGridData(translatorBLL.GetTranslationsForView(defaultLanguage));
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void frmTranslations_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
@@ -100,41 +113,74 @@ namespace LaundryManagement.UI.Forms.Translations
 
         private void btnAddRow_Click(object sender, EventArgs e)
         {
-            var newRow = new TranslationViewDTO()
+            try
             {
-                IdTranslation = 0,
-                IdTag = 0,
-                Tag = "",
-                Description = "",
-            };
-            var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
-            source.Add(newRow);
+                var newRow = new TranslationViewDTO()
+                {
+                    IdTranslation = 0,
+                    IdTag = 0,
+                    Tag = "",
+                    Description = "",
+                };
+                var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
+                source.Add(newRow);
 
-            this.LoadGridData(source);
-            this.dataGridView1.FirstDisplayedScrollingRowIndex = source.Count - 1;
+                this.LoadGridData(source);
+                this.dataGridView1.FirstDisplayedScrollingRowIndex = source.Count - 1;
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnDeleteRow_Click(object sender, EventArgs e)
         {
-            var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
-            var item = this.dataGridView1.CurrentRow.DataBoundItem as TranslationViewDTO;
-            itemsToDelete.Add(item);
-            source.Remove(item);
+            try
+            {
+                var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
+                var item = this.dataGridView1.CurrentRow.DataBoundItem as TranslationViewDTO;
+                itemsToDelete.Add(item);
+                source.Remove(item);
 
-            this.LoadGridData(source);
+                this.LoadGridData(source);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
-            var selectedItem = this.comboLanguage.SelectedItem as Language;
-            translatorBLL.Save(source, selectedItem.Id);
-            translatorBLL.Delete(itemsToDelete, selectedItem.Id);
+            try
+            {
+                var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
+                var selectedItem = this.comboLanguage.SelectedItem as Language;
+                translatorBLL.Save(source, selectedItem.Id);
+                translatorBLL.Delete(itemsToDelete, selectedItem.Id);
 
-            Session.SetTranslations(translatorBLL.GetTranslations(Session.Instance.User.Language as Language));
-            Session.ChangeLanguage(Session.Instance.User.Language);
+                Session.SetTranslations(translatorBLL.GetTranslations(Session.Instance.User.Language as Language));
+                Session.ChangeLanguage(Session.Instance.User.Language);
 
-            this.Close();
+                this.Close();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnManageLanguages_Click(object sender, EventArgs e)

@@ -64,8 +64,19 @@ namespace LaundryManagement.UI
 
         private void frmAdministrationUsers_Load(object sender, EventArgs e)
         {
-            this.ReloadGridEvent(sender, e);
-            Session.SubscribeObserver(this);
+            try
+            {
+                this.ReloadGridEvent(sender, e);
+                Session.SubscribeObserver(this);
+            }         
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnNewUser_Click(object sender, EventArgs e)
