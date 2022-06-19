@@ -68,8 +68,8 @@ namespace LaundryManagement.Services
             }
         }
 
-        public static void SubsribeObserver(ILanguageObserver observer) => _observers.Add(observer);
-        public static void UnsubsribeObserver(ILanguageObserver observer) => _observers.Remove(observer);
+        public static void SubscribeObserver(ILanguageObserver observer) => _observers.Add(observer);
+        public static void UnsubscribeObserver(ILanguageObserver observer) => _observers.Remove(observer);
         private static void Notify(ILanguage language)
         {
             foreach (var observer in _observers)

@@ -48,7 +48,7 @@ namespace LaundryManagement.UI
             MailAddress.TryCreate(email, out var result);
 
             if(result == null)
-                throw new ValidationException(Session.Translations[Tags.PasswordMatch].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.EmailFormat].Text, ValidationType.Error);
         }
 
         public static void ShowPasswordUnsecureMessage(IPasswordPolicies policies)

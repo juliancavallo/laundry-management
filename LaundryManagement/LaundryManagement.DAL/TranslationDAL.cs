@@ -256,5 +256,63 @@ namespace LaundryManagement.DAL
                 connection.Close();
             }
         }
+
+        public void SaveLanguages(IList<Language> list)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                foreach (var item in list)
+                {
+                    cmd.CommandText += $@"
+                        if ({item.Id} = 0)
+                            begin
+                                insert into Language (Name, [Default]) values ('{item.Name}', {(item.Default ? 1 : 0 )})
+                                insert into Translations (IdTag, IdLanguage, Description)
+                                select IdTag, (select Id from Language where Name = '{item.Name}'), Description from Translations where IdLanguage = 1
+                            end
+                        else
+	                        update Language set Name = '{item.Name}' where Id = {item.Id}";
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void DeleteLanguages(IList<Language> list)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                foreach (var item in list)
+                {
+                    cmd.CommandText += $@"
+                        delete Translations where IdLanguage = {item.Id}
+                        delete Language where Id = {item.Id}";
+                }
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }

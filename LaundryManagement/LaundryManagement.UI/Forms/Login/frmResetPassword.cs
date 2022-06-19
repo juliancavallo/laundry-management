@@ -93,8 +93,8 @@ namespace LaundryManagement.UI
             FormValidation.Translate(translations, controls);
         }
 
-        private void frmResetPassword_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
+        private void frmResetPassword_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
-        private void frmResetPassword_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmResetPassword_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
     }
 }

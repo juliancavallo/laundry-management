@@ -134,9 +134,9 @@ namespace LaundryManagement.UI
         private void frmLogin_Load(object sender, EventArgs e)
         {
             Session.SetTranslations(translatorBLL.GetTranslations());
-            Session.SubsribeObserver(this);
+            Session.SubscribeObserver(this);
         }
 
-        private void frmLogin_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmLogin_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
     }
 }

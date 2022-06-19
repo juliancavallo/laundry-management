@@ -138,9 +138,9 @@ namespace LaundryManagement.UI
 
         private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
-        private void frmNewUser_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
+        private void frmNewUser_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
-        private void frmNewUser_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmNewUser_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
         private void PopulateComboLanguages()
         {

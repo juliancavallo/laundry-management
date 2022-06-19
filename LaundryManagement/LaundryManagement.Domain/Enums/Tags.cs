@@ -27,5 +27,6 @@ namespace LaundryManagement.Domain.Enums
         public const string PasswordPolicyUppercase = "PasswordPolicyUppercase";
         public const string PasswordPolicySpecialCharacters = "PasswordPolicySpecialCharacters";
         public const string PasswordPolicyNumbers = "PasswordPolicyNumbers";
+        public const string DeleteDefaultLanguage = "DeleteDefaultLanguage";
     }
 }

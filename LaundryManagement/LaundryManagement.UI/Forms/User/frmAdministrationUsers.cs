@@ -65,7 +65,7 @@ namespace LaundryManagement.UI
         private void frmAdministrationUsers_Load(object sender, EventArgs e)
         {
             this.ReloadGridEvent(sender, e);
-            Session.SubsribeObserver(this);
+            Session.SubscribeObserver(this);
         }
 
         private void btnNewUser_Click(object sender, EventArgs e)
@@ -153,7 +153,7 @@ namespace LaundryManagement.UI
 
         private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
-        private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
     }
 }

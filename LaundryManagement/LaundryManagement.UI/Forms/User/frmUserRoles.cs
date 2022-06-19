@@ -95,9 +95,9 @@ namespace LaundryManagement.UI
 
             this.treeView1.ExpandAll();
 
-            Session.SubsribeObserver(this);
+            Session.SubscribeObserver(this);
         }
 
-        private void frmUserRoles_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmUserRoles_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
     }
 }

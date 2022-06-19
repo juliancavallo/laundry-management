@@ -131,6 +131,7 @@ namespace LaundryManagement.UI
             var frm = new frmTranslations();
             frm.MdiParent = this;   
             frm.Show();
+            frm.FormClosing += new FormClosingEventHandler((sender, e) => PopulateLanguageMenu());
         }
 
         private void languageItem_Click(object sender, EventArgs e)
@@ -186,9 +187,9 @@ namespace LaundryManagement.UI
             CheckLanguage(language);
         }
 
-        private void frmMain_Load(object sender, EventArgs e) => Session.SubsribeObserver(this);
+        private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
     }
 }

@@ -29,7 +29,7 @@ namespace LaundryManagement.UI.Forms.Translations
             PopulateComboLanguages();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.lblLanguage};
+            controls = new List<Control>() { this, this.lblLanguage, this.lblTranslations, this.btnAddRow, this.btnDeleteRow, this.btnSave, this.btnManageLanguages};
             itemsToDelete = new List<TranslationViewDTO>();
 
             Translate();
@@ -51,15 +51,15 @@ namespace LaundryManagement.UI.Forms.Translations
             this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             
             this.comboLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.Tag = "Manage";
+            this.Tag = "Translations";
             this.lblLanguage.Tag = "Language";
+            this.lblTranslations.Tag = "Translations";
+            this.btnAddRow.Tag = "AddRow";
+            this.btnDeleteRow.Tag = "DeleteRow";
+            this.btnSave.Tag = "Save";
+            this.btnManageLanguages.Tag = "ManageLanguages";
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
-        }
-
-        private void frmTranslations_Load(object sender, EventArgs e)
-        {
-            Session.SubsribeObserver(this);
         }
 
         private void LoadGridData(IList<TranslationViewDTO> source)
@@ -87,7 +87,9 @@ namespace LaundryManagement.UI.Forms.Translations
             this.LoadGridData(translatorBLL.GetTranslationsForView(defaultLanguage));
         }
 
-        private void frmTranslations_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubsribeObserver(this);
+        private void frmTranslations_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+
+        private void frmTranslations_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
         private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -133,6 +135,13 @@ namespace LaundryManagement.UI.Forms.Translations
             Session.ChangeLanguage(Session.Instance.User.Language);
 
             this.Close();
+        }
+
+        private void btnManageLanguages_Click(object sender, EventArgs e)
+        {
+            var frm = new frmLanguage();
+            frm.ShowDialog();
+            frm.FormClosed += new FormClosedEventHandler((sender, e) => PopulateComboLanguages());
         }
     }
 }
