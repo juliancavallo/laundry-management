@@ -7,12 +7,6 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace LaundryManagement.UI.Forms.Translations
@@ -21,18 +15,21 @@ namespace LaundryManagement.UI.Forms.Translations
     {
         private TranslatorBLL translatorBLL;
         private IList<Control> controls;
-        private List<TranslationViewDTO> itemsToDelete;
+        private IDictionary<int, List<TranslationViewDTO>> itemsToDelete;
+        private IDictionary<int, List<TranslationViewDTO>> itemsToUpdate;
 
         public frmTranslations()
         {
             translatorBLL = new TranslatorBLL();
+            itemsToUpdate = translatorBLL.GetAllTranslationsByLanguage();
+            itemsToDelete = new Dictionary<int, List<TranslationViewDTO>>();
 
             InitializeComponent();
             PopulateComboLanguages();
             ApplySetup();
 
             controls = new List<Control>() { this, this.lblLanguage, this.lblTranslations, this.btnAddRow, this.btnDeleteRow, this.btnSave, this.btnManageLanguages};
-            itemsToDelete = new List<TranslationViewDTO>();
+            
 
             Translate();
         }
@@ -88,7 +85,7 @@ namespace LaundryManagement.UI.Forms.Translations
                 this.comboLanguage.ValueMember = "Id";
 
                 this.comboLanguage.SelectedValue = defaultLanguage.Id;
-                this.LoadGridData(translatorBLL.GetTranslationsForView(defaultLanguage));
+                this.LoadGridData(itemsToUpdate[defaultLanguage.Id]);
             }
             catch (ValidationException ex)
             {
@@ -107,7 +104,7 @@ namespace LaundryManagement.UI.Forms.Translations
         private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
             var selectedItem = ((ComboBox)sender).SelectedItem as Language;
-            this.LoadGridData(translatorBLL.GetTranslationsForView(selectedItem));
+            this.LoadGridData(itemsToUpdate[selectedItem.Id]);
         }
         #endregion
 
@@ -115,6 +112,7 @@ namespace LaundryManagement.UI.Forms.Translations
         {
             try
             {
+                var selectedLanguage = this.comboLanguage.SelectedItem as Language;
                 var newRow = new TranslationViewDTO()
                 {
                     IdTranslation = 0,
@@ -122,11 +120,11 @@ namespace LaundryManagement.UI.Forms.Translations
                     Tag = "",
                     Description = "",
                 };
-                var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
-                source.Add(newRow);
 
-                this.LoadGridData(source);
-                this.dataGridView1.FirstDisplayedScrollingRowIndex = source.Count - 1;
+                itemsToUpdate[selectedLanguage.Id].Add(newRow);
+                
+                this.LoadGridData(itemsToUpdate[selectedLanguage.Id]);
+                this.dataGridView1.FirstDisplayedScrollingRowIndex = itemsToUpdate[selectedLanguage.Id].Count - 1;
             }
             catch (ValidationException ex)
             {
@@ -142,12 +140,16 @@ namespace LaundryManagement.UI.Forms.Translations
         {
             try
             {
-                var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
+                var selectedLanguage = this.comboLanguage.SelectedItem as Language;
                 var item = this.dataGridView1.CurrentRow.DataBoundItem as TranslationViewDTO;
-                itemsToDelete.Add(item);
-                source.Remove(item);
+                
+                if(!itemsToDelete.ContainsKey(selectedLanguage.Id))
+                    itemsToDelete.Add(selectedLanguage.Id, new List<TranslationViewDTO>());
 
-                this.LoadGridData(source);
+                itemsToDelete[selectedLanguage.Id].Add(item);
+                itemsToUpdate[selectedLanguage.Id].Remove(item);
+
+                this.LoadGridData(itemsToUpdate[selectedLanguage.Id]);
             }
             catch (ValidationException ex)
             {
@@ -163,10 +165,13 @@ namespace LaundryManagement.UI.Forms.Translations
         {
             try
             {
-                var source = this.dataGridView1.DataSource as List<TranslationViewDTO>;
-                var selectedItem = this.comboLanguage.SelectedItem as Language;
-                translatorBLL.Save(source, selectedItem.Id);
-                translatorBLL.Delete(itemsToDelete, selectedItem.Id);
+                foreach(var list in itemsToUpdate)
+                {
+                    translatorBLL.Save(list.Value, list.Key);
+                    
+                    if(itemsToDelete.ContainsKey(list.Key))
+                        translatorBLL.Delete(itemsToDelete[list.Key], list.Key);
+                }
 
                 Session.SetTranslations(translatorBLL.GetTranslations(Session.Instance.User.Language as Language));
                 Session.ChangeLanguage(Session.Instance.User.Language);
@@ -186,8 +191,8 @@ namespace LaundryManagement.UI.Forms.Translations
         private void btnManageLanguages_Click(object sender, EventArgs e)
         {
             var frm = new frmLanguage();
-            frm.ShowDialog();
-            frm.FormClosed += new FormClosedEventHandler((sender, e) => PopulateComboLanguages());
+            frm.Show();
+            frm.FormClosing += new FormClosingEventHandler((sender, e) => PopulateComboLanguages());
         }
     }
 }

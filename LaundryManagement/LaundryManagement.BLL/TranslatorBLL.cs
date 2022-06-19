@@ -27,7 +27,32 @@ namespace LaundryManagement.BLL
         public Language GetById(int id) => dal.GetLanguageById(id);
 
         public IDictionary<string, ITranslation> GetTranslations(Language idioma = null) => dal.GetTranslations(idioma ?? GetDefaultLanguage());
-       
+
+        public IDictionary<int, List<TranslationViewDTO>> GetAllTranslationsByLanguage() 
+        {
+            IDictionary<int, List<TranslationViewDTO>> result = new Dictionary<int, List<TranslationViewDTO>>();
+
+            var list = dal.GetAllTranslations();
+            var languages = list.Select(x => x.IdLanguage).Distinct();
+
+            foreach(var item in languages)
+            {
+                result.Add(item, 
+                    list
+                    .Where(x => x.IdLanguage == item)
+                    .Select(i => new TranslationViewDTO() 
+                    { 
+                        Description = i.Text,
+                        IdTag = i.Tag.Id,
+                        Tag = i.Tag.Name,
+                        IdTranslation = i.Id
+                    }).ToList());
+            }
+
+            return result;
+
+        }
+
         public IList<TranslationViewDTO> GetTranslationsForView(Language idioma = null)
         {
             var translations = dal.GetTranslations(idioma ?? GetDefaultLanguage());
@@ -79,6 +104,7 @@ namespace LaundryManagement.BLL
         }
 
         public void Save(List<Language> list) => dal.SaveLanguages(list);
+
         public void Delete(List<Language> list) 
         { 
             if(list.Where(x => x.Id > 0).Count() > 0)

@@ -12,5 +12,6 @@ namespace LaundryManagement.Domain.Entities
         public int Id { get; set; }
         public string Text { get; set; }
         public ITag Tag { get; set; }
+        public int IdLanguage { get; set; }
     }
 }

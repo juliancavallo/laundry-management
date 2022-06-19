@@ -131,8 +131,58 @@ namespace LaundryManagement.DAL
                         {
                             Id = int.Parse(reader["IdTag"].ToString()),
                             Name = tag
-                        }
+                        },
+                        IdLanguage = int.Parse(reader["IdLanguage"].ToString())
                     });
+                }
+                return translations;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
+
+        public IList<ITranslation> GetAllTranslations()
+        {
+            SqlDataReader reader = null;
+            IList<ITranslation> translations = new List<ITranslation>();
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand($@"
+                    SELECT 
+                        t.Id as IdTranslation,
+                        t.IdLanguage,
+                        t.Description,
+                        Tag.Id as IdTag,
+                        Tag.Name as TagName
+                    FROM Translations t
+                    INNER JOIN Tag on t.IdTag = Tag.Id");
+
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    translations.Add(
+                        new Translation()
+                        {
+                            Id = int.Parse(reader["IdTranslation"].ToString()),
+                            Text = reader["Description"].ToString(),
+                            Tag = new Tag()
+                            {
+                                Id = int.Parse(reader["IdTag"].ToString()),
+                                Name = reader["TagName"].ToString()
+                            },
+                            IdLanguage = int.Parse(reader["IdLanguage"].ToString())
+                        });
                 }
                 return translations;
             }
@@ -185,7 +235,7 @@ namespace LaundryManagement.DAL
                 foreach (var item in list)
                 {
                     cmd.CommandText += $@"
-                        if not exists (select Id from Translations where IdTag = {item.Id} and IdLanguage != {languageId})
+                        if not exists (select Id from Translations where IdTag = {item.Id})
                             delete Tag where Id = {item.Id}";
                 }
                 cmd.Connection = connection;
