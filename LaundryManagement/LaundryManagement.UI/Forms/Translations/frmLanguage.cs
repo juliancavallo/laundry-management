@@ -64,7 +64,6 @@ namespace LaundryManagement.UI.Forms.Translations
             this.dataGridView1.DataSource = null;
             this.dataGridView1.DataSource = source;
             this.dataGridView1.Columns["Id"].Visible = false;
-            this.dataGridView1.Columns["Default"].Visible = false;
         }
 
         private void btnAddRow_Click(object sender, EventArgs e)
@@ -120,6 +119,11 @@ namespace LaundryManagement.UI.Forms.Translations
             try
             {
                 var source = this.dataGridView1.DataSource as List<Language>;
+                if(source.Where(x => x.Default).Count() != 1)
+                {
+                    FormValidation.ShowMessage("There can only be one default language", ValidationType.Warning);
+                    return;
+                }
                 translatorBLL.Save(source);
                 translatorBLL.Delete(itemsToDelete);
                 this.Close();

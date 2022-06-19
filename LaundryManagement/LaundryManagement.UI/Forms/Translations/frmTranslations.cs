@@ -7,6 +7,7 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace LaundryManagement.UI.Forms.Translations
@@ -103,8 +104,11 @@ namespace LaundryManagement.UI.Forms.Translations
 
         private void comboLanguage_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var selectedItem = ((ComboBox)sender).SelectedItem as Language;
-            this.LoadGridData(itemsToUpdate[selectedItem.Id]);
+            if (((ComboBox)sender).SelectedItem != null)
+            {
+                var selectedItem = ((ComboBox)sender).SelectedItem as Language;
+                this.LoadGridData(itemsToUpdate[selectedItem.Id]);
+            }
         }
         #endregion
 
@@ -167,7 +171,8 @@ namespace LaundryManagement.UI.Forms.Translations
             {
                 foreach(var list in itemsToUpdate)
                 {
-                    translatorBLL.Save(list.Value, list.Key);
+                    var cleanList = list.Value.Where(x => !string.IsNullOrWhiteSpace(x.Tag) && !string.IsNullOrWhiteSpace(x.Description));
+                    translatorBLL.Save(cleanList.ToList(), list.Key);
                     
                     if(itemsToDelete.ContainsKey(list.Key))
                         translatorBLL.Delete(itemsToDelete[list.Key], list.Key);

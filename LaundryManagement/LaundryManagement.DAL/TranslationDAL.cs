@@ -324,7 +324,7 @@ namespace LaundryManagement.DAL
                                 select IdTag, (select Id from Language where Name = '{item.Name}'), Description from Translations where IdLanguage = 1
                             end
                         else
-	                        update Language set Name = '{item.Name}' where Id = {item.Id}";
+	                        update Language set Name = '{item.Name}', [Default] = {(item.Default ? 1 : 0)} where Id = {item.Id}";
                 }
                 cmd.Connection = connection;
                 cmd.ExecuteNonQuery();
