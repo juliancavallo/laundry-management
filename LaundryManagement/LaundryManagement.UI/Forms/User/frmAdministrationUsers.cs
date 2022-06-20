@@ -17,10 +17,10 @@ namespace LaundryManagement.UI
         private IList<Control> controls;
         public frmAdministrationUsers()
         {
+            userBLL = new UserBLL();
+
             InitializeComponent();
             ApplySetup();
-
-            userBLL = new UserBLL();
 
             controls = new List<Control>() { this, this.btnDelete, this.btnEdit, this.btnEditRoles, this.btnNewUser, this.btnViewRoles};
             Translate();
@@ -53,6 +53,8 @@ namespace LaundryManagement.UI
             this.btnDelete.Tag = "Delete";
             this.btnViewRoles.Tag = "ViewRoles";
             this.btnEditRoles.Tag = "EditRoles";
+
+            ApplyPermissions();
         }
 
         private void ReloadGridEvent(object sender, EventArgs e)
@@ -60,6 +62,11 @@ namespace LaundryManagement.UI
             this.gridUsers.DataSource = null;
             this.gridUsers.DataSource = userBLL.GetAllForView();
             this.gridUsers.Columns["Id"].Visible = false;
+        }
+
+        private void ApplyPermissions()
+        {
+            this.btnEditRoles.Enabled = userBLL.HasPermission((UserDTO)Session.Instance.User, "ADM_ROL");
         }
 
         private void frmAdministrationUsers_Load(object sender, EventArgs e)
@@ -148,7 +155,10 @@ namespace LaundryManagement.UI
                 var dto = userBLL.GetById(selectedId);
 
                 var frmUserRoles = new frmUserRoles(dto, edit);
-                frmUserRoles.ShowDialog();
+                if (edit)
+                    frmUserRoles.FormClosing += new FormClosingEventHandler((sender, e) => ApplyPermissions());
+
+                frmUserRoles.Show();
             }
             catch (ValidationException ex)
             {

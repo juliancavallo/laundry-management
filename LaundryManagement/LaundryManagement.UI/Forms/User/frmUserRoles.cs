@@ -57,7 +57,7 @@ namespace LaundryManagement.UI
                 {
                     var newNode = new TreeNode(permission.Name);
                     newNode.Tag = permission;
-                    newNode.Checked = userBLL.HasPermission(_userDTO, permission.Id);
+                    newNode.Checked = userBLL.HasPermission(_userDTO, permission.Permission);
 
                     if(permission is CompositeDTO)
                         AddChildrenToTree(permission.Children.Cast<ComponentDTO>(), newNode.Nodes);

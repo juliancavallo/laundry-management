@@ -105,20 +105,20 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
-        public bool HasPermission(UserDTO userDto, int permissionId)
+        public bool HasPermission(UserDTO userDto, string permissionCode)
         {
             foreach (var item in userDto.Permissions)
             {
-                if (CheckPermissionRecursively((ComponentDTO)item, permissionId))
+                if (permissionCode == "" || CheckPermissionRecursively((ComponentDTO)item, permissionCode))
                     return true;
             }
             return false;
         }
         
-        private bool CheckPermissionRecursively(ComponentDTO permission, int permissionId)
+        private bool CheckPermissionRecursively(ComponentDTO permission, string permissionCode)
         {
             bool exists = false;
-            if (permission.Id == permissionId)
+            if (permission.Permission == permissionCode)
                 exists = true;
             else
             {
@@ -126,7 +126,7 @@ namespace LaundryManagement.BLL
                 {
                     foreach (var child in permission.Children)
                     {
-                        exists = CheckPermissionRecursively((ComponentDTO)child, permissionId);
+                        exists = CheckPermissionRecursively((ComponentDTO)child, permissionCode);
                         if (exists) return true;
                     }
                 }

@@ -85,8 +85,9 @@ namespace LaundryManagement.UI
         {
             foreach (var control in controls)
             {
-                if (control.Tag != null && translations.ContainsKey(control.Tag.ToString()))
-                    control.Text = translations[control.Tag.ToString()].Text;
+                var tagValue = control.Tag?.GetType()?.GetProperty("TagName")?.GetValue(control.Tag, null);
+                if (control.Tag != null && translations.ContainsKey(tagValue.ToString()))
+                    control.Text = translations[tagValue.ToString()].Text;
             }
         }
     }

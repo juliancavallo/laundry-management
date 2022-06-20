@@ -40,7 +40,7 @@ namespace LaundryManagement.UI
                 this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesClinicReception, 
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
-                this.menuReportsMovements, this.menuReportsShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage };
+                this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage };
 
             PopulateLanguageMenu();
             Translate();
@@ -62,26 +62,28 @@ namespace LaundryManagement.UI
             this.menuLanguage.Alignment = ToolStripItemAlignment.Right;
 
             this.Tag = "MainMenu";
-            this.menuAdministration.Tag = "Administration";
-            this.menuProcesses.Tag = "Processes";
-            this.menuReports.Tag = "Reports";
-            this.menuAdministrationUsers.Tag = "Users";
-            this.menuAdministrationArticles.Tag = "Articles";
-            this.menuAdministrationCategories.Tag = "Categories";
-            this.menuAdministrationItemTypes.Tag = "ItemTypes";
-            this.menuProcessesClinicReception.Tag = "ClinicReception";
-            this.menuProcessesClinicShipping.Tag = "ClinicShipping";
-            this.menuProcessesInternalShipping.Tag = "InternalShipping";
-            this.menuProcessesItemCreation.Tag = "ItemCreation";
-            this.menuProcessesItemRemoval.Tag = "ItemRemoval";
-            this.menuProcessesLaundryReception.Tag = "LaundryReception";
-            this.menuProcessesLaundryShipping.Tag = "LaundryShipping";
-            this.menuProcessesRoadMap.Tag = "RoadMap";
-            this.menuReportsMovements.Tag = "Movements";
-            this.menuReportsShippings.Tag = "Shippings";
-            this.menuLanguage.Tag = "Language";
-            this.menuLogout.Tag = "Logout";
-            this.menuLanguageManage.Tag = "Administration";
+            this.menuAdministration.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "ADM" };
+            this.menuProcesses.Tag = new MenuItemMetadataDTO { TagName = "Processes", Permission = "PRO" };
+            this.menuReports.Tag = new MenuItemMetadataDTO { TagName = "Reports", Permission = "REP" };
+            this.menuAdministrationUsers.Tag = new MenuItemMetadataDTO { TagName = "Users", Permission = "ADM_USR" };
+            this.menuAdministrationLocations.Tag = new MenuItemMetadataDTO { TagName = "Locations", Permission = "ADM_LOC" };
+            this.menuAdministrationArticles.Tag = new MenuItemMetadataDTO { TagName = "Articles", Permission = "ADM_ART" };
+            this.menuAdministrationSizes.Tag = new MenuItemMetadataDTO { TagName = "Sizes", Permission = "ADM_SIZ" };
+            this.menuAdministrationCategories.Tag = new MenuItemMetadataDTO { TagName = "Categories", Permission = "ADM_CAT" };
+            this.menuAdministrationItemTypes.Tag = new MenuItemMetadataDTO { TagName = "ItemTypes", Permission = "ADM_TYP" };
+            this.menuProcessesClinicReception.Tag = new MenuItemMetadataDTO { TagName = "ClinicReception", Permission = "PRO_REC_CLI" };
+            this.menuProcessesClinicShipping.Tag = new MenuItemMetadataDTO { TagName = "ClinicShipping", Permission = "PRO_SHP_CLI" };
+            this.menuProcessesInternalShipping.Tag = new MenuItemMetadataDTO { TagName = "InternalShipping", Permission = "PRO_SHP_INT" };
+            this.menuProcessesItemCreation.Tag = new MenuItemMetadataDTO { TagName = "ItemCreation", Permission = "PRO_ITM_NEW" };
+            this.menuProcessesItemRemoval.Tag = new MenuItemMetadataDTO { TagName = "ItemRemoval", Permission = "PRO_ITM_DEL" };
+            this.menuProcessesLaundryReception.Tag = new MenuItemMetadataDTO { TagName = "LaundryReception", Permission = "PRO_REC_LDY" };
+            this.menuProcessesLaundryShipping.Tag = new MenuItemMetadataDTO { TagName = "LaundryShipping", Permission = "PRO_SHP_LDY" };
+            this.menuProcessesRoadMap.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "PRO_ROA" };
+            this.menuReportsMovements.Tag = new MenuItemMetadataDTO { TagName = "Movements", Permission = "REP_MOV" };
+            this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
+            this.menuLanguage.Tag = new MenuItemMetadataDTO { TagName = "Language", Permission = "" };
+            this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
+            this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
         }
 
         public void ValidateForm()
@@ -95,10 +97,28 @@ namespace LaundryManagement.UI
 
         private void ShowMenus()
         {
-            //Mostrar según los permisos del usuario
-            foreach (ToolStripItem item in this.menuStrip1.Items)
+            foreach (ToolStripMenuItem item in this.menuStrip1.Items)
             {
-                item.Visible = loginBLL.IsLogged();
+                var permission = ((MenuItemMetadataDTO)item.Tag).Permission;
+                item.Visible = loginBLL.IsLogged() && userBLL.HasPermission((UserDTO)Session.Instance.User, permission);
+
+                bool hasChildren = false;
+
+                foreach(var subitem in item.DropDownItems)
+                {
+                    if (subitem is ToolStripMenuItem && ((ToolStripMenuItem)subitem).Tag is MenuItemMetadataDTO)
+                    {
+                        var castedSubitem = (ToolStripMenuItem)subitem;
+                        var subpermission = ((MenuItemMetadataDTO)(castedSubitem).Tag).Permission;
+                        bool visible = loginBLL.IsLogged() && userBLL.HasPermission((UserDTO)Session.Instance.User, subpermission);
+                        castedSubitem.Visible = visible;
+
+                        if(visible) 
+                            hasChildren = true;
+                    }
+                }
+
+                item.Visible = hasChildren || permission == "";
             }
 
             this.menuStrip1.Enabled = loginBLL.IsLogged();
@@ -127,6 +147,7 @@ namespace LaundryManagement.UI
         {
             var frmAdmUsers = new frmAdministrationUsers();
             frmAdmUsers.MdiParent = this;
+            frmAdmUsers.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
             frmAdmUsers.Show();
         }
         private void menuLanguageManage_Click(object sender, EventArgs e)
@@ -229,6 +250,5 @@ namespace LaundryManagement.UI
         private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
-
     }
 }

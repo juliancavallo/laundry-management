@@ -155,6 +155,73 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public List<Component> GetPermissions(int userId)
+        {
+            var result = new List<Component>();
+            SqlDataReader reader = null;
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                    $@"
+                    SELECT DISTINCT up.IdPermission, p.Name as PermissionName, p.Permission as Permission, pf.IdPermissionParent, 
+	                    case when pf2.IdPermission is not null then 1 else 0 end as IsFamily
+	                    FROM [User] u
+	                    INNER JOIN UserPermission up on u.Id = up.IdUser
+	                    INNER JOIN Permission p on up.IdPermission = p.Id
+	                    LEFT JOIN PermissionFamily pf on p.Id = pf.IdPermission
+	                    LEFT JOIN PermissionFamily pf2 on p.Id = pf2.IdPermissionParent
+                    WHERE u.Id = {userId}"
+                );
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var isFamily = reader.GetInt32(reader.GetOrdinal("IsFamily")) == 1;
+                    var permissionId = reader.GetInt32(reader.GetOrdinal("IdPermission"));
+
+                    if (!PermissionExists(result, permissionId))
+                    {
+                        Component component = null;
+                        if (isFamily)
+                        {
+                            component = new Composite();
+                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Id = permissionId;
+                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                            AddCompositeChildren((Composite)component, userId);
+
+                            foreach (var item in component.Children)
+                            {
+                                result.RemoveAll(x => x.Id == item.Id);
+                            }
+                        }
+                        else
+                        {
+                            component = new Leaf();
+                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Id = permissionId;
+                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                        }
+
+                        result.Add(component);
+                    }
+                }
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
+
         private void AddCompositeChildren(Composite composite, int? userId = null)
         {
             SqlConnection newConnection = null;

@@ -18,6 +18,7 @@ namespace LaundryManagement.BLL.Mappers
                 result = new CompositeDTO();
                 result.Name = component.Name;
                 result.Id = component.Id;
+                result.Permission = component.Permission;
                 foreach(var item in component.Children)
                 {
                     result.AddChildren(MapToDTO(item));
@@ -41,6 +42,7 @@ namespace LaundryManagement.BLL.Mappers
                 result = new Composite();
                 result.Name = dto.Name;
                 result.Id = dto.Id;
+                result.Permission = dto.Permission;
                 foreach (var item in dto.Children)
                 {
                     result.AddChildren(MapToEntity(item as ComponentDTO));
