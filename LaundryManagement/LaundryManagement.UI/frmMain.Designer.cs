@@ -159,64 +159,65 @@ namespace LaundryManagement.UI
             // menuProcessesLaundryShipping
             // 
             this.menuProcessesLaundryShipping.Name = "menuProcessesLaundryShipping";
-            this.menuProcessesLaundryShipping.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesLaundryShipping.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesLaundryShipping.Text = "Laundry Shipping";
+            this.menuProcessesLaundryShipping.Click += new System.EventHandler(this.menuProcessesLaundryShipping_Click);
             // 
             // menuProcessesClinicShipping
             // 
             this.menuProcessesClinicShipping.Name = "menuProcessesClinicShipping";
-            this.menuProcessesClinicShipping.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesClinicShipping.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesClinicShipping.Text = "Clinic Shipping";
             // 
             // menuProcessesInternalShipping
             // 
             this.menuProcessesInternalShipping.Name = "menuProcessesInternalShipping";
-            this.menuProcessesInternalShipping.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesInternalShipping.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesInternalShipping.Text = "Internal Shipping";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // menuProcessesRoadMap
             // 
             this.menuProcessesRoadMap.Name = "menuProcessesRoadMap";
-            this.menuProcessesRoadMap.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesRoadMap.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesRoadMap.Text = "Road Map";
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
             // menuProcessesLaundryReception
             // 
             this.menuProcessesLaundryReception.Name = "menuProcessesLaundryReception";
-            this.menuProcessesLaundryReception.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesLaundryReception.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesLaundryReception.Text = "Laundry Reception";
             // 
             // menuProcessesClinicReception
             // 
             this.menuProcessesClinicReception.Name = "menuProcessesClinicReception";
-            this.menuProcessesClinicReception.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesClinicReception.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesClinicReception.Text = "Clinic Reception";
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // menuProcessesItemRemoval
             // 
             this.menuProcessesItemRemoval.Name = "menuProcessesItemRemoval";
-            this.menuProcessesItemRemoval.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesItemRemoval.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesItemRemoval.Text = "Item Removal";
             // 
             // menuProcessesItemCreation
             // 
             this.menuProcessesItemCreation.Name = "menuProcessesItemCreation";
-            this.menuProcessesItemCreation.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesItemCreation.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesItemCreation.Text = "Item Creation";
             // 
             // menuReports

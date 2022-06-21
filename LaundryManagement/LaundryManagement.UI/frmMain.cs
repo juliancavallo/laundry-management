@@ -6,6 +6,7 @@ using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.Shipping;
 using LaundryManagement.UI.Forms.Translations;
 using System;
 using System.Collections.Generic;
@@ -145,10 +146,10 @@ namespace LaundryManagement.UI
 
         private void menuAdministrationUsers_Click(object sender, EventArgs e)
         {
-            var frmAdmUsers = new frmAdministrationUsers();
-            frmAdmUsers.MdiParent = this;
-            frmAdmUsers.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
-            frmAdmUsers.Show();
+            var frm = new frmAdministrationUsers();
+            frm.MdiParent = this;
+            frm.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
+            frm.Show();
         }
         private void menuLanguageManage_Click(object sender, EventArgs e)
         {
@@ -167,6 +168,14 @@ namespace LaundryManagement.UI
             
             userBLL.Save((UserDTO)Session.Instance.User);
             CheckLanguage(Session.Instance.User.Language);
+        }
+
+        private void menuProcessesLaundryShipping_Click(object sender, EventArgs e)
+        {
+            var frm = new frmAdministrationShippings(ShippingTypeEnum.ToLaundry);
+            frm.MdiParent = this;
+            frm.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
+            frm.Show();
         }
         #endregion
 
@@ -250,5 +259,6 @@ namespace LaundryManagement.UI
         private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+
     }
 }

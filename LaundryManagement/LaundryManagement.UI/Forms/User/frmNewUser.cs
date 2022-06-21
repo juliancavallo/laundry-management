@@ -13,7 +13,7 @@ namespace LaundryManagement.UI
 {
     public partial class frmNewUser : Form, ILanguageObserver
     {
-        public UserDTO _userDTO;
+        public UserDTO userDTO;
         private UserBLL userBLL;
         private TranslatorBLL translatorBLL;
 
@@ -23,7 +23,7 @@ namespace LaundryManagement.UI
         {
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
-            _userDTO = paramDTO;
+            userDTO = paramDTO;
             securityService = new SecurityService();
 
             InitializeComponent();
@@ -36,16 +36,16 @@ namespace LaundryManagement.UI
 
         private void ApplySetup()
         {
-            this.txtEmail.Text = _userDTO?.Email;
-            this.txtLastName.Text = _userDTO?.LastName;
-            this.txtFirstName.Text = _userDTO?.Name;
-            this.txtUserName.Text = _userDTO?.UserName;
-            if(_userDTO != null)
-                this.comboLanguage.SelectedValue = _userDTO.Language.Id;
+            this.txtEmail.Text = userDTO?.Email;
+            this.txtLastName.Text = userDTO?.LastName;
+            this.txtFirstName.Text = userDTO?.Name;
+            this.txtUserName.Text = userDTO?.UserName;
+            if(userDTO != null)
+                this.comboLanguage.SelectedValue = userDTO.Language.Id;
 
             this.txtPassword.PasswordChar = '*';
             this.txtConfirmPassword.PasswordChar = '*';
-            this.txtPassword.PlaceholderText = _userDTO?.Id == null ? "" : Session.Translations[Tags.PasswordPlaceholder].Text;
+            this.txtPassword.PlaceholderText = userDTO?.Id == null ? "" : Session.Translations[Tags.PasswordPlaceholder].Text;
             this.txtConfirmPassword.Enabled = false;
             this.comboLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
 
@@ -78,7 +78,7 @@ namespace LaundryManagement.UI
         {
             try
             {
-                bool validatePasswords = this.txtPassword.Text.Length > 0 || _userDTO == null;
+                bool validatePasswords = this.txtPassword.Text.Length > 0 || this.userDTO == null;
                 var textboxes = new List<TextBox>
                 {
                     this.txtEmail, this.txtLastName, this.txtFirstName, this.txtUserName
@@ -105,11 +105,11 @@ namespace LaundryManagement.UI
                     }
                 }
 
-                var password = validatePasswords ? Encryptor.Hash(this.txtPassword.Text.Trim()) : _userDTO.Password;
+                var password = validatePasswords ? Encryptor.Hash(this.txtPassword.Text.Trim()) : this.userDTO.Password;
 
                 var userDTO = new UserDTO()
                 {
-                    Id = _userDTO?.Id ?? 0,
+                    Id = this.userDTO?.Id ?? 0,
                     Email = this.txtEmail.Text.Trim(),
                     LastName = this.txtLastName.Text.Trim(),
                     Name = this.txtFirstName.Text.Trim(),

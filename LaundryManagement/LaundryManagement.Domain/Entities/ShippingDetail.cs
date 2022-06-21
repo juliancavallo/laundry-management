@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaundryManagement.Interfaces.Domain.Entities
+namespace LaundryManagement.Domain.Entities
 {
-    public abstract class IEntity
+    public class ShippingDetail
     {
-        public int Id { get; set; }
+        public Item Item { get; set; }
     }
 }

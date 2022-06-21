@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaundryManagement.Interfaces.Domain.Entities
+namespace LaundryManagement.Domain.Enums
 {
-    public abstract class IEntity
+    public enum ShippingStatusEnum
     {
-        public int Id { get; set; }
+        Created = 1,
+        Sent = 2,
+        Received = 3
     }
 }

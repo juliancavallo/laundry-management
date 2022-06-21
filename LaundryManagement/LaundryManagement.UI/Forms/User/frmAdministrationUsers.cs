@@ -100,9 +100,6 @@ namespace LaundryManagement.UI
                 FormValidation.ValidateGridSelectedRow(this.gridUsers);
 
                 var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
-                if(selectedId == Session.Instance.User.Id)
-                    throw new ValidationException(Session.Translations[Tags.EditLoggedUser].Text, ValidationType.Warning);
-
                 var dto = userBLL.GetById(selectedId);
 
                 var frmNewUser = new frmNewUser(dto);

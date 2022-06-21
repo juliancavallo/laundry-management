@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LaundryManagement.Interfaces.Domain.Entities
+namespace LaundryManagement.Domain.Enums
 {
-    public abstract class IEntity
+    public enum LocationType
     {
-        public int Id { get; set; }
+        Laundry = 1,
+        Clinic = 2
     }
 }

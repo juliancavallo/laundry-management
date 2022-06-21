@@ -172,6 +172,13 @@ namespace LaundryManagement.UI.Forms.Translations
                 foreach(var list in itemsToUpdate)
                 {
                     var cleanList = list.Value.Where(x => !string.IsNullOrWhiteSpace(x.Tag) && !string.IsNullOrWhiteSpace(x.Description));
+                    cleanList = cleanList.GroupBy(x => x.Tag).Select(x => new TranslationViewDTO()
+                    {
+                        IdTag = x.FirstOrDefault().IdTag,
+                        Description = x.LastOrDefault().Description,
+                        IdTranslation = x.FirstOrDefault().IdTranslation,
+                        Tag = x.Key
+                    });
                     translatorBLL.Save(cleanList.ToList(), list.Key);
                     
                     if(itemsToDelete.ContainsKey(list.Key))

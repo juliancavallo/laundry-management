@@ -4,15 +4,16 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using System;
 using LaundryManagement.Services;
+using LaundryManagement.Domain.Enums;
 
 namespace LaundryManagement.DAL
 {
-    public class UserDAL : ICrud<User>
+    public class LocationDAL : ICrud<Location>
     {
         private SqlConnection connection;
         private Configuration configuration;
 
-        public UserDAL()
+        public LocationDAL()
         {
             configuration = new Configuration();
             connection = new SqlConnection();
@@ -20,7 +21,7 @@ namespace LaundryManagement.DAL
             connection.ConnectionString = configuration.GetValue<string>("connectionString");
         }
 
-        public void Delete(User entity)
+        public void Delete(Location entity)
         {
             try
             {
@@ -28,7 +29,7 @@ namespace LaundryManagement.DAL
 
                 SqlCommand cmd = new SqlCommand(
                        $@"
-                            DELETE [User] WHERE Id = {entity.Id}
+                            DELETE [Location] WHERE Id = {entity.Id}
                         ");
                 cmd.Connection = connection;
                 cmd.ExecuteNonQuery();
@@ -43,31 +44,26 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public IList<User> GetAll()
+        public IList<Location> GetAll()
         {
             SqlDataReader reader = null;
-            try 
-            { 
+            try
+            {
                 connection.Open();
 
                 SqlCommand cmd = new SqlCommand(@"
                     SELECT 
-	                       u.[Id]
-                          ,[Email]
-                          ,[Password]
-                          ,[UserName]
-                          ,[FirstName]
-                          ,[LastName]
-                          ,l.Id as IdLanguage
-	                      ,l.Name as LanguageName
-	                      ,l.[Default] as LanguageDefault
-                      FROM [User] u
-                      INNER JOIN [Language] L ON U.IdLanguage = l.Id");
+	                       l.Id,
+                            l.Name,
+                            l.Address,
+                            l.IsInternal,
+                            l.IdParentLocation
+                    FROM [Location] l");
 
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
 
-                IList<User> users = new List<User>();
+                IList<Location> users = new List<Location>();
                 while (reader.Read())
                 {
                     users.Add(this.MapFromDatabase(reader));
@@ -87,7 +83,7 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public User GetById(int id)
+        public Location GetById(int id)
         {
             SqlDataReader reader = null;
             try
@@ -96,31 +92,26 @@ namespace LaundryManagement.DAL
 
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
-                        u.[Id]
-                        ,[Email]
-                        ,[Password]
-                        ,[UserName]
-                        ,[FirstName]
-                        ,[LastName]
-                        , l.Id as IdLanguage
-                        , l.Name as LanguageName
-                        , l.[Default] as LanguageDefault
-                    FROM[User] u
-                    INNER JOIN[Language] L ON U.IdLanguage = l.Id
-                    WHERE u.Id = {id}");
+	                       l.Id,
+                            l.Name,
+                            l.Address,
+                            l.IsInternal,
+                            l.IdParentLocation
+                    FROM [Location] l
+                    WHERE l.Id = {id}");
 
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
 
-                User user = new User();
+                Location location = new Location();
                 while (reader.Read())
                 {
-                    user = this.MapFromDatabase(reader);
+                    location = this.MapFromDatabase(reader);
                 }
                 reader.Close();
                 connection.Close();
 
-                return user;
+                return location;
             }
             catch (Exception ex)
             {
@@ -133,7 +124,7 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public void Save(User entity)
+        public void Save(Location entity)
         {
             try
             {
@@ -145,21 +136,20 @@ namespace LaundryManagement.DAL
                 {
                     cmd = new SqlCommand(
                         $@"
-                            INSERT INTO [User] (Email, Password, UserName, FirstName, LastName, IdLanguage) 
-                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}', '{entity.Language.Id}')
+                            INSERT INTO [Location] (Name, Address, IsInternal, IdLocationType, IdParentLocation) 
+                            VALUES ('{entity.Name}', '{entity.Address}', {entity.IsInternal}, {(int)entity.LocationType} ,{entity.ParentLocation?.Id})
                         ");
                 }
                 else
                 {
                     cmd = new SqlCommand(
                         $@"
-                            UPDATE [User] SET
-	                            Email = '{entity.Email}',
-	                            Password = '{entity.Password}',
-	                            FirstName = '{entity.Name}',
-	                            LastName = '{entity.LastName}',
-	                            UserName = '{entity.UserName}',
-                                IdLanguage = '{entity.Language.Id}'
+                            UPDATE [Location] SET
+	                            Name = '{entity.Name}',
+	                            Address = '{entity.Address}',
+	                            IsInternal = {(entity.IsInternal ? 1 : 0)}
+	                            IdParentLocation = {entity.ParentLocation?.Id},
+	                            IdLocationType = {(int)entity.LocationType}
                             WHERE Id = {entity.Id}
                             ");
                 }
@@ -178,22 +168,17 @@ namespace LaundryManagement.DAL
             }
         }
 
-        private User MapFromDatabase(SqlDataReader reader)
+        private Location MapFromDatabase(SqlDataReader reader)
         {
-            return new User()
+            var idParentLocation = reader["IdParentLocation"].GetType() == typeof(DBNull) ? null : (int?)reader["IdParentLocation"];
+            return new Location()
             {
                 Id = int.Parse(reader["Id"].ToString()),
                 Name = reader["FirstName"].ToString(),
-                Email = reader["Email"].ToString(),
-                LastName = reader["LastName"].ToString(),
-                UserName = reader["UserName"].ToString(),
-                Password = reader["Password"].ToString(),
-                Language = new Language()
-                {
-                    Id = int.Parse(reader["IdLanguage"].ToString()),
-                    Name = reader["LanguageName"].ToString(),
-                    Default = bool.Parse(reader["LanguageDefault"].ToString())
-                }
+                Address = reader["Address"].ToString(),
+                IsInternal = bool.Parse(reader["IsInternal"].ToString()),
+                LocationType = (LocationType)int.Parse(reader["IdLocationType"].ToString()),
+                ParentLocation = idParentLocation.HasValue ? GetById(idParentLocation.Value) : null,
             };
         }
     }

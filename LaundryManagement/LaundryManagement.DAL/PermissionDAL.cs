@@ -112,8 +112,8 @@ namespace LaundryManagement.DAL
 
                 while (reader.Read())
                 {
-                    var isFamily = reader.GetInt32(reader.GetOrdinal("IsFamily")) == 1;
-                    var permissionId = reader.GetInt32(reader.GetOrdinal("IdPermission"));
+                    var isFamily = int.Parse(reader["IsFamily"].ToString()) == 1;
+                    var permissionId = int.Parse(reader["IdPermission"].ToString());
 
                     if (!PermissionExists(user.Permissions, permissionId))
                     {
@@ -121,9 +121,9 @@ namespace LaundryManagement.DAL
                         if (isFamily)
                         {
                             component = new Composite();
-                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Name = reader["PermissionName"].ToString();
                             component.Id = permissionId;
-                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                            component.Permission = reader["Permission"].ToString();
                             AddCompositeChildren((Composite)component, user.Id);
 
                             foreach (var item in component.Children)
@@ -134,9 +134,9 @@ namespace LaundryManagement.DAL
                         else
                         {
                             component = new Leaf();
-                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Name = reader["PermissionName"].ToString();
                             component.Id = permissionId;
-                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                            component.Permission = reader["Permission"].ToString();
                         }
                         
                         user.Permissions.Add(component);
@@ -179,8 +179,8 @@ namespace LaundryManagement.DAL
 
                 while (reader.Read())
                 {
-                    var isFamily = reader.GetInt32(reader.GetOrdinal("IsFamily")) == 1;
-                    var permissionId = reader.GetInt32(reader.GetOrdinal("IdPermission"));
+                    var isFamily = int.Parse(reader["IsFamily"].ToString()) == 1;
+                    var permissionId = int.Parse(reader["IdPermission"].ToString());
 
                     if (!PermissionExists(result, permissionId))
                     {
@@ -188,9 +188,9 @@ namespace LaundryManagement.DAL
                         if (isFamily)
                         {
                             component = new Composite();
-                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Name = reader["PermissionName"].ToString();
                             component.Id = permissionId;
-                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                            component.Permission = reader["Permission"].ToString();
                             AddCompositeChildren((Composite)component, userId);
 
                             foreach (var item in component.Children)
@@ -201,9 +201,9 @@ namespace LaundryManagement.DAL
                         else
                         {
                             component = new Leaf();
-                            component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
+                            component.Name = reader["PermissionName"].ToString();
                             component.Id = permissionId;
-                            component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                            component.Permission = reader["Permission"].ToString();
                         }
 
                         result.Add(component);
@@ -275,18 +275,17 @@ namespace LaundryManagement.DAL
                 while (reader.Read())
                 {
                     Component component;
-                    var idParent = reader.GetInt32(reader.GetOrdinal("IdPermissionParent"));
-
-                    var isFamily = reader.GetInt32(reader.GetOrdinal("IsFamily")) == 1;
+                    var idParent = int.Parse(reader["IdPermissionParent"].ToString());
+                    var isFamily = int.Parse(reader["IsFamily"].ToString()) == 1;
 
                     if (isFamily)
                         component = new Composite();
                     else
                         component = new Leaf();
 
-                    component.Name = reader.GetString(reader.GetOrdinal("Name"));
-                    component.Id = reader.GetInt32(reader.GetOrdinal("Id"));
-                    component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
+                    component.Name = reader["Name"].ToString();
+                    component.Id = int.Parse(reader["Id"].ToString());
+                    component.Permission = reader["Permission"].ToString();
 
                     var parent = GetComponent(idParent, components);
                     if (parent == null)
