@@ -92,6 +92,7 @@
             this.txtItem.Name = "txtItem";
             this.txtItem.Size = new System.Drawing.Size(224, 23);
             this.txtItem.TabIndex = 5;
+            this.txtItem.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtItem_KeyUp);
             // 
             // lblItem
             // 
@@ -110,6 +111,7 @@
             this.btnAdd.TabIndex = 7;
             this.btnAdd.Text = "button1";
             this.btnAdd.UseVisualStyleBackColor = true;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnRemove
             // 
@@ -119,6 +121,7 @@
             this.btnRemove.TabIndex = 8;
             this.btnRemove.Text = "button2";
             this.btnRemove.UseVisualStyleBackColor = true;
+            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
             // 
             // btnSave
             // 
@@ -128,6 +131,7 @@
             this.btnSave.TabIndex = 9;
             this.btnSave.Text = "button1";
             this.btnSave.UseVisualStyleBackColor = true;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // frmNewShipping
             // 

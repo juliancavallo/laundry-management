@@ -70,22 +70,26 @@ namespace LaundryManagement.DAL
 
         public List<ShippingDetail> GetDetailByShippingId(int id)
         {
+            var connection2 = new SqlConnection();
+            connection2.ConnectionString = configuration.GetValue<string>("connectionString");
+
             SqlDataReader reader = null;
             try
             {
-                connection.Open();
+                if (connection2.State == System.Data.ConnectionState.Closed)
+                    connection2.Open();
 
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
-	                    s.Id,
+	                    s.IdShipping,
                         s.IdItem
                     FROM ShippingDetail s
                     WHERE s.IdShipping = {id}");
 
-                cmd.Connection = connection;
+                cmd.Connection = connection2;
                 reader = cmd.ExecuteReader();
 
-                List<ShippingDetail> details = null;
+                List<ShippingDetail> details = new List<ShippingDetail>();
                 while (reader.Read())
                 {
                     details.Add(this.MapDetailFromDatabase(reader));
@@ -101,7 +105,7 @@ namespace LaundryManagement.DAL
             finally
             {
                 reader?.Close();
-                connection.Close();
+                connection2.Close();
             }
         }
 
@@ -118,7 +122,7 @@ namespace LaundryManagement.DAL
                     cmd = new SqlCommand(
                         $@"
                             INSERT INTO [Shipping] (CreatedDate, IdLocationOrigin, IdLocationDestination, IdShippingType, IdShippingStatus) 
-                            VALUES ('{entity.CreatedDate}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id});
+                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id});
                             SELECT SCOPE_IDENTITY();
                         ");
                 }
@@ -132,14 +136,14 @@ namespace LaundryManagement.DAL
                         ");
                 }
                 cmd.Connection = connection;
-                var newId = (int)cmd.ExecuteScalar();
+                decimal newId = (decimal)cmd.ExecuteScalar();
 
                 if(entity.Id == 0)
                 {
                     cmd.CommandText = "INSERT INTO ShippingDetail (IdItem, IdShipping) VALUES ";
                     foreach(var item in entity.ShippingDetail)
                     {
-                        cmd.CommandText += @$"({item.Item.Id}, {newId}), ";
+                        cmd.CommandText += @$"({item.Item.Id}, {newId}),";
                     }
                     cmd.CommandText = cmd.CommandText.TrimEnd(',');
                     cmd.ExecuteNonQuery();
@@ -173,7 +177,7 @@ namespace LaundryManagement.DAL
                 Status = new ShippingStatus() 
                 { 
                     Id = int.Parse(reader["IdShippingStatus"].ToString()),
-                    Name = reader["Name"].ToString()
+                    Name = reader["StatusName"].ToString()
                 },
                 Origin = locationDAL.GetById(int.Parse(reader["IdLocationOrigin"].ToString())),
                 Destination = locationDAL.GetById(int.Parse(reader["IdLocationDestination"].ToString()))

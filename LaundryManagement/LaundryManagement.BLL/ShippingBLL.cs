@@ -3,6 +3,7 @@ using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Domain.Extensions;
 using LaundryManagement.Domain.Filters;
 using LaundryManagement.Services;
 using System.Collections.Generic;
@@ -35,5 +36,15 @@ namespace LaundryManagement.BLL
         }
 
         public void Save(ShippingDTO shipping) => dal.Save(mapper.MapToEntity(shipping));
+
+        public List<ShippingDetailViewDTO> MapToView(List<ShippingDetailDTO> shippingDetailDTO)
+        {
+            var result = new List<ShippingDetailViewDTO>();
+            foreach(var item in shippingDetailDTO)
+            {
+                result.AddOrUpdate(mapper.MapToViewDTO(item));
+            }
+            return result;
+        }
     }
 }

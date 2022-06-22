@@ -27,7 +27,7 @@ namespace LaundryManagement.DAL
             { 
                 connection.Open();
 
-                var condition = string.IsNullOrWhiteSpace(code) ? "1 = 1" : $"i.Code = {code}";
+                var condition = string.IsNullOrWhiteSpace(code) ? "1 = 1" : $"i.Code = '{code}'";
                 condition += id.HasValue ? $"AND i.Id = {id}" : "";
 
                 SqlCommand cmd = new SqlCommand(@$"
@@ -47,10 +47,10 @@ namespace LaundryManagement.DAL
 	                    cat.Name as CategoryName
                     FROM Item i
                     INNER JOIN Article a on i.IdArticle = a.Id
-                    INNER JOIN Color col on a.IdColor = c.Id
+                    INNER JOIN Color col on a.IdColor = col.Id
                     INNER JOIN Size s on a.IdSize = s.Id
                     INNER JOIN ItemType t on a.IdItemType = t.Id
-                    INNER JOIN Category cat on t.IdCategory = c.Id
+                    INNER JOIN Category cat on t.IdCategory = cat.Id
                     WHERE {condition}");
 
                 cmd.Connection = connection;

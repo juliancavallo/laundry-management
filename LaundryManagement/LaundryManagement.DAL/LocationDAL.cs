@@ -49,7 +49,8 @@ namespace LaundryManagement.DAL
             SqlDataReader reader = null;
             try
             {
-                connection.Open();
+                if (connection.State == System.Data.ConnectionState.Closed)
+                    connection.Open();
 
                 SqlCommand cmd = new SqlCommand(@"
                     SELECT 
@@ -57,20 +58,22 @@ namespace LaundryManagement.DAL
                             l.Name,
                             l.Address,
                             l.IsInternal,
+                            l.IdLocationType,
                             l.IdParentLocation
                     FROM [Location] l");
 
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
 
-                IList<Location> users = new List<Location>();
+                IList<Location> locations = new List<Location>();
                 while (reader.Read())
                 {
-                    users.Add(this.MapFromDatabase(reader));
+                    var location = this.MapFromDatabase(reader);
+                    locations.Add(location);
                 }
 
 
-                return users;
+                return locations;
             }
             catch (Exception ex)
             {
@@ -85,10 +88,14 @@ namespace LaundryManagement.DAL
 
         public Location GetById(int id)
         {
+            var connection2 = new SqlConnection();
+
+            connection2.ConnectionString = configuration.GetValue<string>("connectionString");
             SqlDataReader reader = null;
             try
             {
-                connection.Open();
+                if(connection2.State == System.Data.ConnectionState.Closed)
+                    connection2.Open();
 
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
@@ -96,11 +103,12 @@ namespace LaundryManagement.DAL
                             l.Name,
                             l.Address,
                             l.IsInternal,
+                            l.IdLocationType,
                             l.IdParentLocation
                     FROM [Location] l
                     WHERE l.Id = {id}");
 
-                cmd.Connection = connection;
+                cmd.Connection = connection2;
                 reader = cmd.ExecuteReader();
 
                 Location location = new Location();
@@ -108,8 +116,6 @@ namespace LaundryManagement.DAL
                 {
                     location = this.MapFromDatabase(reader);
                 }
-                reader.Close();
-                connection.Close();
 
                 return location;
             }
@@ -120,7 +126,7 @@ namespace LaundryManagement.DAL
             finally
             {
                 reader?.Close();
-                connection.Close();
+                connection2.Close();
             }
         }
 
@@ -171,14 +177,14 @@ namespace LaundryManagement.DAL
         private Location MapFromDatabase(SqlDataReader reader)
         {
             var idParentLocation = reader["IdParentLocation"].GetType() == typeof(DBNull) ? null : (int?)reader["IdParentLocation"];
+
             return new Location()
             {
                 Id = int.Parse(reader["Id"].ToString()),
-                Name = reader["FirstName"].ToString(),
+                Name = reader["Name"].ToString(),
                 Address = reader["Address"].ToString(),
                 IsInternal = bool.Parse(reader["IsInternal"].ToString()),
-                LocationType = (LocationType)int.Parse(reader["IdLocationType"].ToString()),
-                ParentLocation = idParentLocation.HasValue ? GetById(idParentLocation.Value) : null,
+                LocationType = (LocationType)int.Parse(reader["IdLocationType"].ToString())
             };
         }
     }

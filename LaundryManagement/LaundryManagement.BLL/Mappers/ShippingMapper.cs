@@ -27,7 +27,7 @@ namespace LaundryManagement.BLL.Mappers
                 Destination = locationMapper.MapToEntity(dto.Destination),
                 Origin = locationMapper.MapToEntity(dto.Origin),
                 Status = new ShippingStatus() { Id = (int)dto.Status },
-                Type = new ShippingType() { Id = (int)dto.Status },
+                Type = new ShippingType() { Id = (int)dto.Type },
                 ShippingDetail = dto.ShippingDetail.Select(x => new ShippingDetail()
                 {
                     Item = new Item()
@@ -70,6 +70,18 @@ namespace LaundryManagement.BLL.Mappers
                 Type = dto.TypeName,
                 Status = dto.StatusName,
                 Id = dto.Id,
+            };
+        }
+
+        public ShippingDetailViewDTO MapToViewDTO(ShippingDetailDTO dto)
+        {
+            return new ShippingDetailViewDTO()
+            {
+                ArticleId = dto.Item.Article.Id,
+                Color = dto.Item.Article.Color.Name,
+                ItemType = dto.Item.Article.Type.Name,
+                Size = dto.Item.Article.Size.Name,
+                Quantity = 1
             };
         }
     }
