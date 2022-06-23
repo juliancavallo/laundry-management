@@ -38,6 +38,8 @@
             this.btnAdd = new System.Windows.Forms.Button();
             this.btnRemove = new System.Windows.Forms.Button();
             this.btnSave = new System.Windows.Forms.Button();
+            this.comboResponsible = new System.Windows.Forms.ComboBox();
+            this.lblResponsible = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.gridItems)).BeginInit();
             this.SuspendLayout();
             // 
@@ -125,19 +127,38 @@
             // 
             // btnSave
             // 
-            this.btnSave.Location = new System.Drawing.Point(204, 432);
+            this.btnSave.Location = new System.Drawing.Point(361, 429);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(127, 37);
+            this.btnSave.Size = new System.Drawing.Size(171, 37);
             this.btnSave.TabIndex = 9;
             this.btnSave.Text = "button1";
             this.btnSave.UseVisualStyleBackColor = true;
             this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            // 
+            // comboResponsible
+            // 
+            this.comboResponsible.FormattingEnabled = true;
+            this.comboResponsible.Location = new System.Drawing.Point(37, 443);
+            this.comboResponsible.Name = "comboResponsible";
+            this.comboResponsible.Size = new System.Drawing.Size(181, 23);
+            this.comboResponsible.TabIndex = 10;
+            // 
+            // lblResponsible
+            // 
+            this.lblResponsible.AutoSize = true;
+            this.lblResponsible.Location = new System.Drawing.Point(37, 425);
+            this.lblResponsible.Name = "lblResponsible";
+            this.lblResponsible.Size = new System.Drawing.Size(38, 15);
+            this.lblResponsible.TabIndex = 11;
+            this.lblResponsible.Text = "label1";
             // 
             // frmNewShipping
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(593, 490);
+            this.Controls.Add(this.lblResponsible);
+            this.Controls.Add(this.comboResponsible);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnRemove);
             this.Controls.Add(this.btnAdd);
@@ -170,5 +191,7 @@
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.ComboBox comboResponsible;
+        private System.Windows.Forms.Label lblResponsible;
     }
 }

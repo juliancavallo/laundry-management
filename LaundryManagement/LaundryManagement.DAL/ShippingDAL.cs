@@ -14,12 +14,14 @@ namespace LaundryManagement.DAL
         private Configuration configuration;
         private ItemDAL itemDAL;
         private LocationDAL locationDAL;
+        private UserDAL userDAL;
         public ShippingDAL()
         {
             configuration = new Configuration();
             connection = new SqlConnection();
             itemDAL = new ItemDAL();
             locationDAL = new LocationDAL();
+            userDAL = new UserDAL();    
 
             connection.ConnectionString = configuration.GetValue<string>("connectionString");
         }
@@ -40,7 +42,8 @@ namespace LaundryManagement.DAL
 	                    s.IdShippingStatus,
                         sta.Name as StatusName,
 	                    s.IdShippingType,
-                        ty.Name as TypeName
+                        ty.Name as TypeName,
+                        s.IdUser
                     FROM Shipping s
                     INNER JOIN ShippingStatus sta on s.IdShippingStatus = sta.Id
                     INNER JOIN ShippingType ty on s.IdShippingType = ty.Id
@@ -180,7 +183,8 @@ namespace LaundryManagement.DAL
                     Name = reader["StatusName"].ToString()
                 },
                 Origin = locationDAL.GetById(int.Parse(reader["IdLocationOrigin"].ToString())),
-                Destination = locationDAL.GetById(int.Parse(reader["IdLocationDestination"].ToString()))
+                Destination = locationDAL.GetById(int.Parse(reader["IdLocationDestination"].ToString())),
+                User = userDAL.GetById(int.Parse(reader["IdUser"].ToString()))
             };
         }
 

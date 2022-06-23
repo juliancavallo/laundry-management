@@ -23,6 +23,7 @@ namespace LaundryManagement.UI.Forms.Shipping
 
         private ShippingBLL shippingBLL;
         private LocationBLL locationBLL;
+        private UserBLL userBLL;
         private ItemBLL itemBLL;
         private List<Control> controls;
 
@@ -34,15 +35,17 @@ namespace LaundryManagement.UI.Forms.Shipping
             shippingBLL = new ShippingBLL();
             locationBLL = new LocationBLL();
             itemBLL = new ItemBLL();    
+            userBLL = new UserBLL();
             shippingDetailDTO = new List<ShippingDetailDTO>();
 
 
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.lblDestination, this.lblOrigin, this.lblItem, this.btnAdd, this.btnRemove, this.btnSave };
+            controls = new List<Control>() { this, this.lblDestination, this.lblOrigin, this.lblItem, this.btnAdd, this.btnRemove, this.btnSave, this.lblResponsible };
             Translate();
             PopulateComboLocation();
+            PopulateComboResponsible();
             EnableControls();
         }
 
@@ -60,6 +63,7 @@ namespace LaundryManagement.UI.Forms.Shipping
 
             this.comboOrigin.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboDestination.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboResponsible.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
@@ -72,6 +76,7 @@ namespace LaundryManagement.UI.Forms.Shipping
             this.lblDestination.Tag = "Destination";
             this.lblOrigin.Tag = "Origin";
             this.lblItem.Tag = "Item";
+            this.lblResponsible.Tag = "Responsible";
 
             this.gridItems.DataSource = null;
         }
@@ -105,6 +110,26 @@ namespace LaundryManagement.UI.Forms.Shipping
             }
         }
 
+        private void PopulateComboResponsible()
+        {
+            try
+            {
+                this.comboResponsible.DataSource = null;
+                this.comboResponsible.DataSource = userBLL.GetAllForView();
+                this.comboResponsible.DisplayMember = "FullName";
+                this.comboResponsible.ValueMember = "Id";
+                this.comboResponsible.SelectedIndex = -1;
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
         private void EnableControls()
         {
             var locationsSelected = this.comboOrigin.SelectedItem != null && this.comboDestination.SelectedItem != null;
@@ -114,6 +139,7 @@ namespace LaundryManagement.UI.Forms.Shipping
             this.btnRemove.Enabled = locationsSelected;
             this.btnSave.Enabled = locationsSelected;
             this.txtItem.Enabled = locationsSelected;
+            this.comboResponsible.Enabled = locationsSelected;
 
             if(locationsSelected)
                 this.txtItem.Focus();
@@ -128,8 +154,11 @@ namespace LaundryManagement.UI.Forms.Shipping
             try
             {
                 var code = txtItem.Text;
-                if (string.IsNullOrWhiteSpace(code))
+                if (string.IsNullOrWhiteSpace(code) || shippingDetailDTO.Any(x => x.Item.Code == code))
+                {
+                    txtItem.Clear();
                     return;
+                }
 
                 var item = itemBLL.GetByCode(code);
 
@@ -208,6 +237,8 @@ namespace LaundryManagement.UI.Forms.Shipping
                     FormValidation.ShowMessage("There are no items to save", ValidationType.Warning);
                     return;
                 }
+
+                FormValidation.ValidateComboSelected(this.comboResponsible);
 
                 var shipping = new ShippingDTO();
                 shipping.Origin = (LocationDTO)this.comboOrigin.SelectedItem;

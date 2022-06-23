@@ -32,6 +32,12 @@ namespace LaundryManagement.UI
                 throw new ValidationException(Session.Translations[Tags.FormValidationGridRow].Text, ValidationType.Warning);
         }
 
+        public static void ValidateComboSelected(ComboBox combo)
+        {
+            if (combo.SelectedItem == null)
+                throw new ValidationException(Session.Translations[Tags.FormValidationCombo].Text, ValidationType.Warning);
+        }
+
         public static void ValidatePasswordMatch(string pwd, string pwd2)
         {
             if(pwd != pwd2)
@@ -75,10 +81,12 @@ namespace LaundryManagement.UI
 
         public static void Translate(IDictionary<string, ITranslation> translations, IList<Control> controls)
         {
-            foreach(var control in controls)
+            foreach (var control in controls)
             {
-                if (control.Tag != null && translations.ContainsKey(control.Tag.ToString()))
-                    control.Text = translations[control.Tag.ToString()].Text;
+                if (control.Tag != null)
+                    control.Text = translations.ContainsKey(control.Tag.ToString()) ? 
+                        translations[control.Tag.ToString()].Text : 
+                        control.Tag.ToString();
             }
         }
         public static void Translate(IDictionary<string, ITranslation> translations, IList<ToolStripItem> controls)

@@ -28,5 +28,6 @@ namespace LaundryManagement.Domain.Enums
         public const string PasswordPolicySpecialCharacters = "PasswordPolicySpecialCharacters";
         public const string PasswordPolicyNumbers = "PasswordPolicyNumbers";
         public const string DeleteDefaultLanguage = "DeleteDefaultLanguage";
+        public const string FormValidationCombo = "FormValidationCombo";
     }
 }

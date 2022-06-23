@@ -22,5 +22,7 @@ namespace LaundryManagement.Domain.DTOs
         public string UserName { get; set; }
         public IList<IComponentDTO> Permissions { get; set; }
         public ILanguage Language { get; set; }
+
+        public string FullName { get { return Name + " " + LastName; } }
     }
 }

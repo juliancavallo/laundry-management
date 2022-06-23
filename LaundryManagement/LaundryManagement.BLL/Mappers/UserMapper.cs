@@ -56,7 +56,7 @@ namespace LaundryManagement.BLL.Mappers
             return new UserViewDTO()
             {
                 Email = dto.Email,
-                FullName = dto.Name + " " + dto.LastName,
+                FullName = dto.FullName,
                 UserName = dto.UserName,
                 Id = dto.Id,
             };

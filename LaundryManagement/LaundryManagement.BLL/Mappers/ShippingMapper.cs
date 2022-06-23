@@ -12,10 +12,12 @@ namespace LaundryManagement.BLL.Mappers
     public class ShippingMapper
     {
         private LocationMapper locationMapper;
+        private UserMapper userMapper;
 
         public ShippingMapper()
         {
             locationMapper = new LocationMapper();
+            userMapper = new UserMapper();  
         }
 
         public Shipping MapToEntity(ShippingDTO dto)
@@ -57,6 +59,7 @@ namespace LaundryManagement.BLL.Mappers
                         Id = x.Item.Id,
                     }
                 }).ToList(),
+                User = userMapper.MapToDTO(entity.User)
             };
         }
 
@@ -67,9 +70,9 @@ namespace LaundryManagement.BLL.Mappers
                 CreatedDate = dto.CreatedDate.ToString(),
                 Destination = dto.Destination.Name,
                 Origin = dto.Origin.Name,
-                Type = dto.TypeName,
                 Status = dto.StatusName,
                 Id = dto.Id,
+                User = dto.User.FullName
             };
         }
 
