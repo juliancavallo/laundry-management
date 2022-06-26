@@ -74,6 +74,7 @@ namespace LaundryManagement.UI.Forms.Roles
         public void LoadPermissions()
         {
             var permissions = permissionBLL.GetAll();
+            this.treeView1.Nodes.Clear();
             AddChildrenToTree(permissions, this.treeView1.Nodes);
 
             this.treeView1.ExpandAll();

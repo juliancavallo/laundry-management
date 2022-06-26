@@ -45,6 +45,7 @@ namespace LaundryManagement.DAL
 
                 while (reader.Read())
                 {
+                    var addedPermissions = new List<int>();
                     var isFamily = reader.GetInt32(reader.GetOrdinal("IsFamily")) == 1;
                     var permissionId = reader.GetInt32(reader.GetOrdinal("Id"));
 
@@ -57,7 +58,10 @@ namespace LaundryManagement.DAL
                             component.Name = reader.GetString(reader.GetOrdinal("PermissionName"));
                             component.Id = permissionId;
                             component.Permission = reader.GetValue(reader.GetOrdinal("Permission"))?.ToString();
-                            AddCompositeChildren((Composite)component);
+
+                            addedPermissions.Add(permissionId);
+
+                            AddCompositeChildren((Composite)component, addedPermissions);
 
                             foreach (var item in component.Children)
                             {
@@ -110,6 +114,7 @@ namespace LaundryManagement.DAL
                 );
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
+                var addedPermissions = new List<int>();
 
                 while (reader.Read())
                 {
@@ -125,7 +130,10 @@ namespace LaundryManagement.DAL
                             component.Name = reader["PermissionName"].ToString();
                             component.Id = permissionId;
                             component.Permission = reader["Permission"].ToString();
-                            AddCompositeChildren((Composite)component, userId);
+
+                            addedPermissions.Add(permissionId);
+
+                            AddCompositeChildren((Composite)component, addedPermissions, userId);
 
                             foreach (var item in component.Children)
                             {
@@ -156,7 +164,7 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public void AddCompositeChildren(Composite composite, int? userId = null)
+        public void AddCompositeChildren(Composite composite, List<int> addedPermissions, int? userId = null)
         {
             SqlConnection newConnection = null;
             SqlDataReader reader = null;
@@ -165,43 +173,19 @@ namespace LaundryManagement.DAL
                 newConnection = new SqlConnection(connectionString);
                 newConnection.Open();
 
-                SqlCommand cmd =
-                    userId.HasValue ?
-                    new SqlCommand($@"
-                        WITH [recursive] AS (
-                                        SELECT pf2.IdPermissionParent, pf2.IdPermission
-	                                    FROM PermissionFamily pf2
-                                        WHERE pf2.IdPermissionParent = {composite.Id}
-                                        UNION ALL 
-                                        SELECT pf.IdPermissionParent, pf.IdPermission
-	                                    FROM PermissionFamily pf 
-                                        INNER JOIN [recursive] r on r.IdPermission= pf.IdPermissionParent)
-                        SELECT r.IdPermissionParent,  p.Id, p.Name, p.Permission,case when max(up2.IdPermission) is not null then 1 else 0 end as IsFamily
-                        FROM [recursive] r 
-                        INNER JOIN Permission p on r.IdPermission = p.Id
-                        INNER JOIN UserPermission up on p.Id = up.IdPermission
-					    LEFT JOIN PermissionFamily pf on pf.IdPermissionParent = up.IdPermission
-					    LEFT JOIN UserPermission up2 on pf.IdPermission = up2.IdPermission
-					    WHERE up.IdUser = {userId}
-					    group by r.IdPermissionParent, r.IdPermission, p.Id, p.Name, p.Permission
-                    ") :
-                    new SqlCommand($@"
-                        WITH [recursive] AS (
-                                        SELECT pf2.IdPermissionParent, pf2.IdPermission
-	                                    FROM PermissionFamily pf2
-                                        WHERE pf2.IdPermissionParent = {composite.Id}
-                                        UNION ALL 
-                                        SELECT pf.IdPermissionParent, pf.IdPermission
-	                                    FROM PermissionFamily pf 
-                                        INNER JOIN [recursive] r on r.IdPermission= pf.IdPermissionParent)
-                        SELECT r.IdPermissionParent,  p.Id, p.Name, p.Permission,case when max(p2.Id) is not null then 1 else 0 end as IsFamily
-                        FROM [recursive] r 
-                        INNER JOIN Permission p on r.IdPermission = p.Id
-                        LEFT JOIN PermissionFamily pf on pf.IdPermissionParent = p.Id
-                        LEFT JOIN Permission p2 on pf.IdPermission = p2.Id
-                        group by r.IdPermissionParent, r.IdPermission, p.Id, p.Name, p.Permission
-                    ");
+                string permissionsString = string.Join(',', addedPermissions);
+                string addedPermissionsQuery = addedPermissions.Count > 0 ? @$"and p.Id not in ({permissionsString})" : "";
+                string userQuery = userId.HasValue ? $"and up.IdUser = {userId}" : "";
 
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @$"
+                    select p.Id, p.Name, p.Permission, case when max(pf2.IdPermission) is null then 0 else 1 end as IsFamily
+                    from Permission p
+                    left join UserPermission up on p.Id = up.IdPermission
+                    inner join PermissionFamily pf on p.Id = pf.IdPermission
+                    left join PermissionFamily pf2 on p.Id = pf2.IdPermissionParent
+                    where pf.IdPermissionParent = {composite.Id} {userQuery} {addedPermissionsQuery}
+                    group by p.Id, p.Name, p.Permission";
                 cmd.Connection = newConnection;
                 reader = cmd.ExecuteReader();
 
@@ -209,7 +193,6 @@ namespace LaundryManagement.DAL
                 while (reader.Read())
                 {
                     Component component;
-                    var idParent = int.Parse(reader["IdPermissionParent"].ToString());
                     var isFamily = int.Parse(reader["IsFamily"].ToString()) == 1;
 
                     if (isFamily)
@@ -221,11 +204,12 @@ namespace LaundryManagement.DAL
                     component.Id = int.Parse(reader["Id"].ToString());
                     component.Permission = reader["Permission"].ToString();
 
-                    var parent = GetComponent(idParent, components);
-                    if (parent == null)
-                        components.Add(component);
-                    else
-                        parent.AddChildren(component);
+                    addedPermissions.Add(component.Id);
+
+                    if (isFamily)
+                        AddCompositeChildren((Composite)component, addedPermissions, userId);
+
+                    components.Add(component);
                 }
             
                 components.ForEach(x => composite.AddChildren(x));
@@ -285,29 +269,6 @@ namespace LaundryManagement.DAL
                 reader?.Close();
                 connection.Close();
             }
-        }
-
-        private Component GetComponent(int id, IList<Component> list)
-        {
-            Component component = list?.FirstOrDefault(x => x.Id == id);
-
-            if(component == null)
-            {
-                foreach(var c in list)
-                {
-                    if(c is Composite)
-                    {
-                        var l = GetComponent(id, c.Children);
-
-                        if(l != null)
-                            return l.Id == id ? l : GetComponent(id, l.Children);
-                    }
-                    else
-                        return null;
-                }
-            }
-
-            return component;
         }
 
         private bool PermissionExists(IList<Component> list, int id)

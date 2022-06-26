@@ -55,6 +55,7 @@ namespace LaundryManagement.UI.Forms.Roles
             this.lblLeafs.Tag = "Leafs";
             this.lblFamilies.Tag = "Families";
             this.btnAddLeaf.Tag = "Add";
+            this.btnAddFamily.Tag = "Add";
             this.btnRemove.Tag = "Remove";
 
             this.txtPermissionCode.Text = componentDTO?.Permission;

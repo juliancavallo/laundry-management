@@ -32,7 +32,8 @@ namespace LaundryManagement.BLL
             {
 
                 var composite = mapper.MapToEntity(componentDTO) as Composite;
-                permissionDAL.AddCompositeChildren(composite);
+                var addedPermissions = new List<int>() { composite.Id };
+                permissionDAL.AddCompositeChildren(composite, addedPermissions);
 
                 componentDTO = mapper.MapToDTO(composite);
             }
