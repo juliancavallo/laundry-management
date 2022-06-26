@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.BLL.Mappers;
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Interfaces.Domain.DTOs;
 using LaundryManagement.Services;
 using System.Collections.Generic;
@@ -25,11 +26,41 @@ namespace LaundryManagement.BLL
             return entities.Select(x => mapper.MapToDTO(x)).ToList();
         }
 
-        public void SavePermissions(int userId, List<ComponentDTO> components)
+        public void SetChilds(ref ComponentDTO componentDTO)
+        {
+            if(componentDTO is CompositeDTO)
+            {
+
+                var composite = mapper.MapToEntity(componentDTO) as Composite;
+                permissionDAL.AddCompositeChildren(composite);
+
+                componentDTO = mapper.MapToDTO(composite);
+            }
+        }
+
+        public List<ComponentDTO> GetLeafs()
+        {
+            var entities = permissionDAL.GetSinglePermissions(false);
+            return entities.Select(x => mapper.MapToDTO(x)).ToList();
+        }
+
+        public List<ComponentDTO> GetFamilies()
+        {
+            var entities = permissionDAL.GetSinglePermissions(true);
+            return entities.Select(x => mapper.MapToDTO(x)).ToList();
+        }
+
+        public void SaveUserPermissions(int userId, List<ComponentDTO> components)
         {
             var entities = components.Select(x => mapper.MapToEntity(x));
-            permissionDAL.SavePermissions(userId, entities);
+            permissionDAL.SaveUserPermissions(userId, entities);
             Session.Instance.User.Permissions = permissionDAL.GetPermissions(userId).Select(x => mapper.MapToDTO(x)).ToList<IComponentDTO>();
+        }
+
+        public void SavePermission(ComponentDTO componentDTO)
+        {
+            var entity = mapper.MapToEntity(componentDTO);
+            permissionDAL.SavePermission(entity);
         }
     }
 }

@@ -89,72 +89,6 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public void GetPermissions(User user)
-        {
-            SqlDataReader reader = null;
-            try
-            {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand(
-                    $@"
-                    SELECT DISTINCT up.IdPermission, p.Name as PermissionName, p.Permission as Permission, pf.IdPermissionParent, 
-	                    case when pf2.IdPermission is not null then 1 else 0 end as IsFamily
-	                    FROM [User] u
-	                    INNER JOIN UserPermission up on u.Id = up.IdUser
-	                    INNER JOIN Permission p on up.IdPermission = p.Id
-	                    LEFT JOIN PermissionFamily pf on p.Id = pf.IdPermission
-	                    LEFT JOIN PermissionFamily pf2 on p.Id = pf2.IdPermissionParent
-                    WHERE u.Id = {user.Id}"
-                );
-                cmd.Connection = connection;
-                reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    var isFamily = int.Parse(reader["IsFamily"].ToString()) == 1;
-                    var permissionId = int.Parse(reader["IdPermission"].ToString());
-
-                    if (!PermissionExists(user.Permissions, permissionId))
-                    {
-                        Component component = null;
-                        if (isFamily)
-                        {
-                            component = new Composite();
-                            component.Name = reader["PermissionName"].ToString();
-                            component.Id = permissionId;
-                            component.Permission = reader["Permission"].ToString();
-                            AddCompositeChildren((Composite)component, user.Id);
-
-                            foreach (var item in component.Children)
-                            {
-                                user.Permissions.RemoveAll(x => x.Id == item.Id);
-                            }
-                        }
-                        else
-                        {
-                            component = new Leaf();
-                            component.Name = reader["PermissionName"].ToString();
-                            component.Id = permissionId;
-                            component.Permission = reader["Permission"].ToString();
-                        }
-                        
-                        user.Permissions.Add(component);
-                    }
-
-                }
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-            finally
-            {
-                reader?.Close();
-                connection.Close();
-            }
-        }
-
         public List<Component> GetPermissions(int userId)
         {
             var result = new List<Component>();
@@ -222,7 +156,7 @@ namespace LaundryManagement.DAL
             }
         }
 
-        private void AddCompositeChildren(Composite composite, int? userId = null)
+        public void AddCompositeChildren(Composite composite, int? userId = null)
         {
             SqlConnection newConnection = null;
             SqlDataReader reader = null;
@@ -307,6 +241,52 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public IList<Component> GetSinglePermissions(bool isFamily)
+        {
+            SqlDataReader reader = null;
+            List<Component> permissions = new List<Component>();
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                    $@"
+                    select distinct p.Id, p.Name as PermissionName, p.Permission as Permission
+                    from Permission p
+                    left join PermissionFamily pf on p.Id = pf.IdPermissionParent
+                    where pf.IdPermission {(isFamily ? "is not null" : "is null")}"
+                );
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Component component = null;
+
+                    if (isFamily)
+                        component = new Composite();
+                    else
+                        component = new Leaf();
+
+                    component.Name = reader["PermissionName"].ToString();
+                    component.Id = int.Parse(reader["Id"].ToString());
+                    component.Permission = reader["Permission"].ToString();
+                    permissions.Add(component);
+                }
+
+                return permissions;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
+
         private Component GetComponent(int id, IList<Component> list)
         {
             Component component = list?.FirstOrDefault(x => x.Id == id);
@@ -351,7 +331,7 @@ namespace LaundryManagement.DAL
             return false;
         }
 
-        public void SavePermissions(int userId, IEnumerable<Component> permissions)
+        public void SaveUserPermissions(int userId, IEnumerable<Component> permissions)
         {
             try
             {
@@ -371,6 +351,62 @@ namespace LaundryManagement.DAL
                 }
                 cmd.CommandText = cmd.CommandText.TrimEnd(',');
                 cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void SavePermission(Component permission)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                if (permission.Id > 0)
+                {
+                    cmd.CommandText = @$"
+                        UPDATE Permission SET Name = '{permission.Name}', Permission = '{permission.Permission}'
+                        WHERE Id = {permission.Id}
+                        SELECT SCOPE_IDENTITY();";
+
+                    cmd.ExecuteScalar();
+
+                }
+                else
+                {
+                    cmd.CommandText = @$"
+                        INSERT INTO Permission (Name, Permission) VALUES ('{permission.Name}', '{permission.Permission}')
+                        SELECT SCOPE_IDENTITY();";
+
+
+                    decimal id = (decimal)cmd.ExecuteScalar();
+                    permission.Id = (int)id;
+                }
+
+                cmd.CommandText =
+                       $@"
+                            DELETE [PermissionFamily] WHERE IdPermissionParent = {permission.Id}
+                        ";
+                cmd.ExecuteNonQuery();
+
+                if(permission is Composite)
+                {
+                    cmd.CommandText = @"INSERT INTO PermissionFamily (IdPermissionParent, IdPermission) VALUES ";
+                    foreach (var item in permission.Children)
+                    {
+                        cmd.CommandText += $"({permission.Id}, {item.Id}),";
+                    }
+                    cmd.CommandText = cmd.CommandText.TrimEnd(',');
+                    cmd.ExecuteNonQuery();
+                }
             }
             catch (Exception ex)
             {

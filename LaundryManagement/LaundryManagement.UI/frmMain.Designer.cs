@@ -59,6 +59,7 @@ namespace LaundryManagement.UI
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguageManage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuAdministrationRoles = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -80,6 +81,7 @@ namespace LaundryManagement.UI
             // 
             this.menuAdministration.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuAdministrationUsers,
+            this.menuAdministrationRoles,
             this.toolStripSeparator4,
             this.menuAdministrationArticles,
             this.menuAdministrationCategories,
@@ -94,48 +96,48 @@ namespace LaundryManagement.UI
             // menuAdministrationUsers
             // 
             this.menuAdministrationUsers.Name = "menuAdministrationUsers";
-            this.menuAdministrationUsers.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationUsers.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationUsers.Text = "Users";
             this.menuAdministrationUsers.Click += new System.EventHandler(this.menuAdministrationUsers_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(127, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
             // 
             // menuAdministrationArticles
             // 
             this.menuAdministrationArticles.Name = "menuAdministrationArticles";
-            this.menuAdministrationArticles.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationArticles.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationArticles.Text = "Articles";
             // 
             // menuAdministrationCategories
             // 
             this.menuAdministrationCategories.Name = "menuAdministrationCategories";
-            this.menuAdministrationCategories.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationCategories.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationCategories.Text = "Categories";
             // 
             // menuAdministrationSizes
             // 
             this.menuAdministrationSizes.Name = "menuAdministrationSizes";
-            this.menuAdministrationSizes.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationSizes.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationSizes.Text = "Sizes";
             // 
             // menuAdministrationItemTypes
             // 
             this.menuAdministrationItemTypes.Name = "menuAdministrationItemTypes";
-            this.menuAdministrationItemTypes.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationItemTypes.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationItemTypes.Text = "Item Types";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(127, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
             // 
             // menuAdministrationLocations
             // 
             this.menuAdministrationLocations.Name = "menuAdministrationLocations";
-            this.menuAdministrationLocations.Size = new System.Drawing.Size(130, 22);
+            this.menuAdministrationLocations.Size = new System.Drawing.Size(180, 22);
             this.menuAdministrationLocations.Text = "Locations";
             // 
             // menuProcesses
@@ -269,6 +271,13 @@ namespace LaundryManagement.UI
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
             // 
+            // menuAdministrationRoles
+            // 
+            this.menuAdministrationRoles.Name = "menuAdministrationRoles";
+            this.menuAdministrationRoles.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationRoles.Text = "Roles";
+            this.menuAdministrationRoles.Click += new System.EventHandler(this.menuAdministrationRoles_Click);
+            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -318,5 +327,6 @@ namespace LaundryManagement.UI
         private ToolStripMenuItem menuLanguageManage;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem menuAdministrationSizes;
+        private ToolStripMenuItem menuAdministrationRoles;
     }
 }

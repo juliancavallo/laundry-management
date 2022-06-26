@@ -6,6 +6,7 @@ using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.Roles;
 using LaundryManagement.UI.Forms.Shipping;
 using LaundryManagement.UI.Forms.Translations;
 using System;
@@ -177,6 +178,15 @@ namespace LaundryManagement.UI
             frm.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
             frm.Show();
         }
+
+        private void menuAdministrationRoles_Click(object sender, EventArgs e)
+        {
+            var frm = new frmAdministrationPermissions();
+            frm.MdiParent = this;
+            frm.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
+            frm.Show();
+        }
+
         #endregion
 
         #region Language

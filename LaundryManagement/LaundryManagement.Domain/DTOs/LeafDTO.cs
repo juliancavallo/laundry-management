@@ -9,7 +9,7 @@ namespace LaundryManagement.Domain.DTOs
     {
         public override IList<IComponentDTO> Children
         {
-            get { throw new NotImplementedException(); }
+            get { return new List<IComponentDTO>(); }
         }
         public override void AddChildren(IComponentDTO dto) => throw new NotImplementedException();
         public override void RemoveChildren(IComponentDTO dto) => throw new NotImplementedException();

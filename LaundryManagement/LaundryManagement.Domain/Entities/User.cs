@@ -20,7 +20,7 @@ namespace LaundryManagement.Domain.Entities
         public string Email { get; set; }
         public string Password { get; set; }
         public string UserName { get; set; }
-        public List<Component> Permissions { get { return _permissions; } }
+        public List<Component> Permissions { get { return _permissions; } set { this._permissions = value; } }
         public Language Language { get; set; }
     }
 }

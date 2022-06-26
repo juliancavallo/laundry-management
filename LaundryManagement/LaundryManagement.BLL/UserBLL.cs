@@ -35,7 +35,7 @@ namespace LaundryManagement.BLL
         public IList<UserDTO> GetAll()
         {
             var list = this.dal.GetAll().ToList();
-            list.ForEach(x => permissionDAL.GetPermissions(x));
+            list.ForEach(x => x.Permissions = permissionDAL.GetPermissions(x.Id));
 
             return list
                 .Select(x => mapper.MapToDTO(x))
@@ -45,7 +45,7 @@ namespace LaundryManagement.BLL
         public UserDTO GetById(int id)
         {
             var entity = this.dal.GetById(id);
-            permissionDAL.GetPermissions(entity);
+            entity.Permissions = permissionDAL.GetPermissions(id);
             return mapper.MapToDTO(entity);
         }
 
@@ -79,7 +79,7 @@ namespace LaundryManagement.BLL
 
             foreach(var item in list)
             {
-                permissionDAL.GetPermissions(item);
+                item.Permissions = permissionDAL.GetPermissions(item.Id);
                 dtoList.Add(mapper.MapToDTO(item));
             }
 

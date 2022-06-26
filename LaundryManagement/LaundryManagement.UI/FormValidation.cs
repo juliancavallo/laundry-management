@@ -38,6 +38,12 @@ namespace LaundryManagement.UI
                 throw new ValidationException(Session.Translations[Tags.FormValidationCombo].Text, ValidationType.Warning);
         }
 
+        public static void ValidateTreeViewSelected(TreeView treeView)
+        {
+            if (treeView.SelectedNode == null)
+                throw new ValidationException(Session.Translations[Tags.FormValidationTreeView].Text, ValidationType.Warning);
+        }
+
         public static void ValidatePasswordMatch(string pwd, string pwd2)
         {
             if(pwd != pwd2)

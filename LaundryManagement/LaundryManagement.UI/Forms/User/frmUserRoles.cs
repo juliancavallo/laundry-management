@@ -82,7 +82,7 @@ namespace LaundryManagement.UI
                 var components = new List<ComponentDTO>();
                 components.AddRange(GetCheckedNodesRecursively(this.treeView1.Nodes));
 
-                permissionBLL.SavePermissions(_userDTO.Id, components);
+                permissionBLL.SaveUserPermissions(_userDTO.Id, components);
                 this.Close();
             }
             catch (ValidationException ex)
