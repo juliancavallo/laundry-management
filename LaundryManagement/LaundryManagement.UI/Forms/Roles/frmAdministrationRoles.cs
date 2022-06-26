@@ -28,7 +28,7 @@ namespace LaundryManagement.UI.Forms.Roles
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.btnEdit, this.btnAdd};
+            controls = new List<Control>() { this, this.btnEdit, this.btnAdd, this.btnDelete};
             Translate();
         }
 
@@ -44,6 +44,7 @@ namespace LaundryManagement.UI.Forms.Roles
             this.Tag = "Permissions";
             this.btnEdit.Tag = "Edit";
             this.btnAdd.Tag = "Add";
+            this.btnDelete.Tag = "Delete";  
         }
 
         private void AddChildrenToTree(IEnumerable<ComponentDTO> permissions, TreeNodeCollection nodes)
@@ -109,6 +110,7 @@ namespace LaundryManagement.UI.Forms.Roles
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
+            FormValidation.ValidateTreeViewSelected(treeView1);
             var selectedItem = this.treeView1.SelectedNode.Tag as ComponentDTO;
             var frm = new frmNewPermission(selectedItem);
             frm.FormClosing += new FormClosingEventHandler((sender, e) => LoadPermissions());
@@ -120,6 +122,16 @@ namespace LaundryManagement.UI.Forms.Roles
             var frm = new frmNewPermission(null);
             frm.FormClosing += new FormClosingEventHandler((sender, e) => LoadPermissions());
             frm.Show();
+        }
+
+        private void btnDeleteClick(object sender, EventArgs e)
+        {
+            FormValidation.ValidateTreeViewSelected(treeView1);
+            var selectedItem = this.treeView1.SelectedNode.Tag as ComponentDTO;
+
+            permissionBLL.Delete(selectedItem);
+
+            LoadPermissions();
         }
     }
 }

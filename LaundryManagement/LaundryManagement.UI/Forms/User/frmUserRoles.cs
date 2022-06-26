@@ -146,5 +146,30 @@ namespace LaundryManagement.UI
         }
 
         private void frmUserRoles_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+
+        private void treeView1_AfterCheck(object sender, TreeViewEventArgs e)
+        {
+            try
+            {
+                SetNodesCheckedStatus(e.Node);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
+        private void SetNodesCheckedStatus(TreeNode node)
+        {
+            foreach (TreeNode item in node.Nodes)
+            {
+                item.Checked = node.Checked;
+                SetNodesCheckedStatus(item);
+            }
+        }
     }
 }

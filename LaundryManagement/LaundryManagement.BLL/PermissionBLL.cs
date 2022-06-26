@@ -22,7 +22,7 @@ namespace LaundryManagement.BLL
 
         public List<ComponentDTO> GetAll()
         {
-            var entities = permissionDAL.GetAllPermissions();
+            var entities = permissionDAL.GetAll();
             return entities.Select(x => mapper.MapToDTO(x)).ToList();
         }
 
@@ -61,7 +61,13 @@ namespace LaundryManagement.BLL
         public void SavePermission(ComponentDTO componentDTO)
         {
             var entity = mapper.MapToEntity(componentDTO);
-            permissionDAL.SavePermission(entity);
+            permissionDAL.Save(entity);
+        }
+
+        public void Delete(ComponentDTO componentDTO)
+        {
+            var entity = mapper.MapToEntity(componentDTO);
+            permissionDAL.Delete(entity);
         }
     }
 }

@@ -36,7 +36,8 @@ namespace LaundryManagement.UI.Forms.Roles
             PopulateComboLeafs();
             PopulateComboFamilies();
 
-            controls = new List<Control>() { this, this.btnSave, this.btnRemove, this.lblParent, this.lblPermissionCode, this.lblPermissionName, this.lblFamilies, this.lblLeafs, this.btnAddLeaf};
+            controls = new List<Control>() { this, this.btnSave, this.btnRemove, this.lblParent, this.lblPermissionCode, this.lblPermissionName, 
+                this.lblFamilies, this.lblLeafs, this.btnAddLeaf, this.btnAddFamily, this.btnRemove};
             Translate();
         }
 
@@ -56,7 +57,10 @@ namespace LaundryManagement.UI.Forms.Roles
             this.lblFamilies.Tag = "Families";
             this.btnAddLeaf.Tag = "Add";
             this.btnAddFamily.Tag = "Add";
-            this.btnRemove.Tag = "Remove";
+            this.btnRemove.Tag = "Delete";
+
+            this.comboFamilies.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboLeafs.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.txtPermissionCode.Text = componentDTO?.Permission;
             this.txtPermissionName.Text = componentDTO?.Name;
@@ -123,8 +127,12 @@ namespace LaundryManagement.UI.Forms.Roles
         {
             try
             {
+                var source = permissionBLL.GetLeafs();
+                if (componentDTO != null)
+                    source = source.Where(x => x.Id != componentDTO.Id).ToList();
+
                 this.comboLeafs.DataSource = null;
-                this.comboLeafs.DataSource = permissionBLL.GetLeafs();
+                this.comboLeafs.DataSource = source;
                 this.comboLeafs.DisplayMember = "Name";
                 this.comboLeafs.ValueMember = "Id";
 
@@ -143,8 +151,12 @@ namespace LaundryManagement.UI.Forms.Roles
         {
             try
             {
+                var source = permissionBLL.GetFamilies();
+                if (componentDTO != null)
+                    source = source.Where(x => x.Id != componentDTO.Id).ToList();
+
                 this.comboFamilies.DataSource = null;
-                this.comboFamilies.DataSource = permissionBLL.GetFamilies();
+                this.comboFamilies.DataSource = source;
                 this.comboFamilies.DisplayMember = "Name";
                 this.comboFamilies.ValueMember = "Id";
 
