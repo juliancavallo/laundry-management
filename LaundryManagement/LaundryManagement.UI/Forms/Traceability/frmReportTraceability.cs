@@ -26,7 +26,7 @@ namespace LaundryManagement.UI.Forms.Traceability
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this };
+            controls = new List<Control>() { this, this.lblItemCode, this.btnSearch };
             Translate();
         }
 
@@ -46,18 +46,31 @@ namespace LaundryManagement.UI.Forms.Traceability
             this.MinimizeBox = false;
 
             this.Tag = "Traceability";
+            this.lblItemCode.Tag = "ItemCode";
+            this.btnSearch.Tag = "Search";
         }
 
         public void UpdateLanguage(ILanguage language) => Translate();
 
         private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
-        private void frmReportTraceability_Load(object sender, EventArgs e)
+        private void frmReportTraceability_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
+
+        private void frmReportTraceability_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+
+        private void ReloadGridEvent(string code)
+        {
+            this.grid.DataSource = null;
+            this.grid.DataSource = traceabilityBLL.GetForView(code);
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
         {
             try
             {
-                this.ReloadGridEvent();
-                Session.SubscribeObserver(this);
+                FormValidation.ValidateTextBoxCompleted(new List<TextBox>() { this.txtCode });
+
+                this.ReloadGridEvent(txtCode.Text);
             }
             catch (ValidationException ex)
             {
@@ -67,14 +80,6 @@ namespace LaundryManagement.UI.Forms.Traceability
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
-        }
-
-        private void frmReportTraceability_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
-
-        private void ReloadGridEvent()
-        {
-            this.grid.DataSource = null;
-            this.grid.DataSource = traceabilityBLL.GetForView();
         }
     }
 }

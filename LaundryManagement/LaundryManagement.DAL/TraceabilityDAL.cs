@@ -27,7 +27,7 @@ namespace LaundryManagement.DAL
             connection.ConnectionString = configuration.GetValue<string>("connectionString");
         }
 
-        public List<Traceability> GetAll()
+        public List<Traceability> Get(string code)
         {
             SqlDataReader reader = null;
             try
@@ -47,8 +47,10 @@ namespace LaundryManagement.DAL
 	                      , st.Name as ItemStatusName
 	                      , mt.Name as MovementType
                       FROM [Traceability] t
+                      INNER JOIN Item i on t.IdItem = i.Id
                       INNER JOIN ItemStatus st on t.IdItemStatus = st.Id
                       INNER JOIN MovementType mt on t.IdMovementType = mt.Id
+                      WHERE i.Code = '{code}'
                     ";
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();

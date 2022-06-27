@@ -25,9 +25,9 @@ namespace LaundryManagement.BLL
             traceabilityDAL.Save(entities);
         }
         
-        public List<TraceabilityViewDTO> GetForView()
+        public List<TraceabilityViewDTO> GetForView(string code)
         {
-            return traceabilityDAL.GetAll().Select(x => traceabilityMapper.MapToViewDTO(x)).ToList();
+            return traceabilityDAL.Get(code).Select(x => traceabilityMapper.MapToViewDTO(x)).ToList();
         }
         
     }
