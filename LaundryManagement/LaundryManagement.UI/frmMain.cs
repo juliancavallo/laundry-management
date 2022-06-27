@@ -175,7 +175,6 @@ namespace LaundryManagement.UI
         {
             var frm = new frmAdministrationShippings(ShippingTypeEnum.ToLaundry);
             frm.MdiParent = this;
-            frm.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
             frm.Show();
         }
 
@@ -184,6 +183,13 @@ namespace LaundryManagement.UI
             var frm = new frmAdministrationPermissions();
             frm.MdiParent = this;
             frm.FormClosing += new FormClosingEventHandler((sender, e) => ShowMenus());
+            frm.Show();
+        }
+
+        private void menuReportsLaundryShippings_Click(object sender, EventArgs e)
+        {
+            var frm = new frmShippingReport(ShippingTypeEnum.ToLaundry);
+            frm.MdiParent = this;
             frm.Show();
         }
 

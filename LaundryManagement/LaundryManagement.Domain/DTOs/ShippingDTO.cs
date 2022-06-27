@@ -19,6 +19,7 @@ namespace LaundryManagement.Domain.DTOs
         public List<ShippingDetailDTO> ShippingDetail { get; set; }
         public ShippingTypeEnum Type { get; set; }
         public string TypeName { get; set; }
-        public UserDTO User { get; set; }
+        public UserDTO Responsible { get; set; }
+        public UserDTO CreationUser { get; set; }
     }
 }

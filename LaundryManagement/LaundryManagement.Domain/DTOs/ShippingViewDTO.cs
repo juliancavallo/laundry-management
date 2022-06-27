@@ -11,10 +11,11 @@ namespace LaundryManagement.Domain.DTOs
     public class ShippingViewDTO
     {
         public int Id { get; set; }
+        public string Number { get; set; }
         public string CreatedDate { get; set; }
         public string Origin { get; set; }
         public string Destination { get; set; }
         public string Status { get; set; }
-        public string User { get; set; }
+        public string Responsible { get; set; }
     }
 }

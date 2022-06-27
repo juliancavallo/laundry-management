@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,7 @@ namespace LaundryManagement.BLL.Mappers
                 Id = dto.Id,
                 Code = dto.Code,
                 Created = dto.Created,
+                ItemStatus = new ItemStatus() { Id = dto.Id },
                 Article = new Article()
                 {
                     Id = dto.Article.Id,
@@ -52,6 +54,7 @@ namespace LaundryManagement.BLL.Mappers
                 Id = entity.Id,
                 Code = entity.Code,
                 Created = entity.Created,
+                ItemStatus = (ItemStatusEnum)entity.ItemStatus.Id,
                 Article = new ArticleDTO()
                 {
                     Id = entity.Article.Id,

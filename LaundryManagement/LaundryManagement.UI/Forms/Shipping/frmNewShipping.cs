@@ -115,7 +115,7 @@ namespace LaundryManagement.UI.Forms.Shipping
             try
             {
                 this.comboResponsible.DataSource = null;
-                this.comboResponsible.DataSource = userBLL.GetAllForView();
+                this.comboResponsible.DataSource = userBLL.GetShippingResponsibles("RESP_SHP_LDY");
                 this.comboResponsible.DisplayMember = "FullName";
                 this.comboResponsible.ValueMember = "Id";
                 this.comboResponsible.SelectedIndex = -1;
@@ -161,6 +161,9 @@ namespace LaundryManagement.UI.Forms.Shipping
                 }
 
                 var item = itemBLL.GetByCode(code);
+
+                if(item.ItemStatus != ItemStatusEnum.OnLocation)
+                    throw new ValidationException("The item is not in a valid state", ValidationType.Warning);
 
                 shippingDetailDTO.Add(new ShippingDetailDTO()
                 {
@@ -247,8 +250,11 @@ namespace LaundryManagement.UI.Forms.Shipping
                 shipping.CreatedDate = DateTime.Now;
                 shipping.Status = ShippingStatusEnum.Created;
                 shipping.Type = shippingType;
+                shipping.Responsible = new UserDTO() { Id = ((UserViewDTO)this.comboResponsible.SelectedItem).Id };
+                shipping.CreationUser = (UserDTO)Session.Instance.User;
 
                 shippingBLL.Save(shipping);
+                this.Close();
             }
             catch (ValidationException ex)
             {

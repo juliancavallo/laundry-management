@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using LaundryManagement.Services;
 using LaundryManagement.Domain.Enums;
+using System.Linq;
 
 namespace LaundryManagement.DAL
 {
@@ -43,7 +44,8 @@ namespace LaundryManagement.DAL
                         sta.Name as StatusName,
 	                    s.IdShippingType,
                         ty.Name as TypeName,
-                        s.IdUser
+                        s.IdResponsibleUser,
+                        s.IdCreatedUser
                     FROM Shipping s
                     INNER JOIN ShippingStatus sta on s.IdShippingStatus = sta.Id
                     INNER JOIN ShippingType ty on s.IdShippingType = ty.Id
@@ -124,8 +126,8 @@ namespace LaundryManagement.DAL
                 {
                     cmd = new SqlCommand(
                         $@"
-                            INSERT INTO [Shipping] (CreatedDate, IdLocationOrigin, IdLocationDestination, IdShippingType, IdShippingStatus) 
-                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id});
+                            INSERT INTO [Shipping] (CreatedDate, IdLocationOrigin, IdLocationDestination, IdShippingType, IdShippingStatus, IdCreatedUser, IdResponsibleUser) 
+                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id}, {entity.CreationUser.Id}, {entity.Responsible.Id});
                             SELECT SCOPE_IDENTITY();
                         ");
                 }
@@ -151,6 +153,7 @@ namespace LaundryManagement.DAL
                     cmd.CommandText = cmd.CommandText.TrimEnd(',');
                     cmd.ExecuteNonQuery();
                 }
+
 
                 connection.Close();
             }
@@ -184,7 +187,8 @@ namespace LaundryManagement.DAL
                 },
                 Origin = locationDAL.GetById(int.Parse(reader["IdLocationOrigin"].ToString())),
                 Destination = locationDAL.GetById(int.Parse(reader["IdLocationDestination"].ToString())),
-                User = userDAL.GetById(int.Parse(reader["IdUser"].ToString()))
+                CreationUser = userDAL.GetById(int.Parse(reader["IdCreatedUser"].ToString())),
+                Responsible = userDAL.GetById(int.Parse(reader["IdResponsibleUser"].ToString()))
             };
         }
 

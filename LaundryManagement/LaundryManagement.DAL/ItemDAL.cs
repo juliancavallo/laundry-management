@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using System;
 using LaundryManagement.Services;
+using System.Linq;
 
 namespace LaundryManagement.DAL
 {
@@ -44,7 +45,8 @@ namespace LaundryManagement.DAL
 	                    t.Id as IdItemType,
 	                    t.Name as ItemTypeName,
 	                    cat.Id as IdCategory,
-	                    cat.Name as CategoryName
+	                    cat.Name as CategoryName,
+                        i.IdItemStatus
                     FROM Item i
                     INNER JOIN Article a on i.IdArticle = a.Id
                     INNER JOIN Color col on a.IdColor = col.Id
@@ -117,6 +119,34 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public void UpdateStatus(IList<int> list, int newStatus)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.CommandText = $@"
+                    UPDATE Item SET IdItemStatus = {newStatus} 
+                    WHERE Id in ({string.Join(',', list)})
+                    ";
+
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         private Item MapFromDatabase(SqlDataReader reader)
         {
             return new Item()
@@ -124,6 +154,7 @@ namespace LaundryManagement.DAL
                 Id = int.Parse(reader["IdItem"].ToString()),
                 Code = reader["ItemCode"].ToString(),
                 Created = DateTime.Parse(reader["ItemCreated"].ToString()),
+                ItemStatus = new ItemStatus() { Id = int.Parse(reader["IdItemStatus"].ToString()) },
                 Article = new Article()
                 {
                     Id = int.Parse(reader["IdArticle"].ToString()),

@@ -37,6 +37,8 @@ namespace LaundryManagement.BLL.Mappers
                         Id = x.Item.Id,
                     }
                 }).ToList(),
+                CreationUser = userMapper.MapToEntity(dto.CreationUser),
+                Responsible = userMapper.MapToEntity(dto.Responsible),
             };
         }
 
@@ -59,7 +61,8 @@ namespace LaundryManagement.BLL.Mappers
                         Id = x.Item.Id,
                     }
                 }).ToList(),
-                User = userMapper.MapToDTO(entity.User)
+                Responsible = userMapper.MapToDTO(entity.Responsible),
+                CreationUser = userMapper.MapToDTO(entity.CreationUser)
             };
         }
 
@@ -67,12 +70,13 @@ namespace LaundryManagement.BLL.Mappers
         {
             return new ShippingViewDTO()
             {
+                Number = dto.Id.ToString(),
                 CreatedDate = dto.CreatedDate.ToString(),
                 Destination = dto.Destination.Name,
                 Origin = dto.Origin.Name,
                 Status = dto.StatusName,
                 Id = dto.Id,
-                User = dto.User.FullName
+                Responsible = dto.Responsible.FullName
             };
         }
 
@@ -84,6 +88,17 @@ namespace LaundryManagement.BLL.Mappers
                 Color = dto.Item.Article.Color.Name,
                 ItemType = dto.Item.Article.Type.Name,
                 Size = dto.Item.Article.Size.Name,
+                Quantity = 1
+            };
+        }
+        public ShippingDetailViewDTO MapToViewDTO(ShippingDetail entity)
+        {
+            return new ShippingDetailViewDTO()
+            {
+                ArticleId = entity.Item.Article.Id,
+                Color = entity.Item.Article.Color.Name,
+                ItemType = entity.Item.Article.Type.Name,
+                Size = entity.Item.Article.Size.Name,
                 Quantity = 1
             };
         }

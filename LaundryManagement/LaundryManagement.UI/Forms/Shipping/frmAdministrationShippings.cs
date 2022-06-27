@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Domain.Filters;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -17,7 +18,7 @@ namespace LaundryManagement.UI.Forms.Shipping
 {
     public partial class frmAdministrationShippings : Form, ILanguageObserver
     {
-        public ShippingTypeEnum shippingType;
+        private ShippingTypeEnum shippingType;
 
         ShippingBLL shippingBLL;
         private IList<Control> controls;
@@ -59,7 +60,7 @@ namespace LaundryManagement.UI.Forms.Shipping
         private void ReloadGridEvent()
         {
             this.gridShippings.DataSource = null;
-            this.gridShippings.DataSource = shippingBLL.GetByTypeForView(shippingType);
+            this.gridShippings.DataSource = shippingBLL.GetByTypeForView(new ShippingFilter() { ShippingType = shippingType});
             this.gridShippings.Columns["Id"].Visible = false;
         }
 

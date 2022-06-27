@@ -105,6 +105,14 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
+        public IList<UserViewDTO> GetShippingResponsibles(string permissionCode)
+        {
+            return this.GetAll()
+                .Where(x => HasPermission(x, permissionCode))
+                .Select(x => mapper.MapToViewDTO(x))
+                .ToList();
+        }
+
         public bool HasPermission(UserDTO userDto, string permissionCode)
         {
             foreach (var item in userDto.Permissions)

@@ -16,6 +16,7 @@ namespace LaundryManagement.Domain.Entities
         public ShippingStatus Status { get; set; }
         public List<ShippingDetail> ShippingDetail { get; set; }
         public ShippingType Type { get; set; }
-        public User User { get; set; }
+        public User Responsible { get; set; }
+        public User CreationUser { get; set; }
     }
 }
