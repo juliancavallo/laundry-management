@@ -60,6 +60,7 @@ namespace LaundryManagement.UI
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguageManage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
+            this.menuReportsTraceability = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -233,7 +234,8 @@ namespace LaundryManagement.UI
             // 
             this.menuReports.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.menuReportsMovements,
-            this.menuReportsLaundryShippings});
+            this.menuReportsLaundryShippings,
+            this.menuReportsTraceability});
             this.menuReports.Name = "menuReports";
             this.menuReports.Size = new System.Drawing.Size(59, 20);
             this.menuReports.Text = "Reports";
@@ -278,6 +280,13 @@ namespace LaundryManagement.UI
             // 
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
+            // 
+            // menuReportsTraceability
+            // 
+            this.menuReportsTraceability.Name = "menuReportsTraceability";
+            this.menuReportsTraceability.Size = new System.Drawing.Size(180, 22);
+            this.menuReportsTraceability.Text = "Traceability";
+            this.menuReportsTraceability.Click += new System.EventHandler(this.menuReportsTraceability_Click);
             // 
             // frmMain
             // 
@@ -329,5 +338,6 @@ namespace LaundryManagement.UI
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem menuAdministrationSizes;
         private ToolStripMenuItem menuAdministrationRoles;
+        private ToolStripMenuItem menuReportsTraceability;
     }
 }

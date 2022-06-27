@@ -53,5 +53,19 @@ namespace LaundryManagement.BLL.Mappers
                 MovementTypeName = entity.MovementType.Name
             };
         }
+
+        public TraceabilityViewDTO MapToViewDTO(Traceability entity)
+        {
+            return new TraceabilityViewDTO()
+            {
+                Date = entity.Date,
+                Destination = entity.Destination.Name,
+                Origin = entity.Origin.Name,
+                ItemCode = entity.Item.Code,
+                ItemStatus = entity.ItemStatus.Name,
+                Movement = entity.MovementType.Name,
+                User = entity.User.UserName
+            };
+        }
     }
 }

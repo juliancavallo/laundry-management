@@ -2,11 +2,6 @@
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
-using LaundryManagement.Domain.Enums;
-using LaundryManagement.Domain.Exceptions;
-using LaundryManagement.Domain.Extensions;
-using LaundryManagement.Domain.Filters;
-using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,14 +18,17 @@ namespace LaundryManagement.BLL
             this.traceabilityMapper  = new TraceabilityMapper();
         }
 
-        
         public void Save(List<TraceabilityDTO> list) 
         {
             var entities = list.Select(x => traceabilityMapper.MapToEntity(x)).ToList();
 
             traceabilityDAL.Save(entities);
         }
-
+        
+        public List<TraceabilityViewDTO> GetForView()
+        {
+            return traceabilityDAL.GetAll().Select(x => traceabilityMapper.MapToViewDTO(x)).ToList();
+        }
         
     }
 }

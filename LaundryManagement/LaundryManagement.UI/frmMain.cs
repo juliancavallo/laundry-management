@@ -8,6 +8,7 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Roles;
 using LaundryManagement.UI.Forms.Shipping;
+using LaundryManagement.UI.Forms.Traceability;
 using LaundryManagement.UI.Forms.Translations;
 using System;
 using System.Collections.Generic;
@@ -42,7 +43,7 @@ namespace LaundryManagement.UI
                 this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesClinicReception, 
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
-                this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage };
+                this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, this.menuReportsTraceability };
 
             PopulateLanguageMenu();
             Translate();
@@ -83,6 +84,7 @@ namespace LaundryManagement.UI
             this.menuProcessesRoadMap.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "PRO_ROA" };
             this.menuReportsMovements.Tag = new MenuItemMetadataDTO { TagName = "Movements", Permission = "REP_MOV" };
             this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
+            this.menuReportsTraceability.Tag = new MenuItemMetadataDTO { TagName = "Traceability", Permission = "REP_TRA" };
             this.menuLanguage.Tag = new MenuItemMetadataDTO { TagName = "Language", Permission = "" };
             this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
             this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
@@ -189,6 +191,13 @@ namespace LaundryManagement.UI
         private void menuReportsLaundryShippings_Click(object sender, EventArgs e)
         {
             var frm = new frmShippingReport(ShippingTypeEnum.ToLaundry);
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void menuReportsTraceability_Click(object sender, EventArgs e)
+        {
+            var frm = new frmReportTraceability();
             frm.MdiParent = this;
             frm.Show();
         }
