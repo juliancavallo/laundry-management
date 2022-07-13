@@ -13,5 +13,6 @@ namespace LaundryManagement.Domain.Entities
         public ItemType Type { get; set; }
         public Color Color { get; set; }
         public Size Size { get; set; }
+        public int Washes { get; set; }
     }
 }

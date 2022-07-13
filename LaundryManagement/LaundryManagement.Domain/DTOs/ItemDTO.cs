@@ -15,6 +15,8 @@ namespace LaundryManagement.Domain.DTOs
         public string Code { get; set; }
         public DateTime Created { get; set; }
         public ArticleDTO Article { get; set; }
+        public LocationDTO Location { get; set; }
         public ItemStatusEnum ItemStatus { get; set; }
+        public int Washes { get; set; }
     }
 }

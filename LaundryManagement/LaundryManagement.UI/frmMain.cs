@@ -43,7 +43,8 @@ namespace LaundryManagement.UI
                 this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesClinicReception, 
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
-                this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, this.menuReportsTraceability };
+                this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
+                this.menuReportsTraceability, this.menuReportsClinicShippings };
 
             PopulateLanguageMenu();
             Translate();
@@ -83,8 +84,9 @@ namespace LaundryManagement.UI
             this.menuProcessesLaundryShipping.Tag = new MenuItemMetadataDTO { TagName = "LaundryShipping", Permission = "PRO_SHP_LDY" };
             this.menuProcessesRoadMap.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "PRO_ROA" };
             this.menuReportsMovements.Tag = new MenuItemMetadataDTO { TagName = "Movements", Permission = "REP_MOV" };
-            this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
             this.menuReportsTraceability.Tag = new MenuItemMetadataDTO { TagName = "Traceability", Permission = "REP_TRA" };
+            this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
+            this.menuReportsClinicShippings.Tag = new MenuItemMetadataDTO { TagName = "ClinicShippings", Permission = "REP_SHP_CLI" };
             this.menuLanguage.Tag = new MenuItemMetadataDTO { TagName = "Language", Permission = "" };
             this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
             this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
@@ -134,6 +136,88 @@ namespace LaundryManagement.UI
             frmLogin.MdiParent = this;
             frmLogin.Show();
         }
+
+        #region Language
+
+        private void PopulateLanguageMenu()
+        {
+            try
+            {
+                this.menuLanguage.DropDownItems.Clear();
+                menuLanguage.DropDownItems.Add(menuLanguageManage);
+                menuLanguage.DropDownItems.Add(new ToolStripSeparator());
+
+                foreach (var language in translatorBLL.GetAllLanguages())
+                {
+                    var item = new ToolStripMenuItem();
+                    item.Text = language.Name;
+                    item.Tag = language;
+                    item.Click += languageItem_Click;
+                    this.menuLanguage.DropDownItems.Add(item);
+                }
+                if (loginBLL.IsLogged())
+                    CheckLanguage(Session.Instance.User.Language);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
+        private void CheckLanguage(ILanguage language)
+        {
+            try
+            {
+                foreach (var item in this.menuLanguage.DropDownItems)
+                {
+                    if (item is ToolStripMenuItem)
+                    {
+                        if ((item as ToolStripMenuItem).Tag is ILanguage)
+                            (item as ToolStripMenuItem).Checked = language.Id.Equals(((ILanguage)(item as ToolStripMenuItem).Tag).Id);
+                    }
+                }
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
+        private void Translate()
+        {
+            FormValidation.Translate(Session.Translations, controls);
+            FormValidation.Translate(Session.Translations, toolStripItems);
+        }
+
+        public void UpdateLanguage(ILanguage language)
+        {
+            try
+            {
+                Translate();
+                CheckLanguage(language);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+        #endregion
+
+        private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
+
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
         #region Menus
         private void menuLogout_Click(object sender, EventArgs e)
@@ -202,88 +286,21 @@ namespace LaundryManagement.UI
             frm.Show();
         }
 
-        #endregion
-
-        #region Language
-
-        private void PopulateLanguageMenu()
+        private void menuProcessesClinicShipping_Click(object sender, EventArgs e)
         {
-            try
-            {
-                this.menuLanguage.DropDownItems.Clear();
-                menuLanguage.DropDownItems.Add(menuLanguageManage);
-                menuLanguage.DropDownItems.Add(new ToolStripSeparator());
-
-                foreach (var language in translatorBLL.GetAllLanguages())
-                {
-                    var item = new ToolStripMenuItem();
-                    item.Text = language.Name;
-                    item.Tag = language;
-                    item.Click += languageItem_Click;
-                    this.menuLanguage.DropDownItems.Add(item);
-                }
-                if (loginBLL.IsLogged())
-                    CheckLanguage(Session.Instance.User.Language);
-            }
-            catch (ValidationException ex)
-            {
-                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
-            }
-            catch (Exception ex)
-            {
-                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
-            }
+            var frm = new frmAdministrationShippings(ShippingTypeEnum.ToClinic);
+            frm.MdiParent = this;
+            frm.Show();
         }
 
-        private void CheckLanguage(ILanguage language)
+        private void menuReportsClinicShippings_Click(object sender, EventArgs e)
         {
-            try
-            {
-                foreach (var item in this.menuLanguage.DropDownItems)
-                {
-                    if(item is ToolStripMenuItem)
-                    {
-                        if((item as ToolStripMenuItem).Tag is ILanguage)
-                            (item as ToolStripMenuItem).Checked = language.Id.Equals(((ILanguage)(item as ToolStripMenuItem).Tag).Id);
-                    }
-                }
-            }
-            catch (ValidationException ex)
-            {
-                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
-            }
-            catch (Exception ex)
-            {
-                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
-            }
+            var frm = new frmShippingReport(ShippingTypeEnum.ToClinic);
+            frm.MdiParent = this;
+            frm.Show();
         }
 
-        private void Translate()
-        {
-            FormValidation.Translate(Session.Translations, controls);
-            FormValidation.Translate(Session.Translations, toolStripItems);
-        }
-
-        public void UpdateLanguage(ILanguage language)
-        {
-            try
-            {
-                Translate();
-                CheckLanguage(language);
-            }
-            catch (ValidationException ex)
-            {
-                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
-            }
-            catch (Exception ex)
-            {
-                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
-            }
-        }
-        #endregion
-        private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
-
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+        #endregion      
 
     }
 }

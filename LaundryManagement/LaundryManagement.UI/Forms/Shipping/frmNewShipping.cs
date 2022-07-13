@@ -7,9 +7,6 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -161,9 +158,10 @@ namespace LaundryManagement.UI.Forms.Shipping
                 }
 
                 var item = itemBLL.GetByCode(code);
+                var validationResult = itemBLL.ApplyValidationForShipping(item, shippingType, (LocationDTO)this.comboOrigin.SelectedItem);
 
-                if(item.ItemStatus != ItemStatusEnum.OnLocation)
-                    throw new ValidationException("The item is not in a valid state", ValidationType.Warning);
+                if (validationResult.Messages.Count > 0)
+                    FormValidation.ShowMessage(string.Join(Environment.NewLine, validationResult.Messages), ValidationType.Info);
 
                 shippingDetailDTO.Add(new ShippingDetailDTO()
                 {

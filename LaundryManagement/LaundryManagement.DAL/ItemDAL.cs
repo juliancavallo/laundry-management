@@ -12,11 +12,12 @@ namespace LaundryManagement.DAL
     {
         private SqlConnection connection;
         private Configuration configuration;
-
+        private LocationDAL locationDAL;
         public ItemDAL()
         {
             configuration = new Configuration();
             connection = new SqlConnection();
+            locationDAL = new LocationDAL();
 
             connection.ConnectionString = configuration.GetValue<string>("connectionString");
         }
@@ -36,8 +37,12 @@ namespace LaundryManagement.DAL
 	                    i.Id as IdItem,
 	                    i.Code as ItemCode,
                         i.Created as ItemCreated,
+                        i.IdLocation,
+                        i.IdItemStatus,
+                        i.Washes as ItemWashes,
 	                    a.Id as IdArticle,
 	                    a.Name as ArticleName,
+                        a.Washes as ArticleWashes,
 	                    col.Id as IdColor,
 	                    col.Name as ColorName,
 	                    s.Id as IdSize,
@@ -45,8 +50,7 @@ namespace LaundryManagement.DAL
 	                    t.Id as IdItemType,
 	                    t.Name as ItemTypeName,
 	                    cat.Id as IdCategory,
-	                    cat.Name as CategoryName,
-                        i.IdItemStatus
+	                    cat.Name as CategoryName
                     FROM Item i
                     INNER JOIN Article a on i.IdArticle = a.Id
                     INNER JOIN Color col on a.IdColor = col.Id
@@ -147,6 +151,34 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public void UpdateWashes(IList<int> list)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.CommandText = $@"
+                    UPDATE Item SET Washes = Washes -1 
+                    WHERE Id in ({string.Join(',', list)})
+                    ";
+
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         private Item MapFromDatabase(SqlDataReader reader)
         {
             return new Item()
@@ -155,10 +187,13 @@ namespace LaundryManagement.DAL
                 Code = reader["ItemCode"].ToString(),
                 Created = DateTime.Parse(reader["ItemCreated"].ToString()),
                 ItemStatus = new ItemStatus() { Id = int.Parse(reader["IdItemStatus"].ToString()) },
+                Location = locationDAL.GetById(int.Parse(reader["IdLocation"].ToString())),
+                Washes = int.Parse(reader["ItemWashes"].ToString()),
                 Article = new Article()
                 {
                     Id = int.Parse(reader["IdArticle"].ToString()),
                     Name = reader["ArticleName"].ToString(),
+                    Washes = int.Parse(reader["ArticleWashes"].ToString()),
                     Color = new Color()
                     {
                         Id = int.Parse(reader["IdColor"].ToString()),

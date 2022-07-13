@@ -14,5 +14,6 @@ namespace LaundryManagement.Domain.DTOs
         public ItemTypeDTO Type { get; set; }
         public ColorDTO Color { get; set; }
         public SizeDTO Size { get; set; }
+        public int Washes { get; set; }
     }
 }

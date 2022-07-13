@@ -16,5 +16,16 @@ namespace LaundryManagement.Domain.DTOs
         public string Address { get; set; }
         public LocationDTO? ParentLocation { get; set; }
         public LocationType LocationType { get; set; }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is LocationDTO dTO &&
+                   Id == dTO.Id;
+        }
+
+        public override int GetHashCode()
+        {
+            return HashCode.Combine(Id);
+        }
     }
 }

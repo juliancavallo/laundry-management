@@ -11,6 +11,13 @@ namespace LaundryManagement.BLL.Mappers
 {
     public class ItemMapper
     {
+        private LocationMapper locationMapper;
+
+        public ItemMapper()
+        {
+            this.locationMapper = new LocationMapper();
+        }
+
         public Item MapToEntity(ItemDTO dto)
         {
             return new Item()
@@ -19,10 +26,13 @@ namespace LaundryManagement.BLL.Mappers
                 Code = dto.Code,
                 Created = dto.Created,
                 ItemStatus = new ItemStatus() { Id = dto.Id },
+                Location = locationMapper.MapToEntity(dto.Location),
+                Washes = dto.Washes,
                 Article = new Article()
                 {
                     Id = dto.Article.Id,
                     Name = dto.Article.Name,
+                    Washes = dto.Article.Washes,
                     Color = new Color()
                     {
                         Id = dto.Article.Color.Id,
@@ -55,10 +65,13 @@ namespace LaundryManagement.BLL.Mappers
                 Code = entity.Code,
                 Created = entity.Created,
                 ItemStatus = (ItemStatusEnum)entity.ItemStatus.Id,
+                Location = locationMapper.MapToDTO(entity.Location),
+                Washes = entity.Washes,
                 Article = new ArticleDTO()
                 {
                     Id = entity.Article.Id,
                     Name = entity.Article.Name,
+                    Washes = entity.Article.Washes,
                     Color = new ColorDTO()
                     {
                         Id = entity.Article.Color.Id,

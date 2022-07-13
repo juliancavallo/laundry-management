@@ -65,7 +65,9 @@ namespace LaundryManagement.BLL
         public void Save(ShippingDTO shipping) 
         { 
             dal.Save(mapper.MapToEntity(shipping));
-            itemDAL.UpdateStatus(shipping.ShippingDetail.Select(x => x.Item.Id).ToList(), (int)ItemStatus.ItemStatusByShippingStatus[shipping.Status]);
+
+            var itemIds = shipping.ShippingDetail.Select(x => x.Item.Id).ToList();
+            itemDAL.UpdateStatus(itemIds, (int)ItemStatus.ItemStatusByShippingStatus[shipping.Status]);
 
             var traceabilityList = shipping.ShippingDetail.Select(x => new TraceabilityDTO()
             {
@@ -79,6 +81,9 @@ namespace LaundryManagement.BLL
             }).ToList();
 
             traceabilityBLL.Save(traceabilityList);
+
+            if (shipping.Type == ShippingTypeEnum.ToClinic)
+                itemDAL.UpdateWashes(itemIds);
         }
 
         public List<ShippingDetailViewDTO> MapToView(List<ShippingDetailDTO> shippingDetailDTO)

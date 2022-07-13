@@ -13,5 +13,7 @@ namespace LaundryManagement.Domain.Entities
         public DateTime Created { get; set; }
         public Article Article { get; set; }
         public ItemStatus ItemStatus { get; set; }
+        public Location Location { get; set; }
+        public int Washes { get; set; }
     }
 }

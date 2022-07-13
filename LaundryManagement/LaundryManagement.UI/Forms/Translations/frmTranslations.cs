@@ -29,8 +29,8 @@ namespace LaundryManagement.UI.Forms.Translations
             PopulateComboLanguages();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.lblLanguage, this.lblTranslations, this.btnAddRow, this.btnDeleteRow, this.btnSave, this.btnManageLanguages};
-            
+            controls = new List<Control>() { this, this.lblLanguage, this.lblTranslations, this.btnAddRow, this.btnDeleteRow, this.btnSave, this.btnManageLanguages };
+
 
             Translate();
         }
@@ -49,7 +49,7 @@ namespace LaundryManagement.UI.Forms.Translations
             this.dataGridView1.AllowUserToResizeColumns = false;
             this.dataGridView1.AllowUserToResizeRows = false;
             this.dataGridView1.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            
+
             this.comboLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
             this.Tag = "Translations";
             this.lblLanguage.Tag = "Language";
@@ -126,7 +126,7 @@ namespace LaundryManagement.UI.Forms.Translations
                 };
 
                 itemsToUpdate[selectedLanguage.Id].Add(newRow);
-                
+
                 this.LoadGridData(itemsToUpdate[selectedLanguage.Id]);
                 this.dataGridView1.FirstDisplayedScrollingRowIndex = itemsToUpdate[selectedLanguage.Id].Count - 1;
             }
@@ -146,8 +146,8 @@ namespace LaundryManagement.UI.Forms.Translations
             {
                 var selectedLanguage = this.comboLanguage.SelectedItem as Language;
                 var item = this.dataGridView1.CurrentRow.DataBoundItem as TranslationViewDTO;
-                
-                if(!itemsToDelete.ContainsKey(selectedLanguage.Id))
+
+                if (!itemsToDelete.ContainsKey(selectedLanguage.Id))
                     itemsToDelete.Add(selectedLanguage.Id, new List<TranslationViewDTO>());
 
                 itemsToDelete[selectedLanguage.Id].Add(item);
@@ -169,7 +169,7 @@ namespace LaundryManagement.UI.Forms.Translations
         {
             try
             {
-                foreach(var list in itemsToUpdate)
+                foreach (var list in itemsToUpdate)
                 {
                     var cleanList = list.Value.Where(x => !string.IsNullOrWhiteSpace(x.Tag) && !string.IsNullOrWhiteSpace(x.Description));
                     cleanList = cleanList.GroupBy(x => x.Tag).Select(x => new TranslationViewDTO()
@@ -180,8 +180,8 @@ namespace LaundryManagement.UI.Forms.Translations
                         Tag = x.Key
                     });
                     translatorBLL.Save(cleanList.ToList(), list.Key);
-                    
-                    if(itemsToDelete.ContainsKey(list.Key))
+
+                    if (itemsToDelete.ContainsKey(list.Key))
                         translatorBLL.Delete(itemsToDelete[list.Key], list.Key);
                 }
 
@@ -204,7 +204,14 @@ namespace LaundryManagement.UI.Forms.Translations
         {
             var frm = new frmLanguage();
             frm.Show();
-            frm.FormClosing += new FormClosingEventHandler((sender, e) => PopulateComboLanguages());
+            frm.FormClosing += frmLanguageClosed;
         }
+
+        private void frmLanguageClosed(object sender, EventArgs e)
+        {
+            PopulateComboLanguages();
+            itemsToUpdate = translatorBLL.GetAllTranslationsByLanguage();
+        } 
     }
+    
 }
