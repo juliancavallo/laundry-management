@@ -179,10 +179,10 @@ namespace LaundryManagement.UI.Forms.Translations
                         IdTranslation = x.FirstOrDefault().IdTranslation,
                         Tag = x.Key
                     });
-                    translatorBLL.Save(cleanList.ToList(), list.Key);
+                    translatorBLL.SaveTranslations(cleanList.ToList(), list.Key);
 
                     if (itemsToDelete.ContainsKey(list.Key))
-                        translatorBLL.Delete(itemsToDelete[list.Key], list.Key);
+                        translatorBLL.DeleteTranslations(itemsToDelete[list.Key], list.Key);
                 }
 
                 Session.SetTranslations(translatorBLL.GetTranslations(Session.Instance.User.Language as Language));

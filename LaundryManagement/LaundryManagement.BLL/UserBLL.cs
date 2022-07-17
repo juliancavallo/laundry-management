@@ -15,10 +15,12 @@ namespace LaundryManagement.BLL
         private UserMapper mapper;
         private UserDAL dal;
         private PermissionDAL permissionDAL;
+        private TranslatorBLL translatorBLL;
 
         public UserBLL()
         {
             this.permissionDAL = new PermissionDAL();
+            this.translatorBLL = new TranslatorBLL();
             this.dal = new UserDAL();
             this.mapper = new UserMapper();
         }
@@ -57,6 +59,12 @@ namespace LaundryManagement.BLL
 
             var entity = mapper.MapToEntity(dto);
             this.dal.Save(entity);
+
+            if (Session.Instance.User.Id == entity.Id)
+            {
+                Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
+                Session.ChangeLanguage(entity.Language);
+            }
         }
 
         public IList<UserDTO> GetByFilter(UserFilter filter)

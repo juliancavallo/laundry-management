@@ -158,10 +158,9 @@ namespace LaundryManagement.UI.Forms.Shipping
                 }
 
                 var item = itemBLL.GetByCode(code);
-                var validationResult = itemBLL.ApplyValidationForShipping(item, shippingType, (LocationDTO)this.comboOrigin.SelectedItem);
 
-                if (validationResult.Messages.Count > 0)
-                    FormValidation.ShowMessage(string.Join(Environment.NewLine, validationResult.Messages), ValidationType.Info);
+                var validationResult = itemBLL.ApplyValidationForShipping(item, shippingType, (LocationDTO)this.comboOrigin.SelectedItem);
+                FormValidation.ShowValidationMessages(validationResult);
 
                 shippingDetailDTO.Add(new ShippingDetailDTO()
                 {

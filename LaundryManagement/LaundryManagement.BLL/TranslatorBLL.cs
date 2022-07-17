@@ -1,4 +1,5 @@
-﻿using LaundryManagement.DAL;
+﻿using LaundryManagement.BLL.Validators;
+using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Interfaces.Domain.Entities;
@@ -11,10 +12,14 @@ namespace LaundryManagement.BLL
     public class TranslatorBLL
     {
         private TranslationDAL dal;
+        private UserDAL userDAL;
+        private LanguageValidator languageValidator;
 
         public TranslatorBLL()
         {
             dal = new TranslationDAL();
+            userDAL = new UserDAL();
+            languageValidator = new LanguageValidator();
         }
 
         public Language GetDefaultLanguage()
@@ -65,7 +70,7 @@ namespace LaundryManagement.BLL
             }).ToList();
         }
 
-        public void Save(List<TranslationViewDTO> list, int languageId)
+        public void SaveTranslations(List<TranslationViewDTO> list, int languageId)
         {
             var translations = list.Select(x => new Translation()
             {
@@ -82,7 +87,7 @@ namespace LaundryManagement.BLL
             dal.SaveTranslations(translations, languageId);
         }
 
-        public void Delete(List<TranslationViewDTO> list, int languageId)
+        public void DeleteTranslations(List<TranslationViewDTO> list, int languageId)
         {
             if(list.Where(x => x.IdTag > 0).Count() > 0)
             {
@@ -109,6 +114,15 @@ namespace LaundryManagement.BLL
         { 
             if(list.Where(x => x.Id > 0).Count() > 0)
                 dal.DeleteLanguages(list); 
+        }
+
+        public ValidationResponseDTO ApplyValidationForDelete(Language language)
+        {
+            var result = new ValidationResponseDTO();
+            languageValidator.DeleteDefaultValidation(language);
+            languageValidator.DeleteUsedLanguageValidation(language, userDAL.GetAll());
+
+            return result;
         }
     }
 }

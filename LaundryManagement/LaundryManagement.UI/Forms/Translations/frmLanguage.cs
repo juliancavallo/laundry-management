@@ -93,11 +93,9 @@ namespace LaundryManagement.UI.Forms.Translations
             {
                 var source = this.dataGridView1.DataSource as List<Language>;
                 var item = this.dataGridView1.CurrentRow.DataBoundItem as Language;
-                if (item.Default)
-                {
-                    FormValidation.ShowMessage(Session.Translations[Tags.DeleteDefaultLanguage].Text, ValidationType.Warning);
-                    return;
-                }
+
+                var validationResult = translatorBLL.ApplyValidationForDelete(item);
+                FormValidation.ShowValidationMessages(validationResult);
 
                 itemsToDelete.Add(item);
                 source.Remove(item);

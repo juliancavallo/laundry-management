@@ -1,4 +1,5 @@
-﻿using LaundryManagement.Domain.Entities;
+﻿using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
@@ -103,6 +104,12 @@ namespace LaundryManagement.UI
                 if (control.Tag != null && translations.ContainsKey(tagValue.ToString()))
                     control.Text = translations[tagValue.ToString()].Text;
             }
+        }
+
+        public static void ShowValidationMessages(ValidationResponseDTO validationResult)
+        {
+            if (validationResult.Messages.Count > 0)
+                ShowMessage(string.Join(Environment.NewLine, validationResult.Messages), ValidationType.Info);
         }
     }
 }
