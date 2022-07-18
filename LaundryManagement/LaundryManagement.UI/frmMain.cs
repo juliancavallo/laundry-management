@@ -8,6 +8,7 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Roles;
 using LaundryManagement.UI.Forms.Shipping;
+using LaundryManagement.UI.Forms.Stock;
 using LaundryManagement.UI.Forms.Traceability;
 using LaundryManagement.UI.Forms.Translations;
 using System;
@@ -44,7 +45,7 @@ namespace LaundryManagement.UI
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
-                this.menuReportsTraceability, this.menuReportsClinicShippings };
+                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock };
 
             PopulateLanguageMenu();
             Translate();
@@ -87,6 +88,7 @@ namespace LaundryManagement.UI
             this.menuReportsTraceability.Tag = new MenuItemMetadataDTO { TagName = "Traceability", Permission = "REP_TRA" };
             this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
             this.menuReportsClinicShippings.Tag = new MenuItemMetadataDTO { TagName = "ClinicShippings", Permission = "REP_SHP_CLI" };
+            this.menuReportsStock.Tag = new MenuItemMetadataDTO { TagName = "Stock", Permission = "REP_STK" };
             this.menuLanguage.Tag = new MenuItemMetadataDTO { TagName = "Language", Permission = "" };
             this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
             this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
@@ -281,7 +283,7 @@ namespace LaundryManagement.UI
 
         private void menuReportsTraceability_Click(object sender, EventArgs e)
         {
-            var frm = new frmReportTraceability();
+            var frm = new frmTraceabilityReport();
             frm.MdiParent = this;
             frm.Show();
         }
@@ -300,7 +302,13 @@ namespace LaundryManagement.UI
             frm.Show();
         }
 
-        #endregion      
+        private void menuReportsStock_Click(object sender, EventArgs e)
+        {
+            var frm = new frmStockReport();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+        #endregion
 
     }
 }

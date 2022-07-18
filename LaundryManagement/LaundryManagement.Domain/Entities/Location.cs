@@ -15,5 +15,21 @@ namespace LaundryManagement.Domain.Entities
         public string Address { get; set; }
         public Location? ParentLocation { get; set; }
         public LocationType LocationType { get; set; }
+        public string CompleteName
+        {
+            get
+            {
+                return GetParentName(ParentLocation) + Name;
+            }
+        }
+
+
+        private string GetParentName(Location parent)
+        {
+            if (parent == null)
+                return "";
+
+            return parent.Name + " - " + GetParentName(parent.ParentLocation);
+        }
     }
 }

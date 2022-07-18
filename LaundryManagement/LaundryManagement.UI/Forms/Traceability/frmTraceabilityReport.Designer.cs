@@ -1,6 +1,6 @@
 ﻿namespace LaundryManagement.UI.Forms.Traceability
 {
-    partial class frmReportTraceability
+    partial class frmTraceabilityReport
     {
         /// <summary>
         /// Required designer variable.
@@ -70,7 +70,7 @@
             this.lblItemCode.TabIndex = 3;
             this.lblItemCode.Text = "label1";
             // 
-            // frmReportTraceability
+            // frmTraceabilityReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -79,10 +79,10 @@
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.txtCode);
             this.Controls.Add(this.grid);
-            this.Name = "frmReportTraceability";
-            this.Text = "frmReportTraceability";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmReportTraceability_FormClosing);
-            this.Load += new System.EventHandler(this.frmReportTraceability_Load);
+            this.Name = "frmTraceabilityReport";
+            this.Text = "frmTraceabilityReport";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmTraceabilityReport_FormClosing);
+            this.Load += new System.EventHandler(this.frmTraceabilityReport_Load);
             ((System.ComponentModel.ISupportInitialize)(this.grid)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

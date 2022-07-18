@@ -15,11 +15,11 @@ using System.Windows.Forms;
 
 namespace LaundryManagement.UI.Forms.Traceability
 {
-    public partial class frmReportTraceability : Form, ILanguageObserver
+    public partial class frmTraceabilityReport : Form, ILanguageObserver
     {
         private TraceabilityBLL traceabilityBLL;
         private IList<Control> controls;
-        public frmReportTraceability()
+        public frmTraceabilityReport()
         {
             traceabilityBLL = new TraceabilityBLL();
 
@@ -54,9 +54,9 @@ namespace LaundryManagement.UI.Forms.Traceability
 
         private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
-        private void frmReportTraceability_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
+        private void frmTraceabilityReport_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
-        private void frmReportTraceability_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+        private void frmTraceabilityReport_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
         private void ReloadGridEvent(string code)
         {

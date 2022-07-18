@@ -184,7 +184,8 @@ namespace LaundryManagement.DAL
                 Name = reader["Name"].ToString(),
                 Address = reader["Address"].ToString(),
                 IsInternal = bool.Parse(reader["IsInternal"].ToString()),
-                LocationType = (LocationType)int.Parse(reader["IdLocationType"].ToString())
+                LocationType = (LocationType)int.Parse(reader["IdLocationType"].ToString()),
+                ParentLocation = idParentLocation.HasValue ? GetById(idParentLocation.Value) : null,
             };
         }
     }

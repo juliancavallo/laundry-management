@@ -32,6 +32,7 @@ namespace LaundryManagement.BLL.Mappers
                 Address = entity.Address,
                 IsInternal = entity.IsInternal,
                 LocationType = entity.LocationType,
+                CompleteName = entity.CompleteName,
             };
             return result;
         }

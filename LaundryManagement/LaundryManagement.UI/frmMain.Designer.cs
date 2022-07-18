@@ -58,6 +58,7 @@ namespace LaundryManagement.UI
             this.menuReportsTraceability = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReportsLaundryShippings = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReportsClinicShippings = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReportsStock = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLogout = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguageManage = new System.Windows.Forms.ToolStripMenuItem();
@@ -238,7 +239,8 @@ namespace LaundryManagement.UI
             this.menuReportsMovements,
             this.menuReportsTraceability,
             this.menuReportsLaundryShippings,
-            this.menuReportsClinicShippings});
+            this.menuReportsClinicShippings,
+            this.menuReportsStock});
             this.menuReports.Name = "menuReports";
             this.menuReports.Size = new System.Drawing.Size(59, 20);
             this.menuReports.Text = "Reports";
@@ -269,6 +271,13 @@ namespace LaundryManagement.UI
             this.menuReportsClinicShippings.Size = new System.Drawing.Size(180, 22);
             this.menuReportsClinicShippings.Text = "Clinic Shippings";
             this.menuReportsClinicShippings.Click += new System.EventHandler(this.menuReportsClinicShippings_Click);
+            // 
+            // menuReportsStock
+            // 
+            this.menuReportsStock.Name = "menuReportsStock";
+            this.menuReportsStock.Size = new System.Drawing.Size(180, 22);
+            this.menuReportsStock.Text = "Stock";
+            this.menuReportsStock.Click += new System.EventHandler(this.menuReportsStock_Click);
             // 
             // menuLogout
             // 
@@ -350,5 +359,6 @@ namespace LaundryManagement.UI
         private ToolStripMenuItem menuAdministrationRoles;
         private ToolStripMenuItem menuReportsTraceability;
         private ToolStripMenuItem menuReportsClinicShippings;
+        private ToolStripMenuItem menuReportsStock;
     }
 }

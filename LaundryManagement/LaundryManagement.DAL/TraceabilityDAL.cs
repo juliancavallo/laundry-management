@@ -50,7 +50,8 @@ namespace LaundryManagement.DAL
                       INNER JOIN Item i on t.IdItem = i.Id
                       INNER JOIN ItemStatus st on t.IdItemStatus = st.Id
                       INNER JOIN MovementType mt on t.IdMovementType = mt.Id
-                      WHERE i.Code = '{code}'
+                      WHERE i.Code LIKE '%{code}%'
+                      ORDER BY t.[Date] DESC
                     ";
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();

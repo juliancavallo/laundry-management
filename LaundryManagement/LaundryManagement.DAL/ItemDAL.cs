@@ -22,24 +22,15 @@ namespace LaundryManagement.DAL
             connection.ConnectionString = configuration.GetValue<string>("connectionString");
         }
 
-        public Item Get(string? code = null, int? id = null)
-        {
-            SqlDataReader reader = null;
-            try 
-            { 
-                connection.Open();
-
-                var condition = string.IsNullOrWhiteSpace(code) ? "1 = 1" : $"i.Code = '{code}'";
-                condition += id.HasValue ? $"AND i.Id = {id}" : "";
-
-                SqlCommand cmd = new SqlCommand(@$"
+        string GetQuery = @$"
                     SELECT 
 	                    i.Id as IdItem,
 	                    i.Code as ItemCode,
                         i.Created as ItemCreated,
                         i.IdLocation,
-                        i.IdItemStatus,
                         i.Washes as ItemWashes,
+                        st.Id as IdItemStatus,
+                        st.Name as ItemStatusName,
 	                    a.Id as IdArticle,
 	                    a.Name as ArticleName,
                         a.Washes as ArticleWashes,
@@ -57,7 +48,19 @@ namespace LaundryManagement.DAL
                     INNER JOIN Size s on a.IdSize = s.Id
                     INNER JOIN ItemType t on a.IdItemType = t.Id
                     INNER JOIN Category cat on t.IdCategory = cat.Id
-                    WHERE {condition}");
+                    INNER JOIN ItemStatus st on i.IdItemStatus = st.Id";
+
+        public Item Get(string? code = null, int? id = null)
+        {
+            SqlDataReader reader = null;
+            try 
+            { 
+                connection.Open();
+
+                var condition = string.IsNullOrWhiteSpace(code) ? "1 = 1" : $"i.Code = '{code}'";
+                condition += id.HasValue ? $"AND i.Id = {id}" : "";
+
+                SqlCommand cmd = new SqlCommand($@"{GetQuery} WHERE {condition}");
 
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
@@ -68,8 +71,38 @@ namespace LaundryManagement.DAL
                     item = this.MapFromDatabase(reader);
                 }
 
-
                 return item;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
+
+        public IList<Item> GetAll()
+        {
+            SqlDataReader reader = null;
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(GetQuery);
+
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                IList<Item> items = new List<Item>();
+                while (reader.Read())
+                {
+                    items.Add(this.MapFromDatabase(reader));
+                }
+
+                return items;
             }
             catch (Exception ex)
             {
@@ -186,7 +219,11 @@ namespace LaundryManagement.DAL
                 Id = int.Parse(reader["IdItem"].ToString()),
                 Code = reader["ItemCode"].ToString(),
                 Created = DateTime.Parse(reader["ItemCreated"].ToString()),
-                ItemStatus = new ItemStatus() { Id = int.Parse(reader["IdItemStatus"].ToString()) },
+                ItemStatus = new ItemStatus() 
+                { 
+                    Id = int.Parse(reader["IdItemStatus"].ToString()) ,
+                    Name = reader["ItemStatusName"].ToString()
+                },
                 Location = locationDAL.GetById(int.Parse(reader["IdLocation"].ToString())),
                 Washes = int.Parse(reader["ItemWashes"].ToString()),
                 Article = new Article()
