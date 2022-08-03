@@ -61,16 +61,15 @@ namespace LaundryManagement.UI
                 });
                 FormValidation.ValidatePasswordMatch(this.txtNewPassword.Text, this.txtNewPasswordRepeated.Text);
 
-                var policies = new PasswordPolicies();
-                if (!securityService.CheckPasswordSecurity(this.txtNewPassword.Text, policies))
+                if (!securityService.CheckPasswordSecurity(this.txtNewPassword.Text))
                 {
-                    FormValidation.ShowPasswordUnsecureMessage(policies);
+                    FormValidation.ShowPasswordUnsecureMessage();
                     return;
                 }
 
                 userBLL.ResetPassword(this.txtEmail.Text, this.txtNewPassword.Text);
 
-                FormValidation.ShowMessage(Session.Translations[Tags.PasswordReset].Text, ValidationType.Info);
+                FormValidation.ShowMessage(Session.Translations[Tags.PasswordReset], ValidationType.Info);
 
                 this.Close();
             }

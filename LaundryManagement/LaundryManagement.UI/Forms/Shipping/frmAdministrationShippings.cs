@@ -59,9 +59,16 @@ namespace LaundryManagement.UI.Forms.Shipping
 
         private void ReloadGridEvent()
         {
-            this.gridShippings.DataSource = null;
-            this.gridShippings.DataSource = shippingBLL.GetByTypeForView(new ShippingFilter() { ShippingType = shippingType});
-            this.gridShippings.Columns["Id"].Visible = false;
+            try
+            {
+                this.gridShippings.DataSource = null;
+                this.gridShippings.DataSource = shippingBLL.GetByTypeForView(new ShippingFilter() { ShippingType = shippingType});
+                this.gridShippings.Columns["Id"].Visible = false;
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
         private void btnNewShipping_Click(object sender, EventArgs e)

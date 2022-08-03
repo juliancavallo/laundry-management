@@ -28,7 +28,7 @@ namespace LaundryManagement.BLL
         public void Delete(UserDTO dto)
         {
             if (dto.Id == Session.Instance.User.Id)
-                throw new ValidationException(Session.Translations[Tags.DeleteLoggedUser].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.DeleteLoggedUser], ValidationType.Warning);
 
             var entity = mapper.MapToEntity(dto);
             this.dal.Delete(entity);
@@ -55,12 +55,12 @@ namespace LaundryManagement.BLL
         {
             var existingUser = this.dal.GetAll().Where(x => x.UserName == dto.UserName || x.Email == dto.Email);
             if (existingUser.Any(x => x.Id != dto.Id || dto.Id == 0))
-                throw new ValidationException(Session.Translations[Tags.UserDuplicate].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.UserDuplicate], ValidationType.Warning);
 
             var entity = mapper.MapToEntity(dto);
             this.dal.Save(entity);
 
-            if (Session.Instance.User.Id == entity.Id)
+            if (Session.IsLogged() && Session.Instance.User.Id == entity.Id)
             {
                 Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
                 Session.ChangeLanguage(entity.Language);
@@ -98,7 +98,7 @@ namespace LaundryManagement.BLL
         {
             var user = this.dal.GetAll().Where(x => x.Email == email).FirstOrDefault();
             if (user == null)
-                throw new ValidationException(Session.Translations[Tags.NonexistentUser].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.NonexistentUser], ValidationType.Error);
 
             user.Password = Encryptor.Hash(newPassword);
             dal.Save(user);

@@ -8,8 +8,9 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Entities
 {
-    public class Location : IEntity
+    public class Location
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public bool IsInternal { get; set; }
         public string Address { get; set; }

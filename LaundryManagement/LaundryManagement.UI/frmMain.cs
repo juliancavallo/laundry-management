@@ -11,6 +11,7 @@ using LaundryManagement.UI.Forms.Shipping;
 using LaundryManagement.UI.Forms.Stock;
 using LaundryManagement.UI.Forms.Traceability;
 using LaundryManagement.UI.Forms.Translations;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -25,15 +26,15 @@ namespace LaundryManagement.UI
         private TranslatorBLL translatorBLL;
         private UserBLL userBLL;
 
-        private Configuration configuration;
         private IList<Control> controls;
         private IList<ToolStripItem> toolStripItems;
         public frmMain()
         {
+            SetSettings();
+
             loginBLL = new LoginBLL();
             translatorBLL = new TranslatorBLL();
             userBLL = new UserBLL();
-            configuration = new Configuration();
 
             InitializeComponent();
             ApplySetup();
@@ -56,7 +57,7 @@ namespace LaundryManagement.UI
             this.StartPosition = FormStartPosition.CenterScreen;
             this.IsMdiContainer = true;
 
-            this.BackgroundImage = Image.FromFile(Path.GetFullPath(@"..\..\..\") + configuration.GetValue<string>("imagePath"));
+            this.BackgroundImage = Image.FromFile(Path.GetFullPath(@"..\..\..\") + Program.Configuration.GetSection("imagePath").Value.ToString());
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -137,6 +138,17 @@ namespace LaundryManagement.UI
             var frmLogin = new frmLogin();
             frmLogin.MdiParent = this;
             frmLogin.Show();
+        }
+
+        private void SetSettings()
+        {
+            Session.Settings = new SettingsDTO()
+            {
+                ConnectionString = Program.Configuration.GetSection("ConnectionString").Value.ToString(),
+                ImagePath = Program.Configuration.GetSection("ImagePath").Value.ToString(),
+                PasswordPolicy = Program.Configuration.GetSection("PasswordPolicy").Get<PasswordPolicy>(),
+                EmailSettings = Program.Configuration.GetSection("EmailSettings").Get<EmailSettings>(),
+            };
         }
 
         #region Language

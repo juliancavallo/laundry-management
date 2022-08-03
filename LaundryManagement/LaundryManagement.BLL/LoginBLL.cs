@@ -1,6 +1,5 @@
 ﻿using LaundryManagement.Domain;
 using LaundryManagement.Domain.DTOs;
-using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
@@ -12,32 +11,33 @@ namespace LaundryManagement.BLL
 {
     public class LoginBLL
     {
-        private Configuration configuration;
         private UserBLL userBLL;
         private TranslatorBLL translatorBLL;
 
-        private int maxLoginAttempts = 1;
+        private EmailService emailService;
         private SeedService seedService;
+
+        private int maxLoginAttempts;
 
         public LoginBLL()
         {
-            configuration = new Configuration();
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
-            seedService = new SeedService(configuration.GetValue<string>("connectionString"));
+            seedService = new SeedService(Session.Settings.ConnectionString);
+            emailService = new EmailService();
 
-            maxLoginAttempts = configuration.GetValue<int>("maxLoginAttempts");
+            maxLoginAttempts = Session.Settings.PasswordPolicy.MaxLoginAttempts;
         }
 
         public UserDTO Login(LoginDTO dto)
         {
             if (Session.Instance != null)
-                throw new ValidationException(Session.Translations[Tags.SessionAlreadyOpen].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.SessionAlreadyOpen], ValidationType.Error);
 
             var filter = new UserFilter(email: dto.Email);
             var userDTO = userBLL.GetByFilter(filter).FirstOrDefault();
             if (userDTO == null)
-                throw new ValidationException(Session.Translations[Tags.NonexistentUser].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.NonexistentUser], ValidationType.Error);
 
             if(Encryptor.Hash(dto.Password) != userDTO.Password)
             {
@@ -46,13 +46,10 @@ namespace LaundryManagement.BLL
                 if (Session.LoginAttempts[dto.Email] == maxLoginAttempts)
                 {
                     this.ResetPassword(userDTO);
-                    throw new ValidationException(@"Ha superado el limite máximo de intentos de " +
-                       "inicio de sesión para el usuario " + dto.Email + ". " +
-                       "Le enviaremos a su correo su nueva contraseña," +
-                       "la cual recomendamos cambiar la proxima vez que ingrese.", ValidationType.Warning);
+                    throw new ValidationException(string.Format(Session.Translations[Tags.PasswordLimitMessage], dto.Email), ValidationType.Warning);
                 }
                 
-                throw new ValidationException(Session.Translations[Tags.IncorrectPassword].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.IncorrectPassword], ValidationType.Error);
             }
 
             Session.Login(userDTO);
@@ -80,14 +77,9 @@ namespace LaundryManagement.BLL
             dto.Password = Encryptor.Hash(newPassword);
             userBLL.Save(dto);
 
-            string message = string.Format(
-                    @"<p>Su nueva contraseña es <h1>{0}</h1> </p> " +
-                    "<p>Recuerde cambiarla cuando inicie sesión nuevamente</p>" +
-                    "<p>Muchas gracias</p>",
-                    newPassword);
+            string message = string.Format(Session.Translations[Tags.PasswordResetEmailBody], newPassword);
 
-            EmailService emailService = new EmailService();
-            //emailService.SendMail(dto.Email, "Password Reset", message);
+            emailService.SendMail(dto.Email, Session.Translations[Tags.PasswordResetEmailSubject], message);
         }
 
         public void SeedData() => seedService.SeedData();

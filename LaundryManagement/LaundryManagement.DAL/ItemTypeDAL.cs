@@ -3,19 +3,18 @@ using LaundryManagement.Domain;
 using System.Data.SqlClient;
 using System.Collections.Generic;
 using System;
+using LaundryManagement.Services;
 
 namespace LaundryManagement.DAL
 {
     public class ItemTypeDAL : ICrud<ItemType>
     {
         private SqlConnection connection;
-        private Configuration configuration;
         public ItemTypeDAL()
         {
-            configuration = new Configuration();
             connection = new SqlConnection();
 
-            connection.ConnectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         public void Delete(ItemType entity)

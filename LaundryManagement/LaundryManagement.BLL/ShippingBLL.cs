@@ -19,6 +19,7 @@ namespace LaundryManagement.BLL
         private ShippingDAL dal;
         private ItemDAL itemDAL;
         private TraceabilityBLL traceabilityBLL;
+        private EmailService emailService;
 
         public ShippingBLL()
         {
@@ -26,6 +27,7 @@ namespace LaundryManagement.BLL
             this.itemDAL = new ItemDAL();
             this.traceabilityBLL = new TraceabilityBLL();
             this.mapper = new ShippingMapper();
+            this.emailService = new EmailService();
         }
 
         public IEnumerable<ShippingDTO> GetByType(ShippingTypeEnum shippingType)
@@ -64,7 +66,8 @@ namespace LaundryManagement.BLL
 
         public void Save(ShippingDTO shipping) 
         { 
-            dal.Save(mapper.MapToEntity(shipping));
+            int id = dal.Save(mapper.MapToEntity(shipping));
+            shipping.Id = id;
 
             var itemIds = shipping.ShippingDetail.Select(x => x.Item.Id).ToList();
             itemDAL.UpdateStatus(itemIds, (int)ItemStatus.ItemStatusByShippingStatus[shipping.Status]);
@@ -84,6 +87,8 @@ namespace LaundryManagement.BLL
 
             if (shipping.Type == ShippingTypeEnum.ToClinic)
                 itemDAL.UpdateWashes(itemIds);
+
+            SendEmail(shipping);
         }
 
         public List<ShippingDetailViewDTO> MapToView(List<ShippingDetailDTO> shippingDetailDTO)
@@ -94,6 +99,18 @@ namespace LaundryManagement.BLL
                 result.AddOrUpdate(mapper.MapToViewDTO(item));
             }
             return result;
+        }
+
+        private void SendEmail(ShippingDTO shipping)
+        {
+            var statusName = dal.GetStatusName((int)shipping.Status);
+            var message = string.Format(Session.Translations[Tags.ShippingEmailBody],
+                shipping.Id, statusName, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), Session.Instance.User.FullName);
+            
+            emailService.SendMail(
+                shipping.Responsible.Email,
+                $"{Session.Translations["Shipping"]} {shipping.Id} - { Session.Translations[statusName] }",
+                message);
         }
     }
 }

@@ -11,14 +11,12 @@ namespace LaundryManagement.DAL
     public class LocationDAL : ICrud<Location>
     {
         private SqlConnection connection;
-        private Configuration configuration;
 
         public LocationDAL()
         {
-            configuration = new Configuration();
             connection = new SqlConnection();
 
-            connection.ConnectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         public void Delete(Location entity)
@@ -88,14 +86,14 @@ namespace LaundryManagement.DAL
 
         public Location GetById(int id)
         {
-            var connection2 = new SqlConnection();
+            var subConnection = new SqlConnection();
 
-            connection2.ConnectionString = configuration.GetValue<string>("connectionString");
+            subConnection.ConnectionString = Session.Settings.ConnectionString;
             SqlDataReader reader = null;
             try
             {
-                if(connection2.State == System.Data.ConnectionState.Closed)
-                    connection2.Open();
+                if(subConnection.State == System.Data.ConnectionState.Closed)
+                    subConnection.Open();
 
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
@@ -108,7 +106,7 @@ namespace LaundryManagement.DAL
                     FROM [Location] l
                     WHERE l.Id = {id}");
 
-                cmd.Connection = connection2;
+                cmd.Connection = subConnection;
                 reader = cmd.ExecuteReader();
 
                 Location location = new Location();
@@ -126,7 +124,7 @@ namespace LaundryManagement.DAL
             finally
             {
                 reader?.Close();
-                connection2.Close();
+                subConnection.Close();
             }
         }
 

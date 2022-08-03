@@ -11,20 +11,18 @@ namespace LaundryManagement.DAL
     public class TraceabilityDAL
     {
         private SqlConnection connection;
-        private Configuration configuration;
         private LocationDAL locationDAL;
         private ItemDAL itemDAL;
         private UserDAL userDAL;
 
         public TraceabilityDAL()
         {
-            configuration = new Configuration();
             connection = new SqlConnection();
             locationDAL = new LocationDAL();
             userDAL = new UserDAL();    
             itemDAL = new ItemDAL();
 
-            connection.ConnectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         public List<Traceability> Get(string code)

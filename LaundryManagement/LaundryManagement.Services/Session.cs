@@ -7,12 +7,12 @@ namespace LaundryManagement.Services
 {
     public class Session
     {
-
         private static object _lock = new Object();
         private static Session _session;
         private static Dictionary<string, int> _loginAttempts = new Dictionary<string, int>();
+
         private static IList<ILanguageObserver> _observers = new List<ILanguageObserver>();
-        private static IDictionary<string, ITranslation> _translations = new Dictionary<string, ITranslation>();
+        private static IDictionary<string, string> _translations = new Dictionary<string, string>();
 
         public IUserDTO User { get; set; }
         public static Dictionary<string, int> LoginAttempts 
@@ -20,7 +20,7 @@ namespace LaundryManagement.Services
             get { return _loginAttempts; }
             set { _loginAttempts = value; }        
         }
-        public static IDictionary<string, ITranslation> Translations
+        public static IDictionary<string, string> Translations
         {
             get { return _translations; }
         }
@@ -32,6 +32,8 @@ namespace LaundryManagement.Services
                 return _session;
             }
         }
+
+        public static ISettingsDTO Settings { get; set; }
 
         public static void Login(IUserDTO user)
         {
@@ -68,8 +70,12 @@ namespace LaundryManagement.Services
             }
         }
 
+        public static bool IsLogged() => _session != null;
+
         public static void SubscribeObserver(ILanguageObserver observer) => _observers.Add(observer);
+
         public static void UnsubscribeObserver(ILanguageObserver observer) => _observers.Remove(observer);
+
         private static void Notify(ILanguage language)
         {
             foreach (var observer in _observers)
@@ -86,7 +92,7 @@ namespace LaundryManagement.Services
             }
         }
 
-        public static void SetTranslations(IDictionary<string, ITranslation> translations) => _translations = translations;
+        public static void SetTranslations(IDictionary<string, string> translations) => _translations = translations;
 
         private Session()
         {

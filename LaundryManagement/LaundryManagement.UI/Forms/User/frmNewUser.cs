@@ -45,7 +45,7 @@ namespace LaundryManagement.UI
 
             this.txtPassword.PasswordChar = '*';
             this.txtConfirmPassword.PasswordChar = '*';
-            this.txtPassword.PlaceholderText = userDTO?.Id == null ? "" : Session.Translations[Tags.PasswordPlaceholder].Text;
+            this.txtPassword.PlaceholderText = userDTO?.Id == null ? "" : Session.Translations[Tags.PasswordPlaceholder];
             this.txtConfirmPassword.Enabled = false;
             this.comboLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
 
@@ -97,10 +97,9 @@ namespace LaundryManagement.UI
                 {
                     FormValidation.ValidatePasswordMatch(this.txtConfirmPassword.Text, this.txtPassword.Text);
 
-                    var securityParams = new PasswordPolicies();
-                    if (!securityService.CheckPasswordSecurity(this.txtPassword.Text, securityParams))
+                    if (!securityService.CheckPasswordSecurity(this.txtPassword.Text))
                     {
-                        FormValidation.ShowPasswordUnsecureMessage(securityParams);
+                        FormValidation.ShowPasswordUnsecureMessage();
                         return;
                     }
                 }

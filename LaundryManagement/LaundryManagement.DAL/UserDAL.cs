@@ -10,14 +10,12 @@ namespace LaundryManagement.DAL
     public class UserDAL : ICrud<User>
     {
         private SqlConnection connection;
-        private Configuration configuration;
 
         public UserDAL()
         {
-            configuration = new Configuration();
             connection = new SqlConnection();
 
-            connection.ConnectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         public void Delete(User entity)

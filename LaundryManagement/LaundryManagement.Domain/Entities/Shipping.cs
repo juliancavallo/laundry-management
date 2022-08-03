@@ -8,15 +8,12 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Entities
 {
-    public class Shipping : IEntity
+    public class Shipping : Process
     {
-        public DateTime CreatedDate { get; set; }
-        public Location Origin { get; set; }
-        public Location Destination { get; set; }
+        public int Id { get; set; }
         public ShippingStatus Status { get; set; }
         public List<ShippingDetail> ShippingDetail { get; set; }
         public ShippingType Type { get; set; }
         public User Responsible { get; set; }
-        public User CreationUser { get; set; }
     }
 }

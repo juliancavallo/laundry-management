@@ -61,7 +61,7 @@ namespace LaundryManagement.BLL
                     Article = x.Article.Name,
                     ItemType = x.Article.Type.Name,
                     Location = x.Location.Name,
-                    Status = Session.Translations[x.ItemStatus.Name].Text,
+                    Status = Session.Translations[x.ItemStatus.Name],
                     Washes = x.Washes
                 })
                 .ToList();
@@ -72,7 +72,7 @@ namespace LaundryManagement.BLL
             return itemStatusDAL.GetAll().Select(x => new ItemStatusDTO()
             {
                 Id = x.Id,
-                Name = Session.Translations[x.Name].Text,
+                Name = Session.Translations[x.Name],
             }).ToList();
         }
 

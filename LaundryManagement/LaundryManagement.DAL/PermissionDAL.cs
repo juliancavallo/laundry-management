@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.Domain;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -12,16 +13,11 @@ namespace LaundryManagement.DAL
     public class PermissionDAL : ICrud<Component>
     {
         private SqlConnection connection;
-        private Configuration configuration;
-        private string connectionString;
 
         public PermissionDAL()
         {
-            configuration = new Configuration();
-
             connection = new SqlConnection();
-            connectionString = configuration.GetValue<string>("connectionString");
-            connection.ConnectionString = connectionString;
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         public IList<Component> GetAll()
@@ -309,7 +305,7 @@ namespace LaundryManagement.DAL
             SqlDataReader reader = null;
             try 
             { 
-                newConnection = new SqlConnection(connectionString);
+                newConnection = new SqlConnection(Session.Settings.ConnectionString);
                 newConnection.Open();
 
                 string permissionsString = string.Join(',', addedPermissions);
@@ -392,7 +388,7 @@ namespace LaundryManagement.DAL
             try
             {
 
-                connection2.ConnectionString = configuration.GetValue<string>("connectionString"); 
+                connection2.ConnectionString = Session.Settings.ConnectionString; 
                 connection2.Open();
 
                 SqlCommand cmd = new SqlCommand();

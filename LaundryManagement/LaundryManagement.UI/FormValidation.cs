@@ -24,36 +24,36 @@ namespace LaundryManagement.UI
         public static void ValidateTextBoxCompleted(List<TextBox> list)
         {
             if (list.Where(x => x != null).Any(x => string.IsNullOrWhiteSpace(x.Text)))
-                throw new ValidationException(Session.Translations[Tags.FormValidationTextboxes].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.FormValidationTextboxes], ValidationType.Warning);
         }
 
         public static void ValidateGridSelectedRow(DataGridView dataGridView)
         {
             if (dataGridView.CurrentRow == null)
-                throw new ValidationException(Session.Translations[Tags.FormValidationGridRow].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.FormValidationGridRow], ValidationType.Warning);
         }
 
         public static void ValidateComboSelected(ComboBox combo)
         {
             if (combo.SelectedItem == null)
-                throw new ValidationException(Session.Translations[Tags.FormValidationCombo].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.FormValidationCombo], ValidationType.Warning);
         }
 
         public static void ValidateTreeViewSelected(TreeView treeView)
         {
             if (treeView.SelectedNode == null)
-                throw new ValidationException(Session.Translations[Tags.FormValidationTreeView].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.FormValidationTreeView], ValidationType.Warning);
         }
 
         public static void ValidatePasswordMatch(string pwd, string pwd2)
         {
             if(pwd != pwd2)
-                throw new ValidationException(Session.Translations[Tags.PasswordMatch].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.PasswordMatch], ValidationType.Error);
         }
 
         public static void ShowMessage(string message, ValidationType type)
         {
-            MessageBox.Show(message, Session.Translations[Tags.Notification].Text, MessageBoxButtons.OK, validationTypesDictionary[type]);
+            MessageBox.Show(message, Session.Translations[Tags.Notification], MessageBoxButtons.OK, validationTypesDictionary[type]);
         }
 
         public static void ValidateEmailFormat(string email)
@@ -61,48 +61,49 @@ namespace LaundryManagement.UI
             MailAddress.TryCreate(email, out var result);
 
             if(result == null)
-                throw new ValidationException(Session.Translations[Tags.EmailFormat].Text, ValidationType.Error);
+                throw new ValidationException(Session.Translations[Tags.EmailFormat], ValidationType.Error);
         }
 
-        public static void ShowPasswordUnsecureMessage(IPasswordPolicies policies)
+        public static void ShowPasswordUnsecureMessage()
         {
-            string message = Session.Translations[Tags.PasswordPolicyHeader].Text;
+            string message = Session.Translations[Tags.PasswordPolicyHeader];
+            var policies = Session.Settings.PasswordPolicy;
 
-            if (policies.MinLength > 0)
-                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyLength].Text, policies.MinLength);
+            if (policies.PasswordMinLength > 0)
+                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyLength], policies.PasswordMinLength);
 
-            if (policies.MinLowercase > 0)
-                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyLowercase].Text, policies.MinLowercase);
+            if (policies.PasswordMinLowercase > 0)
+                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyLowercase], policies.PasswordMinLowercase);
 
-            if (policies.MinUppercase > 0)
-                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyUppercase].Text, policies.MinUppercase);
+            if (policies.PasswordMinUppercase > 0)
+                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyUppercase], policies.PasswordMinUppercase);
 
-            if (policies.MinSpecialCharacters > 0)
-                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicySpecialCharacters].Text, policies.MinSpecialCharacters);
+            if (policies.PasswordMinSpecialCharacters > 0)
+                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicySpecialCharacters], policies.PasswordMinSpecialCharacters);
 
-            if (policies.MinNumbers > 0)
-                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyNumbers].Text, policies.MinNumbers);
+            if (policies.PasswordMinNumbers > 0)
+                message += Environment.NewLine + string.Format(Session.Translations[Tags.PasswordPolicyNumbers], policies.PasswordMinNumbers);
 
-            MessageBox.Show(message, Session.Translations[Tags.Notification].Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show(message, Session.Translations[Tags.Notification], MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
 
-        public static void Translate(IDictionary<string, ITranslation> translations, IList<Control> controls)
+        public static void Translate(IDictionary<string, string> translations, IList<Control> controls)
         {
             foreach (var control in controls)
             {
                 if (control.Tag != null)
                     control.Text = translations.ContainsKey(control.Tag.ToString()) ? 
-                        translations[control.Tag.ToString()].Text : 
+                        translations[control.Tag.ToString()] : 
                         control.Tag.ToString();
             }
         }
-        public static void Translate(IDictionary<string, ITranslation> translations, IList<ToolStripItem> controls)
+        public static void Translate(IDictionary<string, string> translations, IList<ToolStripItem> controls)
         {
             foreach (var control in controls)
             {
                 var tagValue = control.Tag?.GetType()?.GetProperty("TagName")?.GetValue(control.Tag, null);
                 if (control.Tag != null && translations.ContainsKey(tagValue.ToString()))
-                    control.Text = translations[tagValue.ToString()].Text;
+                    control.Text = translations[tagValue.ToString()];
             }
         }
 

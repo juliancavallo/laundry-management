@@ -30,5 +30,10 @@ namespace LaundryManagement.Domain.Enums
         public const string DeleteDefaultLanguage = "DeleteDefaultLanguage";
         public const string FormValidationCombo = "FormValidationCombo";
         public const string FormValidationTreeView = "FormValidationTreeView";
+        public const string EmailAddressName = "EmailAddressName";
+        public const string PasswordLimitMessage = "PasswordLimitMessage";
+        public const string PasswordResetEmailSubject = "PasswordResetEmailSubject";
+        public const string PasswordResetEmailBody = "PasswordResetEmailBody";
+        public const string ShippingEmailBody = "ShippingEmailBody";
     }
 }

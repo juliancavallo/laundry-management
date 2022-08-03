@@ -31,7 +31,9 @@ namespace LaundryManagement.BLL
 
         public Language GetById(int id) => dal.GetLanguageById(id);
 
-        public IDictionary<string, ITranslation> GetTranslations(Language idioma = null) => dal.GetTranslations(idioma ?? GetDefaultLanguage());
+        public IDictionary<string, string> GetTranslations(Language idioma = null) =>
+            dal.GetTranslations(idioma ?? GetDefaultLanguage())
+            .ToDictionary(k => k.Key, k => k.Value.Text);
 
         public IDictionary<int, List<TranslationViewDTO>> GetAllTranslationsByLanguage() 
         {

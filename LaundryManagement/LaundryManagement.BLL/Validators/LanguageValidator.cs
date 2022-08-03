@@ -16,7 +16,7 @@ namespace LaundryManagement.BLL.Validators
         public void DeleteDefaultValidation(Language language)
         {
             if (language.Default)
-                throw new ValidationException(Session.Translations[Tags.DeleteDefaultLanguage].Text, ValidationType.Warning);
+                throw new ValidationException(Session.Translations[Tags.DeleteDefaultLanguage], ValidationType.Warning);
         }
 
         public void DeleteUsedLanguageValidation(Language language, IList<User> allUsers)

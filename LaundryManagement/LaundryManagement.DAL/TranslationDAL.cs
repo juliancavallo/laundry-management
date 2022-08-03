@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.Domain;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Interfaces.Domain.Entities;
+using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -13,15 +14,12 @@ namespace LaundryManagement.DAL
     public class TranslationDAL
     {
         private SqlConnection connection;
-        private Configuration configuration;
         private string connectionString;
 
         public TranslationDAL()
         {
-            configuration = new Configuration();
-
             connection = new SqlConnection();
-            connectionString = configuration.GetValue<string>("connectionString");
+            connectionString = Session.Settings.ConnectionString;
             connection.ConnectionString = connectionString;
         }
 

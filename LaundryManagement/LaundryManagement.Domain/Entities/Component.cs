@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Entities
 {
-    public abstract class Component : IEntity
+    public abstract class Component
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string Permission { get; set; }
 

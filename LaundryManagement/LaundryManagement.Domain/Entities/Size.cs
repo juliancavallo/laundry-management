@@ -7,8 +7,9 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Entities
 {
-    public class Size : IEntity
+    public class Size
     {
+        public int Id { get; set; }
         public string Name { get; set; }
     }
 }

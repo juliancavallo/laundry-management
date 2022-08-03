@@ -12,19 +12,17 @@ namespace LaundryManagement.DAL
     public class ShippingDAL
     {
         private SqlConnection connection;
-        private Configuration configuration;
         private ItemDAL itemDAL;
         private LocationDAL locationDAL;
         private UserDAL userDAL;
         public ShippingDAL()
         {
-            configuration = new Configuration();
             connection = new SqlConnection();
             itemDAL = new ItemDAL();
             locationDAL = new LocationDAL();
             userDAL = new UserDAL();    
 
-            connection.ConnectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         public List<Shipping> GetByType(ShippingTypeEnum shippingType)
@@ -75,14 +73,14 @@ namespace LaundryManagement.DAL
 
         public List<ShippingDetail> GetDetailByShippingId(int id)
         {
-            var connection2 = new SqlConnection();
-            connection2.ConnectionString = configuration.GetValue<string>("connectionString");
+            var subConnection = new SqlConnection();
+            subConnection.ConnectionString = Session.Settings.ConnectionString;
 
             SqlDataReader reader = null;
             try
             {
-                if (connection2.State == System.Data.ConnectionState.Closed)
-                    connection2.Open();
+                if (subConnection.State == System.Data.ConnectionState.Closed)
+                    subConnection.Open();
 
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
@@ -91,7 +89,7 @@ namespace LaundryManagement.DAL
                     FROM ShippingDetail s
                     WHERE s.IdShipping = {id}");
 
-                cmd.Connection = connection2;
+                cmd.Connection = subConnection;
                 reader = cmd.ExecuteReader();
 
                 List<ShippingDetail> details = new List<ShippingDetail>();
@@ -110,11 +108,11 @@ namespace LaundryManagement.DAL
             finally
             {
                 reader?.Close();
-                connection2.Close();
+                subConnection.Close();
             }
         }
 
-        public void Save(Shipping entity)
+        public int Save(Shipping entity)
         {
             try
             {
@@ -154,8 +152,8 @@ namespace LaundryManagement.DAL
                     cmd.ExecuteNonQuery();
                 }
 
-
                 connection.Close();
+                return (int)newId;
             }
             catch (Exception ex)
             {
@@ -163,6 +161,37 @@ namespace LaundryManagement.DAL
             }
             finally
             {
+                connection.Close();
+            }
+        }
+
+        public string GetStatusName(int id)
+        {
+            SqlDataReader reader = null;
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(@$"SELECT Name FROM ShippingStatus WHERE Id = {id}");
+
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                string name = "";
+                while (reader.Read())
+                {
+                    name = reader["Name"]?.ToString();
+                }
+
+                return name;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
                 connection.Close();
             }
         }

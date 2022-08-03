@@ -111,8 +111,14 @@ namespace LaundryManagement.UI.Forms.Shipping
         {
             try
             {
+                var permission = new Dictionary<ShippingTypeEnum, string>()
+                {
+                    { ShippingTypeEnum.ToLaundry, "RESP_SHP_LDY" },
+                    { ShippingTypeEnum.ToClinic, "RESP_SHP_CLI" }
+                };
+
                 this.comboResponsible.DataSource = null;
-                this.comboResponsible.DataSource = userBLL.GetShippingResponsibles("RESP_SHP_LDY");
+                this.comboResponsible.DataSource = userBLL.GetShippingResponsibles(permission[shippingType]);
                 this.comboResponsible.DisplayMember = "FullName";
                 this.comboResponsible.ValueMember = "Id";
                 this.comboResponsible.SelectedIndex = -1;
@@ -239,6 +245,7 @@ namespace LaundryManagement.UI.Forms.Shipping
                 }
 
                 FormValidation.ValidateComboSelected(this.comboResponsible);
+                var selectedResponsible = (UserViewDTO)this.comboResponsible.SelectedItem;
 
                 var shipping = new ShippingDTO();
                 shipping.Origin = (LocationDTO)this.comboOrigin.SelectedItem;
@@ -247,7 +254,7 @@ namespace LaundryManagement.UI.Forms.Shipping
                 shipping.CreatedDate = DateTime.Now;
                 shipping.Status = ShippingStatusEnum.Created;
                 shipping.Type = shippingType;
-                shipping.Responsible = new UserDTO() { Id = ((UserViewDTO)this.comboResponsible.SelectedItem).Id };
+                shipping.Responsible = new UserDTO() { Id = selectedResponsible.Id, Email = selectedResponsible.Email };
                 shipping.CreationUser = (UserDTO)Session.Instance.User;
 
                 shippingBLL.Save(shipping);

@@ -69,21 +69,21 @@ namespace LaundryManagement.UI.Forms.Stock
             try
             {
                 var locationSource = locationBLL.GetAll();
-                locationSource.Add(new LocationDTO() { Id = 0, CompleteName = Session.Translations["All"].Text });
+                locationSource.Add(new LocationDTO() { Id = 0, CompleteName = Session.Translations["All"] });
                 this.comboItemLocation.DataSource = null;
                 this.comboItemLocation.DataSource = locationSource.OrderBy(x => x.Id).ToList();
                 this.comboItemLocation.DisplayMember = "CompleteName";
                 this.comboItemLocation.ValueMember = "Id";
 
                 var itemTypeSource = itemTypeBLL.GetAll();
-                itemTypeSource.Add(new ItemTypeDTO() { Id = 0, Name = Session.Translations["All"].Text });
+                itemTypeSource.Add(new ItemTypeDTO() { Id = 0, Name = Session.Translations["All"] });
                 this.comboItemType.DataSource = null;
                 this.comboItemType.DataSource = itemTypeSource.OrderBy(x => x.Id).ToList();
                 this.comboItemType.DisplayMember = "Name";
                 this.comboItemType.ValueMember = "Id";
 
                 var itemStatusSource = itemBLL.GetAllItemStatus();
-                itemStatusSource.Add(new ItemStatusDTO() { Id = 0, Name = Session.Translations["All"].Text });
+                itemStatusSource.Add(new ItemStatusDTO() { Id = 0, Name = Session.Translations["All"] });
                 this.comboItemStatus.DataSource = null;
                 this.comboItemStatus.DataSource = itemStatusSource.OrderBy(x => x.Id).ToList();
                 this.comboItemStatus.DisplayMember = "Name";

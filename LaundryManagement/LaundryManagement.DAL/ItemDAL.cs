@@ -11,15 +11,13 @@ namespace LaundryManagement.DAL
     public class ItemDAL
     {
         private SqlConnection connection;
-        private Configuration configuration;
         private LocationDAL locationDAL;
         public ItemDAL()
         {
-            configuration = new Configuration();
             connection = new SqlConnection();
             locationDAL = new LocationDAL();
 
-            connection.ConnectionString = configuration.GetValue<string>("connectionString");
+            connection.ConnectionString = Session.Settings.ConnectionString;
         }
 
         string GetQuery = @$"

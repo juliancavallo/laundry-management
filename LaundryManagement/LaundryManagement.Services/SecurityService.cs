@@ -9,21 +9,22 @@ namespace LaundryManagement.Services
 {
     public class SecurityService
     {
-        public bool CheckPasswordSecurity(string password, IPasswordPolicies policies)
+        public bool CheckPasswordSecurity(string password)
         {
-            if(password.Length < policies.MinLength)
+            var policies = Session.Settings.PasswordPolicy;
+            if(password.Length < policies.PasswordMinLength)
                 return false;
 
-            if(password.Count(x => char.IsUpper(x)) < policies.MinUppercase)
+            if(password.Count(x => char.IsUpper(x)) < policies.PasswordMinUppercase)
                 return false;
 
-            if (password.Count(x => char.IsLower(x)) < policies.MinLowercase)
+            if (password.Count(x => char.IsLower(x)) < policies.PasswordMinLowercase)
                 return false;
 
-            if (password.Count(x => char.IsDigit(x)) < policies.MinNumbers)
+            if (password.Count(x => char.IsDigit(x)) < policies.PasswordMinNumbers)
                 return false;
 
-            if (password.Count(x => !char.IsLetterOrDigit(x) && !char.IsWhiteSpace(x)) < policies.MinSpecialCharacters)
+            if (password.Count(x => !char.IsLetterOrDigit(x) && !char.IsWhiteSpace(x)) < policies.PasswordMinSpecialCharacters)
                 return false;
 
             return true;
