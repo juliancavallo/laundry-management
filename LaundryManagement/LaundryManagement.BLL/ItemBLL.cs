@@ -78,6 +78,9 @@ namespace LaundryManagement.BLL
 
         public void Save(ItemDTO dto) => itemDAL.Save(itemMapper.MapToEntity(dto));
 
+        public void ApplyFormatValidation(string code) => 
+            itemValidator.FormatValidation(code);
+
         public ValidationResponseDTO ApplyValidationForShipping(ItemDTO item, ShippingTypeEnum shippingType, LocationDTO originLocation)
         {
             var result = new ValidationResponseDTO();            

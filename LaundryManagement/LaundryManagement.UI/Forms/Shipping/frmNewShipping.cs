@@ -163,6 +163,8 @@ namespace LaundryManagement.UI.Forms.Shipping
                     return;
                 }
 
+                itemBLL.ApplyFormatValidation(code);
+
                 var item = itemBLL.GetByCode(code);
 
                 var validationResult = itemBLL.ApplyValidationForShipping(item, shippingType, (LocationDTO)this.comboOrigin.SelectedItem);

@@ -125,7 +125,7 @@ namespace LaundryManagement.DAL
                     cmd = new SqlCommand(
                         $@"
                             INSERT INTO [Shipping] (CreatedDate, IdLocationOrigin, IdLocationDestination, IdShippingType, IdShippingStatus, IdCreatedUser, IdResponsibleUser) 
-                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id}, {entity.CreationUser.Id}, {entity.Responsible.Id});
+                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id}, {entity.CreationUser.Id}, {entity.Responsible.Id});
                             SELECT SCOPE_IDENTITY();
                         ");
                 }

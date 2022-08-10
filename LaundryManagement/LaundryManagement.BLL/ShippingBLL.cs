@@ -105,7 +105,7 @@ namespace LaundryManagement.BLL
         {
             var statusName = dal.GetStatusName((int)shipping.Status);
             var message = string.Format(Session.Translations[Tags.ShippingEmailBody],
-                shipping.Id, statusName, DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"), Session.Instance.User.FullName);
+                shipping.Id, Session.Translations[statusName], DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss"), Session.Instance.User.FullName);
             
             emailService.SendMail(
                 shipping.Responsible.Email,

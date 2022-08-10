@@ -96,7 +96,7 @@ namespace LaundryManagement.DAL
                 {
                     cmd.CommandText += @$"
                                ({item.Item.Id}
-                               ,'{item.Date.ToString("yyyy-MM-dd HH:mm:ss")}'
+                               ,'{item.Date.ToString("yyyy-MM-ddTHH:mm:ss")}'
                                ,{item.MovementType.Id}
                                ,{item.User.Id}
                                ,{item.Origin.Id}
