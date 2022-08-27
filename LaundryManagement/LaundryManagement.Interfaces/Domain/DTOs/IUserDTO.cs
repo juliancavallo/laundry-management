@@ -15,5 +15,6 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
         public string FullName { get; }
         public IList<IComponentDTO> Permissions { get; set; }
         public ILanguage Language { get; set; }
+        public ILocationDTO Location { get; set; }
     }
 }

@@ -10,10 +10,12 @@ namespace LaundryManagement.DAL
     public class UserDAL : ICrud<User>
     {
         private SqlConnection connection;
+        private LocationDAL locationDAL;
 
         public UserDAL()
         {
             connection = new SqlConnection();
+            locationDAL = new LocationDAL();
 
             connection.ConnectionString = Session.Settings.ConnectionString;
         }
@@ -59,6 +61,7 @@ namespace LaundryManagement.DAL
                           ,l.Id as IdLanguage
 	                      ,l.Name as LanguageName
 	                      ,l.[Default] as LanguageDefault
+                          ,u.[IdLocation]
                       FROM [User] u
                       INNER JOIN [Language] L ON U.IdLanguage = l.Id");
 
@@ -103,6 +106,7 @@ namespace LaundryManagement.DAL
                         , l.Id as IdLanguage
                         , l.Name as LanguageName
                         , l.[Default] as LanguageDefault
+                        ,u.[IdLocation]
                     FROM[User] u
                     INNER JOIN[Language] L ON U.IdLanguage = l.Id
                     WHERE u.Id = {id}");
@@ -143,8 +147,8 @@ namespace LaundryManagement.DAL
                 {
                     cmd = new SqlCommand(
                         $@"
-                            INSERT INTO [User] (Email, Password, UserName, FirstName, LastName, IdLanguage) 
-                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}', '{entity.Language.Id}')
+                            INSERT INTO [User] (Email, Password, UserName, FirstName, LastName, IdLanguage, IdLocation) 
+                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}', '{entity.Language.Id}', '{entity.Location.Id}')
                         ");
                 }
                 else
@@ -157,7 +161,8 @@ namespace LaundryManagement.DAL
 	                            FirstName = '{entity.Name}',
 	                            LastName = '{entity.LastName}',
 	                            UserName = '{entity.UserName}',
-                                IdLanguage = '{entity.Language.Id}'
+                                IdLanguage = '{entity.Language.Id}',
+                                IdLocation = '{entity.Location.Id}'
                             WHERE Id = {entity.Id}
                             ");
                 }
@@ -191,7 +196,8 @@ namespace LaundryManagement.DAL
                     Id = int.Parse(reader["IdLanguage"].ToString()),
                     Name = reader["LanguageName"].ToString(),
                     Default = bool.Parse(reader["LanguageDefault"].ToString())
-                }
+                },
+                Location = locationDAL.GetById(int.Parse(reader["IdLocation"].ToString())),
             };
         }
     }

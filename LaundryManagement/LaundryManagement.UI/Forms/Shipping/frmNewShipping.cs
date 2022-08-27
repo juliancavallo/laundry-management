@@ -82,17 +82,17 @@ namespace LaundryManagement.UI.Forms.Shipping
         {
             try
             {
-                var originType = locationBLL.GetByShippingType(shippingType, true);
-                var destinationType = locationBLL.GetByShippingType(shippingType, false);
+                var originType = locationBLL.GetLocationTypeByShippingType(shippingType, true);
+                var destinationType = locationBLL.GetLocationTypeByShippingType(shippingType, false);
 
                 this.comboOrigin.DataSource = null;
-                this.comboOrigin.DataSource = locationBLL.GetAllByType(originType, shippingType == ShippingTypeEnum.Internal);
+                this.comboOrigin.DataSource = locationBLL.GetAllByType(originType, shippingType == ShippingTypeEnum.Internal, true);
                 this.comboOrigin.DisplayMember = "Name";
                 this.comboOrigin.ValueMember = "Id";
                 this.comboOrigin.SelectedIndex = -1;
 
                 this.comboDestination.DataSource = null;
-                this.comboDestination.DataSource = locationBLL.GetAllByType(destinationType, shippingType == ShippingTypeEnum.Internal);
+                this.comboDestination.DataSource = locationBLL.GetAllByType(destinationType, shippingType == ShippingTypeEnum.Internal, false);
                 this.comboDestination.DisplayMember = "Name";
                 this.comboDestination.ValueMember = "Id";
                 this.comboDestination.SelectedIndex = -1;
@@ -114,7 +114,8 @@ namespace LaundryManagement.UI.Forms.Shipping
                 var permission = new Dictionary<ShippingTypeEnum, string>()
                 {
                     { ShippingTypeEnum.ToLaundry, "RESP_SHP_LDY" },
-                    { ShippingTypeEnum.ToClinic, "RESP_SHP_CLI" }
+                    { ShippingTypeEnum.ToClinic, "RESP_SHP_CLI" },
+                    { ShippingTypeEnum.Internal, "RESP_SHP_INT" }
                 };
 
                 this.comboResponsible.DataSource = null;
@@ -167,7 +168,7 @@ namespace LaundryManagement.UI.Forms.Shipping
 
                 var item = itemBLL.GetByCode(code);
 
-                var validationResult = itemBLL.ApplyValidationForShipping(item, shippingType, (LocationDTO)this.comboOrigin.SelectedItem);
+                var validationResult = shippingBLL.ApplyValidationForShipping(item, shippingType, (LocationDTO)this.comboOrigin.SelectedItem);
                 FormValidation.ShowValidationMessages(validationResult);
 
                 shippingDetailDTO.Add(new ShippingDetailDTO()
@@ -254,9 +255,9 @@ namespace LaundryManagement.UI.Forms.Shipping
                 shipping.Destination = (LocationDTO)this.comboDestination.SelectedItem;
                 shipping.ShippingDetail = shippingDetailDTO;
                 shipping.CreatedDate = DateTime.Now;
-                shipping.Status = ShippingStatusEnum.Created;
+                shipping.Status = shippingType == ShippingTypeEnum.Internal ? ShippingStatusEnum.Received : ShippingStatusEnum.Created;
                 shipping.Type = shippingType;
-                shipping.Responsible = new UserDTO() { Id = selectedResponsible.Id, Email = selectedResponsible.Email };
+                shipping.Responsible = userBLL.GetById(selectedResponsible.Id);
                 shipping.CreationUser = (UserDTO)Session.Instance.User;
 
                 shippingBLL.Save(shipping);

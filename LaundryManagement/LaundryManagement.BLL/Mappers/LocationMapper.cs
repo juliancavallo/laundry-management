@@ -1,5 +1,7 @@
 ﻿using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
+using LaundryManagement.Interfaces.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace LaundryManagement.BLL.Mappers
             return new Location()
             {
                 Id = dto.Id,
-                LocationType = dto.LocationType,
+                LocationType = (LocationType)dto.LocationType,
                 IsInternal = dto.IsInternal,
                 Address = dto.Address,
                 Name = dto.Name
@@ -31,8 +33,9 @@ namespace LaundryManagement.BLL.Mappers
                 Name = entity.Name,
                 Address = entity.Address,
                 IsInternal = entity.IsInternal,
-                LocationType = entity.LocationType,
+                LocationType = (ILocationType)entity.LocationType,
                 CompleteName = entity.CompleteName,
+                ParentLocation = entity.ParentLocation != null ? this.MapToDTO(entity.ParentLocation) : null
             };
             return result;
         }

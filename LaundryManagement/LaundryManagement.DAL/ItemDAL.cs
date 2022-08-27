@@ -154,7 +154,7 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public void UpdateStatus(IList<int> list, int newStatus)
+        public void UpdateStatus(IList<int> list, int newStatus, int newLocation)
         {
             try
             {
@@ -163,7 +163,7 @@ namespace LaundryManagement.DAL
                 SqlCommand cmd = new SqlCommand();
 
                 cmd.CommandText = $@"
-                    UPDATE Item SET IdItemStatus = {newStatus} 
+                    UPDATE Item SET IdItemStatus = {newStatus}, IdLocation = {newLocation} 
                     WHERE Id in ({string.Join(',', list)})
                     ";
 

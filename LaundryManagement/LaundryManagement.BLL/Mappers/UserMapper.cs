@@ -11,10 +11,12 @@ namespace LaundryManagement.BLL.Mappers
     public class UserMapper
     {
         private PermissionMapper permissionMapper;
+        private LocationMapper locationMapper;
 
         public UserMapper()
         {
             permissionMapper = new PermissionMapper();
+            locationMapper = new LocationMapper();
         }
         public User MapToEntity(UserDTO dto)
         {
@@ -26,7 +28,8 @@ namespace LaundryManagement.BLL.Mappers
                 Password = dto.Password,
                 LastName = dto.LastName,
                 UserName = dto.UserName,
-                Language = dto.Language as Language
+                Language = dto.Language as Language,
+                Location = locationMapper.MapToEntity(dto.Location as LocationDTO)
             };
 
         }
@@ -42,6 +45,7 @@ namespace LaundryManagement.BLL.Mappers
                 UserName = entity.UserName,
                 LastName = entity.LastName,
                 Language = entity.Language,
+                Location = locationMapper.MapToDTO(entity.Location)
             };
 
             foreach(var item in entity.Permissions)

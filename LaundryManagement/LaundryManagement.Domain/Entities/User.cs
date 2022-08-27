@@ -23,5 +23,6 @@ namespace LaundryManagement.Domain.Entities
         public string UserName { get; set; }
         public List<Component> Permissions { get { return _permissions; } set { this._permissions = value; } }
         public Language Language { get; set; }
+        public Location Location { get; set; }
     }
 }

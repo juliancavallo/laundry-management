@@ -1,9 +1,9 @@
 ﻿using LaundryManagement.BLL.Mappers;
+using LaundryManagement.BLL.Validators;
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
-using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Extensions;
 using LaundryManagement.Domain.Filters;
 using LaundryManagement.Services;
@@ -20,6 +20,7 @@ namespace LaundryManagement.BLL
         private ItemDAL itemDAL;
         private TraceabilityBLL traceabilityBLL;
         private EmailService emailService;
+        private ItemValidator itemValidator;
 
         public ShippingBLL()
         {
@@ -28,6 +29,7 @@ namespace LaundryManagement.BLL
             this.traceabilityBLL = new TraceabilityBLL();
             this.mapper = new ShippingMapper();
             this.emailService = new EmailService();
+            itemValidator = new ItemValidator();
         }
 
         public IEnumerable<ShippingDTO> GetByType(ShippingTypeEnum shippingType)
@@ -70,7 +72,7 @@ namespace LaundryManagement.BLL
             shipping.Id = id;
 
             var itemIds = shipping.ShippingDetail.Select(x => x.Item.Id).ToList();
-            itemDAL.UpdateStatus(itemIds, (int)ItemStatus.ItemStatusByShippingStatus[shipping.Status]);
+            itemDAL.UpdateStatus(itemIds, (int)ItemStatus.ItemStatusByShippingStatus[shipping.Status], shipping.Destination.Id);
 
             var traceabilityList = shipping.ShippingDetail.Select(x => new TraceabilityDTO()
             {
@@ -98,6 +100,28 @@ namespace LaundryManagement.BLL
             {
                 result.AddOrUpdate(mapper.MapToViewDTO(item));
             }
+            return result;
+        }
+
+        public ValidationResponseDTO ApplyValidationForShipping(ItemDTO item, ShippingTypeEnum shippingType, LocationDTO originLocation)
+        {
+            var result = new ValidationResponseDTO();
+
+            itemValidator.StatusValidation(item.ItemStatus);
+            itemValidator.LocationValidation(item, originLocation);
+
+            switch (shippingType)
+            {
+                case ShippingTypeEnum.ToClinic:
+                    itemValidator.WashesValidation(item, result);
+                    break;
+
+                case ShippingTypeEnum.Internal:
+                    if (originLocation.LocationType == Interfaces.Enums.ILocationType.Laundry)
+                        itemValidator.WashesValidation(item, result);
+                    break;
+            }
+
             return result;
         }
 

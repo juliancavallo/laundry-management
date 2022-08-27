@@ -80,26 +80,5 @@ namespace LaundryManagement.BLL
 
         public void ApplyFormatValidation(string code) => 
             itemValidator.FormatValidation(code);
-
-        public ValidationResponseDTO ApplyValidationForShipping(ItemDTO item, ShippingTypeEnum shippingType, LocationDTO originLocation)
-        {
-            var result = new ValidationResponseDTO();            
-
-            switch (shippingType)
-            {
-                case ShippingTypeEnum.ToLaundry:
-                    itemValidator.StatusValidation(item.ItemStatus);
-                    itemValidator.LocationValidation(item, originLocation);
-                    break;
-
-                case ShippingTypeEnum.ToClinic:
-                    itemValidator.StatusValidation(item.ItemStatus);
-                    itemValidator.LocationValidation(item, originLocation);
-                    itemValidator.WashesValidation(item, result);
-                    break;
-            }
-
-            return result;
-        }
     }
 }
