@@ -37,34 +37,48 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
-        public IList<LocationDTO> GetAllByType(LocationType locationType, bool internalShipping, bool origin)
+        public IList<LocationDTO> GetShippingOriginByShippingType(ShippingTypeEnum shippingType)
         {
             var userLocation = Session.Instance.User.Location;
-            var list = this.dal.GetAll().Where(x => x.LocationType == locationType);
+            var locationOriginType = this.GetLocationTypeByShippingType(shippingType, true);
 
-            if (origin)
+            var list = this.dal.GetAll();
+
+            switch (shippingType)
             {
-                list = list.Where(x =>
-                        internalShipping ? 
-                            x.Equals(userLocation) || (x.ParentLocation != null && x.ParentLocation.Equals(userLocation)) : 
-                            !x.IsInternal)
-                    .ToList();
+                case ShippingTypeEnum.ToLaundry:
+                case ShippingTypeEnum.ToClinic:
+                    list = list.Where(x => x.LocationType == locationOriginType && x.Equals(userLocation) && !x.IsInternal).ToList();
+                    break;
+
+                case ShippingTypeEnum.Internal:
+                    list = list.Where(x => x.Equals(userLocation) || (x.IsChild(userLocation))).ToList();
+                    break;
             }
-            else
+
+            return list
+                .Select(x => mapper.MapToDTO(x))
+                .ToList();
+        }
+
+        public IList<LocationDTO> GetShippingDestinationByShippingType(ShippingTypeEnum shippingType)
+        {
+            var userLocation = Session.Instance.User.Location;
+            var locationDestinationType = this.GetLocationTypeByShippingType(shippingType, false);
+
+            var list = this.dal.GetAll();
+
+            switch (shippingType)
             {
-                if (internalShipping)
-                {
-                    if (userLocation.IsInternal)
-                        list = list.Where(x => 
-                            (x.ParentLocation != null && x.ParentLocation.Equals(userLocation.ParentLocation)) ||
-                            x.Equals(userLocation.ParentLocation))
-                            .ToList();
-                    else
-                        list = list.Where(x =>
-                            (x.ParentLocation != null && x.ParentLocation.Equals(userLocation)) ||
-                            x.Equals(userLocation))
-                            .ToList();
-                }
+                case ShippingTypeEnum.ToLaundry:
+                case ShippingTypeEnum.ToClinic:
+                    list = list.Where(x => x.LocationType == locationDestinationType && !x.IsInternal).ToList();
+                    break;
+
+                case ShippingTypeEnum.Internal:
+                    list = list.Where(x => x.LocationType == (LocationType)userLocation.LocationType 
+                    && (x.IsChild(userLocation) || userLocation.IsChild(x) || x.IsChild(x.ParentLocation))).ToList();
+                    break;
             }
 
             return list
@@ -84,7 +98,7 @@ namespace LaundryManagement.BLL
             this.dal.Save(entity);
         }
 
-        public LocationType GetLocationTypeByShippingType(ShippingTypeEnum shippingType, bool origin)
+        internal LocationType GetLocationTypeByShippingType(ShippingTypeEnum shippingType, bool origin)
         {
             var userLocation = Session.Instance.User.Location;
 

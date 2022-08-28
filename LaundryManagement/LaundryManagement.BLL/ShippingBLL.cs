@@ -68,12 +68,15 @@ namespace LaundryManagement.BLL
 
         public void Save(ShippingDTO shipping) 
         { 
+            //Shipping
             int id = dal.Save(mapper.MapToEntity(shipping));
             shipping.Id = id;
 
+            //Item Status
             var itemIds = shipping.ShippingDetail.Select(x => x.Item.Id).ToList();
             itemDAL.UpdateStatus(itemIds, (int)ItemStatus.ItemStatusByShippingStatus[shipping.Status], shipping.Destination.Id);
 
+            //Traceability
             var traceabilityList = shipping.ShippingDetail.Select(x => new TraceabilityDTO()
             {
                 Date = DateTime.Now,
@@ -87,9 +90,11 @@ namespace LaundryManagement.BLL
 
             traceabilityBLL.Save(traceabilityList);
 
+            //Washes
             if (shipping.Type == ShippingTypeEnum.ToClinic)
                 itemDAL.UpdateWashes(itemIds);
 
+            //Send email
             SendEmail(shipping);
         }
 

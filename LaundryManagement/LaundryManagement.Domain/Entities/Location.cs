@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Interfaces.Domain.Entities;
+using LaundryManagement.Interfaces.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,9 @@ namespace LaundryManagement.Domain.Entities
 
             return parent.Name + " - " + GetParentName(parent.ParentLocation);
         }
+
+        public bool IsChild(object location) =>
+            this.ParentLocation != null && this.ParentLocation.Equals(location);
 
         public override bool Equals(object? obj)
         {

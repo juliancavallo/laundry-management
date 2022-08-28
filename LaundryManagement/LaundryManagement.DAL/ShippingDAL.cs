@@ -32,6 +32,7 @@ namespace LaundryManagement.DAL
             { 
                 connection.Open();
 
+                var userLocationId = Session.Instance.User.Location.Id;
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
 	                    s.Id,
@@ -47,7 +48,9 @@ namespace LaundryManagement.DAL
                     FROM Shipping s
                     INNER JOIN ShippingStatus sta on s.IdShippingStatus = sta.Id
                     INNER JOIN ShippingType ty on s.IdShippingType = ty.Id
-                    WHERE s.IdShippingType = {(int)shippingType}");
+                    INNER JOIN Location l on s.IdLocationOrigin = l.Id
+                    WHERE s.IdShippingType = {(int)shippingType} 
+                        AND (l.Id = {userLocationId} OR l.IdParentLocation = {userLocationId})");
 
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();

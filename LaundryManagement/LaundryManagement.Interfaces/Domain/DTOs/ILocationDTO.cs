@@ -16,5 +16,9 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
         public ILocationDTO? ParentLocation { get; set; } 
         public ILocationType LocationType { get; set; }
         public string CompleteName { get; set; }
+
+        public bool IsChild(object location);
+        public bool Equals(object? obj);
+        public int GetHashCode();
     }
 }

@@ -45,6 +45,8 @@ namespace LaundryManagement.UI
             this.txtConfirmPassword = new System.Windows.Forms.TextBox();
             this.comboLanguage = new System.Windows.Forms.ComboBox();
             this.lblLanguage = new System.Windows.Forms.Label();
+            this.lblLocation = new System.Windows.Forms.Label();
+            this.comboLocation = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // txtFirstName
@@ -171,11 +173,30 @@ namespace LaundryManagement.UI
             this.lblLanguage.TabIndex = 13;
             this.lblLanguage.Text = "Language";
             // 
+            // lblLocation
+            // 
+            this.lblLocation.AutoSize = true;
+            this.lblLocation.Location = new System.Drawing.Point(330, 241);
+            this.lblLocation.Name = "lblLocation";
+            this.lblLocation.Size = new System.Drawing.Size(53, 15);
+            this.lblLocation.TabIndex = 15;
+            this.lblLocation.Text = "Location";
+            // 
+            // comboLocation
+            // 
+            this.comboLocation.FormattingEnabled = true;
+            this.comboLocation.Location = new System.Drawing.Point(328, 259);
+            this.comboLocation.Name = "comboLocation";
+            this.comboLocation.Size = new System.Drawing.Size(198, 23);
+            this.comboLocation.TabIndex = 14;
+            // 
             // frmNewUser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(587, 382);
+            this.Controls.Add(this.lblLocation);
+            this.Controls.Add(this.comboLocation);
             this.Controls.Add(this.lblLanguage);
             this.Controls.Add(this.comboLanguage);
             this.Controls.Add(this.lblConfirmPassword);
@@ -217,5 +238,7 @@ namespace LaundryManagement.UI
         private TextBox txtConfirmPassword;
         private ComboBox comboLanguage;
         private Label lblLanguage;
+        private Label lblLocation;
+        private ComboBox comboLocation;
     }
 }

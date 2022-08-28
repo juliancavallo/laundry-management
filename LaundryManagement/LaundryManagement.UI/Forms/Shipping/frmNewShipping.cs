@@ -82,17 +82,14 @@ namespace LaundryManagement.UI.Forms.Shipping
         {
             try
             {
-                var originType = locationBLL.GetLocationTypeByShippingType(shippingType, true);
-                var destinationType = locationBLL.GetLocationTypeByShippingType(shippingType, false);
-
                 this.comboOrigin.DataSource = null;
-                this.comboOrigin.DataSource = locationBLL.GetAllByType(originType, shippingType == ShippingTypeEnum.Internal, true);
+                this.comboOrigin.DataSource = locationBLL.GetShippingOriginByShippingType(shippingType);
                 this.comboOrigin.DisplayMember = "Name";
                 this.comboOrigin.ValueMember = "Id";
                 this.comboOrigin.SelectedIndex = -1;
 
                 this.comboDestination.DataSource = null;
-                this.comboDestination.DataSource = locationBLL.GetAllByType(destinationType, shippingType == ShippingTypeEnum.Internal, false);
+                this.comboDestination.DataSource = locationBLL.GetShippingDestinationByShippingType(shippingType);
                 this.comboDestination.DisplayMember = "Name";
                 this.comboDestination.ValueMember = "Id";
                 this.comboDestination.SelectedIndex = -1;
@@ -137,6 +134,12 @@ namespace LaundryManagement.UI.Forms.Shipping
         private void EnableControls()
         {
             var locationsSelected = this.comboOrigin.SelectedItem != null && this.comboDestination.SelectedItem != null;
+            if (locationsSelected && ((LocationDTO)this.comboOrigin.SelectedItem).Equals(this.comboDestination.SelectedItem))
+            {
+                FormValidation.ShowMessage("The locations must be different", ValidationType.Error);
+                return;
+            }
+
             this.comboOrigin.Enabled = !locationsSelected;
             this.comboDestination.Enabled = !locationsSelected;
             this.btnAdd.Enabled = locationsSelected;

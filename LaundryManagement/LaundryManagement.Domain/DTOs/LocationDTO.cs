@@ -1,4 +1,5 @@
-﻿using LaundryManagement.Domain.Enums;
+﻿using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Enums;
 using LaundryManagement.Interfaces.Domain.DTOs;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Interfaces.Enums;
@@ -19,10 +20,13 @@ namespace LaundryManagement.Domain.DTOs
         public ILocationDTO? ParentLocation { get; set; }
         public ILocationType LocationType { get; set; }
         public string CompleteName { get; set; }
+
+        public bool IsChild(object location) =>
+            this.ParentLocation != null && this.ParentLocation.Equals(location);
+
         public override bool Equals(object? obj)
         {
-            return obj is LocationDTO dTO &&
-                   Id == dTO.Id;
+            return (obj is Location entity && Id == entity.Id) || (obj is LocationDTO dTO && Id == dTO.Id);
         }
 
         public override int GetHashCode()

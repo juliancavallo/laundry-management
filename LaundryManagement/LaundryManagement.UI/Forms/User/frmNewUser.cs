@@ -1,8 +1,8 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
-using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Interfaces.Domain.DTOs;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -16,6 +16,7 @@ namespace LaundryManagement.UI
         public UserDTO userDTO;
         private UserBLL userBLL;
         private TranslatorBLL translatorBLL;
+        private LocationBLL locationBLL;
 
         private IList<Control> controls;
         private SecurityService securityService;
@@ -23,14 +24,16 @@ namespace LaundryManagement.UI
         {
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
+            locationBLL = new LocationBLL();
             userDTO = paramDTO;
             securityService = new SecurityService();
 
             InitializeComponent();
             PopulateComboLanguages();
+            PopulateComboLocations();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.btnSave, this.lblConfirmPassword, this.lblEmail, this.lblFirstName, this.lblLastName, this.lblLanguage, this.lblPassword, this.lblUserName };
+            controls = new List<Control>() { this, this.btnSave, this.lblConfirmPassword, this.lblEmail, this.lblFirstName, this.lblLastName, this.lblLanguage, this.lblPassword, this.lblUserName, this.lblLocation };
             Translate();
         }
 
@@ -41,13 +44,17 @@ namespace LaundryManagement.UI
             this.txtFirstName.Text = userDTO?.Name;
             this.txtUserName.Text = userDTO?.UserName;
             if(userDTO != null)
+            {
                 this.comboLanguage.SelectedValue = userDTO.Language.Id;
+                this.comboLocation.SelectedValue = userDTO.Location.Id;
+            }
 
             this.txtPassword.PasswordChar = '*';
             this.txtConfirmPassword.PasswordChar = '*';
             this.txtPassword.PlaceholderText = userDTO?.Id == null ? "" : Session.Translations[Tags.PasswordPlaceholder];
             this.txtConfirmPassword.Enabled = false;
             this.comboLanguage.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboLocation.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.txtFirstName.TabIndex = 0;
             this.txtLastName.TabIndex = 1;
@@ -114,7 +121,8 @@ namespace LaundryManagement.UI
                     Name = this.txtFirstName.Text.Trim(),
                     Password = password,
                     UserName = this.txtUserName.Text.Trim(),
-                    Language = comboLanguage.SelectedItem as ILanguage
+                    Language = comboLanguage.SelectedItem as ILanguage,
+                    Location = comboLocation.SelectedItem as ILocationDTO
                 };
 
                 userBLL.Save(userDTO);
@@ -151,6 +159,25 @@ namespace LaundryManagement.UI
                 this.comboLanguage.ValueMember = "Id";
 
                 this.comboLanguage.SelectedValue = translatorBLL.GetDefaultLanguage().Id;
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
+        private void PopulateComboLocations()
+        {
+            try
+            {
+                this.comboLocation.DataSource = null;
+                this.comboLocation.DataSource = locationBLL.GetAll();
+                this.comboLocation.DisplayMember = "CompleteName";
+                this.comboLocation.ValueMember = "Id";
             }
             catch (ValidationException ex)
             {
