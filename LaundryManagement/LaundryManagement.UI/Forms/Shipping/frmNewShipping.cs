@@ -19,7 +19,6 @@ namespace LaundryManagement.UI.Forms.Shipping
         public ShippingTypeEnum shippingType;
 
         private ShippingBLL shippingBLL;
-        private LocationBLL locationBLL;
         private UserBLL userBLL;
         private ItemBLL itemBLL;
         private List<Control> controls;
@@ -30,7 +29,6 @@ namespace LaundryManagement.UI.Forms.Shipping
         {
             shippingType = _shippingType;
             shippingBLL = new ShippingBLL();
-            locationBLL = new LocationBLL();
             itemBLL = new ItemBLL();    
             userBLL = new UserBLL();
             shippingDetailDTO = new List<ShippingDetailDTO>();
@@ -83,13 +81,13 @@ namespace LaundryManagement.UI.Forms.Shipping
             try
             {
                 this.comboOrigin.DataSource = null;
-                this.comboOrigin.DataSource = locationBLL.GetShippingOriginByShippingType(shippingType);
+                this.comboOrigin.DataSource = shippingBLL.GetShippingOriginByShippingType(shippingType);
                 this.comboOrigin.DisplayMember = "Name";
                 this.comboOrigin.ValueMember = "Id";
                 this.comboOrigin.SelectedIndex = -1;
 
                 this.comboDestination.DataSource = null;
-                this.comboDestination.DataSource = locationBLL.GetShippingDestinationByShippingType(shippingType);
+                this.comboDestination.DataSource = shippingBLL.GetShippingDestinationByShippingType(shippingType);
                 this.comboDestination.DisplayMember = "Name";
                 this.comboDestination.ValueMember = "Id";
                 this.comboDestination.SelectedIndex = -1;

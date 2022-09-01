@@ -62,7 +62,7 @@ namespace LaundryManagement.BLL
 
             if (Session.IsLogged() && Session.Instance.User.Id == entity.Id)
             {
-                Session.Login(dto);
+                Session.Instance.User.Location = dto.Location;
                 Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
                 Session.ChangeLanguage(entity.Language);
             }

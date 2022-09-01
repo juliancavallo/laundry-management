@@ -199,6 +199,7 @@ namespace LaundryManagement.UI
             this.menuProcessesRoadMap.Name = "menuProcessesRoadMap";
             this.menuProcessesRoadMap.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesRoadMap.Text = "Road Map";
+            this.menuProcessesRoadMap.Click += new System.EventHandler(this.menuProcessesRoadMap_Click);
             // 
             // toolStripSeparator2
             // 
@@ -249,34 +250,34 @@ namespace LaundryManagement.UI
             // menuReportsMovements
             // 
             this.menuReportsMovements.Name = "menuReportsMovements";
-            this.menuReportsMovements.Size = new System.Drawing.Size(172, 22);
+            this.menuReportsMovements.Size = new System.Drawing.Size(180, 22);
             this.menuReportsMovements.Text = "Movements";
             // 
             // menuReportsTraceability
             // 
             this.menuReportsTraceability.Name = "menuReportsTraceability";
-            this.menuReportsTraceability.Size = new System.Drawing.Size(172, 22);
+            this.menuReportsTraceability.Size = new System.Drawing.Size(180, 22);
             this.menuReportsTraceability.Text = "Traceability";
             this.menuReportsTraceability.Click += new System.EventHandler(this.menuReportsTraceability_Click);
             // 
             // menuReportsLaundryShippings
             // 
             this.menuReportsLaundryShippings.Name = "menuReportsLaundryShippings";
-            this.menuReportsLaundryShippings.Size = new System.Drawing.Size(172, 22);
+            this.menuReportsLaundryShippings.Size = new System.Drawing.Size(180, 22);
             this.menuReportsLaundryShippings.Text = "Laundry Shippings";
             this.menuReportsLaundryShippings.Click += new System.EventHandler(this.menuReportsLaundryShippings_Click);
             // 
             // menuReportsClinicShippings
             // 
             this.menuReportsClinicShippings.Name = "menuReportsClinicShippings";
-            this.menuReportsClinicShippings.Size = new System.Drawing.Size(172, 22);
+            this.menuReportsClinicShippings.Size = new System.Drawing.Size(180, 22);
             this.menuReportsClinicShippings.Text = "Clinic Shippings";
             this.menuReportsClinicShippings.Click += new System.EventHandler(this.menuReportsClinicShippings_Click);
             // 
             // menuReportsStock
             // 
             this.menuReportsStock.Name = "menuReportsStock";
-            this.menuReportsStock.Size = new System.Drawing.Size(172, 22);
+            this.menuReportsStock.Size = new System.Drawing.Size(180, 22);
             this.menuReportsStock.Text = "Stock";
             this.menuReportsStock.Click += new System.EventHandler(this.menuReportsStock_Click);
             // 

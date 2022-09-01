@@ -26,5 +26,17 @@ namespace LaundryManagement.Domain.Entities
                 };
             }
         }
+
+        public static Dictionary<RoadmapStatusEnum, ItemStatusEnum> ItemStatusByRoadmapStatus
+        {
+            get
+            {
+                return new Dictionary<RoadmapStatusEnum, ItemStatusEnum>()
+                {
+                    { RoadmapStatusEnum.Sent, ItemStatusEnum.Sent },
+                    { RoadmapStatusEnum.Received, ItemStatusEnum.OnLocation }
+                };
+            }
+        }
     }
 }

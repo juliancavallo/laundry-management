@@ -15,6 +15,7 @@ namespace LaundryManagement.DAL
         private ItemDAL itemDAL;
         private LocationDAL locationDAL;
         private UserDAL userDAL;
+        private string GetQuery;
         public ShippingDAL()
         {
             connection = new SqlConnection();
@@ -23,17 +24,7 @@ namespace LaundryManagement.DAL
             userDAL = new UserDAL();    
 
             connection.ConnectionString = Session.Settings.ConnectionString;
-        }
-
-        public List<Shipping> GetByType(ShippingTypeEnum shippingType)
-        {
-            SqlDataReader reader = null;
-            try 
-            { 
-                connection.Open();
-
-                var userLocationId = Session.Instance.User.Location.Id;
-                SqlCommand cmd = new SqlCommand(@$"
+            GetQuery = @$"
                     SELECT 
 	                    s.Id,
 	                    s.IdLocationOrigin,
@@ -48,9 +39,40 @@ namespace LaundryManagement.DAL
                     FROM Shipping s
                     INNER JOIN ShippingStatus sta on s.IdShippingStatus = sta.Id
                     INNER JOIN ShippingType ty on s.IdShippingType = ty.Id
-                    INNER JOIN Location l on s.IdLocationOrigin = l.Id
-                    WHERE s.IdShippingType = {(int)shippingType} 
-                        AND (l.Id = {userLocationId} OR l.IdParentLocation = {userLocationId})");
+                    INNER JOIN Location l on s.IdLocationOrigin = l.Id";
+        }
+
+        public List<Shipping> GetByType(ShippingTypeEnum shippingType)
+        {
+            var userLocationId = Session.Instance.User.Location.Id;
+            var filter = @$"
+                        WHERE s.IdShippingType = {(int)shippingType} 
+                        AND (l.Id = {userLocationId} OR l.IdParentLocation = {userLocationId})";
+
+            return Get(filter);
+        }
+
+        public List<Shipping> GetAll() => 
+             Get("");
+
+        public List<Shipping> GetByRoadmapId(int roadmapId)
+        {
+            var filter = @$"
+                    INNER JOIN RoadmapShippings rms on rms.IdShipping = s.Id
+                    WHERE rms.IdRoadmap = {roadmapId}";
+
+            return Get(filter);
+        }
+
+        private List<Shipping> Get(string filter)
+        {
+            SqlDataReader reader = null;
+            try 
+            { 
+                connection.Open();
+
+                var userLocationId = Session.Instance.User.Location.Id;
+                SqlCommand cmd = new SqlCommand(GetQuery + filter);
 
                 cmd.Connection = connection;
                 reader = cmd.ExecuteReader();
@@ -131,32 +153,65 @@ namespace LaundryManagement.DAL
                             VALUES ('{entity.CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id}, {entity.CreationUser.Id}, {entity.Responsible.Id});
                             SELECT SCOPE_IDENTITY();
                         ");
+
+                    cmd.Connection = connection;
+                    decimal newId = (decimal)cmd.ExecuteScalar();
+
+                    cmd.CommandText = "INSERT INTO ShippingDetail (IdItem, IdShipping) VALUES ";
+                    foreach (var item in entity.ShippingDetail)
+                    {
+                        cmd.CommandText += @$"({item.Item.Id}, {newId}),";
+                    }
+                    cmd.CommandText = cmd.CommandText.TrimEnd(',');
+                    cmd.ExecuteNonQuery();
+
+                    entity.Id = (int)newId;
                 }
                 else
                 {
                     cmd = new SqlCommand(
                         $@"
                             UPDATE [Shipping] SET
-	                            IdShippingStatus = {entity.Status.Id},
-                            WHERE Id = {entity.Id}
+	                            IdShippingStatus = {entity.Status.Id}
+                            WHERE Id = {entity.Id};
                         ");
-                }
-                cmd.Connection = connection;
-                decimal newId = (decimal)cmd.ExecuteScalar();
+                    cmd.Connection = connection;
 
-                if(entity.Id == 0)
-                {
-                    cmd.CommandText = "INSERT INTO ShippingDetail (IdItem, IdShipping) VALUES ";
-                    foreach(var item in entity.ShippingDetail)
-                    {
-                        cmd.CommandText += @$"({item.Item.Id}, {newId}),";
-                    }
-                    cmd.CommandText = cmd.CommandText.TrimEnd(',');
                     cmd.ExecuteNonQuery();
                 }
 
                 connection.Close();
-                return (int)newId;
+                return entity.Id;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        public void UpdateItems(int newStatus, int newLocation, int idShipping)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.CommandText = $@"
+                    UPDATE i 
+                    SET i.IdItemStatus = {newStatus}, i.IdLocation = {newLocation}
+                    FROM Item i
+                    INNER JOIN ShippingDetail sg ON sg.IdItem = i.Id
+                    WHERE sg.IdShipping = {idShipping}";
+
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
             }
             catch (Exception ex)
             {

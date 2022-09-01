@@ -6,6 +6,7 @@ using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.Roadmap;
 using LaundryManagement.UI.Forms.Roles;
 using LaundryManagement.UI.Forms.Shipping;
 using LaundryManagement.UI.Forms.Stock;
@@ -327,7 +328,14 @@ namespace LaundryManagement.UI
             frm.MdiParent = this;
             frm.Show();
         }
-        #endregion
 
+        private void menuProcessesRoadMap_Click(object sender, EventArgs e)
+        {
+            var frm = new frmAdministrationRoadmaps();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        #endregion
     }
 }

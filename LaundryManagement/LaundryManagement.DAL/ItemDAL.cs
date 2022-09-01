@@ -154,34 +154,6 @@ namespace LaundryManagement.DAL
             }
         }
 
-        public void UpdateStatus(IList<int> list, int newStatus, int newLocation)
-        {
-            try
-            {
-                connection.Open();
-
-                SqlCommand cmd = new SqlCommand();
-
-                cmd.CommandText = $@"
-                    UPDATE Item SET IdItemStatus = {newStatus}, IdLocation = {newLocation} 
-                    WHERE Id in ({string.Join(',', list)})
-                    ";
-
-                cmd.Connection = connection;
-                cmd.ExecuteNonQuery();
-
-                connection.Close();
-            }
-            catch (Exception ex)
-            {
-                throw;
-            }
-            finally
-            {
-                connection.Close();
-            }
-        }
-
         public void UpdateWashes(IList<int> list)
         {
             try

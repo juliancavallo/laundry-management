@@ -13,11 +13,13 @@ namespace LaundryManagement.BLL.Mappers
     {
         private LocationMapper locationMapper;
         private UserMapper userMapper;
+        private ItemMapper itemMapper;
 
         public ShippingMapper()
         {
             locationMapper = new LocationMapper();
             userMapper = new UserMapper();  
+            itemMapper = new ItemMapper();
         }
 
         public Shipping MapToEntity(ShippingDTO dto)
@@ -32,10 +34,7 @@ namespace LaundryManagement.BLL.Mappers
                 Type = new ShippingType() { Id = (int)dto.Type },
                 ShippingDetail = dto.ShippingDetail.Select(x => new ShippingDetail()
                 {
-                    Item = new Item()
-                    {
-                        Id = x.Item.Id,
-                    }
+                    Item = itemMapper.MapToEntity(x.Item)
                 }).ToList(),
                 CreationUser = userMapper.MapToEntity(dto.CreationUser),
                 Responsible = userMapper.MapToEntity(dto.Responsible),
@@ -56,10 +55,7 @@ namespace LaundryManagement.BLL.Mappers
                 TypeName = entity.Type.Name,
                 ShippingDetail = entity.ShippingDetail.Select(x => new ShippingDetailDTO()
                 {
-                    Item = new ItemDTO()
-                    {
-                        Id = x.Item.Id,
-                    }
+                    Item = itemMapper.MapToDTO(x.Item)
                 }).ToList(),
                 Responsible = userMapper.MapToDTO(entity.Responsible),
                 CreationUser = userMapper.MapToDTO(entity.CreationUser)
@@ -91,6 +87,7 @@ namespace LaundryManagement.BLL.Mappers
                 Quantity = 1
             };
         }
+
         public ShippingDetailViewDTO MapToViewDTO(ShippingDetail entity)
         {
             return new ShippingDetailViewDTO()
@@ -100,6 +97,17 @@ namespace LaundryManagement.BLL.Mappers
                 ItemType = entity.Item.Article.Type.Name,
                 Size = entity.Item.Article.Size.Name,
                 Quantity = 1
+            };
+        }
+
+        public RoadmapShippingViewDTO MapToRoadmapViewDTO(ShippingDTO dto)
+        {
+            return new RoadmapShippingViewDTO()
+            {
+                Number = dto.Id.ToString(),
+                CreatedDate = dto.CreatedDate.ToString(),
+                Id = dto.Id,
+                Selected = false
             };
         }
     }

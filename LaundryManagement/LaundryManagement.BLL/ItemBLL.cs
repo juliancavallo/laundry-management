@@ -78,7 +78,10 @@ namespace LaundryManagement.BLL
 
         public void Save(ItemDTO dto) => itemDAL.Save(itemMapper.MapToEntity(dto));
 
-        public void ApplyFormatValidation(string code) => 
+        public void ApplyFormatValidation(string code) =>
             itemValidator.FormatValidation(code);
+
+        public void UpdateWashes(IList<int> list) => 
+            itemDAL.UpdateWashes(list);
     }
 }
