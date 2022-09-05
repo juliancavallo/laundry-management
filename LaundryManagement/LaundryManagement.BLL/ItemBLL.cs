@@ -67,16 +67,14 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
-        public List<ItemStatusDTO> GetAllItemStatus()
+        public List<EnumTypeDTO> GetAllItemStatus()
         {
-            return itemStatusDAL.GetAll().Select(x => new ItemStatusDTO()
+            return itemStatusDAL.GetAll().Select(x => new EnumTypeDTO()
             {
                 Id = x.Id,
                 Name = Session.Translations[x.Name],
             }).ToList();
         }
-
-        public void Save(ItemDTO dto) => itemDAL.Save(itemMapper.MapToEntity(dto));
 
         public void ApplyFormatValidation(string code) =>
             itemValidator.FormatValidation(code);

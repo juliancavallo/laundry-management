@@ -83,7 +83,7 @@ namespace LaundryManagement.UI.Forms.Stock
                 this.comboItemType.ValueMember = "Id";
 
                 var itemStatusSource = itemBLL.GetAllItemStatus();
-                itemStatusSource.Add(new ItemStatusDTO() { Id = 0, Name = Session.Translations["All"] });
+                itemStatusSource.Add(new EnumTypeDTO() { Id = 0, Name = Session.Translations["All"] });
                 this.comboItemStatus.DataSource = null;
                 this.comboItemStatus.DataSource = itemStatusSource.OrderBy(x => x.Id).ToList();
                 this.comboItemStatus.DisplayMember = "Name";

@@ -14,5 +14,11 @@ namespace LaundryManagement.Domain.Enums
         RoadMap = 4,
         LaundryReception = 5,
         ClinicReception = 6,
+        Login = 7,
+        ResetPassword = 8,
+        Logout = 9,
+        ManualPasswordReset = 10,
+        UserCreate = 11,
+        UserDelete = 12
     }
 }

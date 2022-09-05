@@ -19,6 +19,7 @@ namespace LaundryManagement.BLL
         private RoadmapDAL dal;
         private ShippingBLL shippingBLL;
         private LocationBLL locationBLL;
+        private LogBLL logBLL;
         private ItemBLL itemBLL;
         private TraceabilityBLL traceabilityBLL;
         private EmailService emailService;
@@ -29,6 +30,7 @@ namespace LaundryManagement.BLL
             this.itemBLL = new ItemBLL();
             this.shippingBLL = new ShippingBLL();
             this.locationBLL = new LocationBLL();
+            this.logBLL = new LogBLL();
             this.traceabilityBLL = new TraceabilityBLL();
             this.mapper = new RoadmapMapper();
             this.emailService = new EmailService();
@@ -80,6 +82,8 @@ namespace LaundryManagement.BLL
 
             //Send email
             SendEmail(roadmap);
+
+            logBLL.Save(MovementTypeEnum.RoadMap, $"The roadmap {roadmap.Id} has been created");
         }
 
         public List<LocationDTO> GetLocations()

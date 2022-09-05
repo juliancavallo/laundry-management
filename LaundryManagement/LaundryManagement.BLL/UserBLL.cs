@@ -16,11 +16,13 @@ namespace LaundryManagement.BLL
         private UserDAL dal;
         private PermissionDAL permissionDAL;
         private TranslatorBLL translatorBLL;
+        private LogBLL logBLL;
 
         public UserBLL()
         {
             this.permissionDAL = new PermissionDAL();
             this.translatorBLL = new TranslatorBLL();
+            this.logBLL = new LogBLL();
             this.dal = new UserDAL();
             this.mapper = new UserMapper();
         }
@@ -32,6 +34,8 @@ namespace LaundryManagement.BLL
 
             var entity = mapper.MapToEntity(dto);
             this.dal.Delete(entity);
+
+            logBLL.Save(MovementTypeEnum.UserDelete, $"The user {entity.FullName} has been deleted");
         }
 
         public IList<UserDTO> GetAll()
@@ -66,6 +70,8 @@ namespace LaundryManagement.BLL
                 Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
                 Session.ChangeLanguage(entity.Language);
             }
+
+            logBLL.Save(MovementTypeEnum.UserCreate, $"The user {entity.FullName} has been created");
         }
 
         public IList<UserDTO> GetByFilter(UserFilter filter)
@@ -103,6 +109,8 @@ namespace LaundryManagement.BLL
 
             user.Password = Encryptor.Hash(newPassword);
             dal.Save(user);
+
+            logBLL.Save(MovementTypeEnum.ManualPasswordReset, $"The user {user.FullName} has reset his password manually");
 
             return newPassword;
         }

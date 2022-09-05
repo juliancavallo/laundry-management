@@ -7,9 +7,7 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Entities
 {
-    public class RoadmapStatus
+    public class RoadmapStatus : EnumType
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

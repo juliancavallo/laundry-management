@@ -6,6 +6,7 @@ using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.Logs;
 using LaundryManagement.UI.Forms.Roadmap;
 using LaundryManagement.UI.Forms.Roles;
 using LaundryManagement.UI.Forms.Shipping;
@@ -336,6 +337,14 @@ namespace LaundryManagement.UI
             frm.Show();
         }
 
+        private void menuReportsLogs_Click(object sender, EventArgs e)
+        {
+            var frm = new frmLogs();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
         #endregion
+
     }
 }

@@ -19,6 +19,7 @@ namespace LaundryManagement.BLL
         private ShippingDAL dal;
         private ItemBLL itemBLL;
         private TraceabilityBLL traceabilityBLL;
+        private LogBLL logBLL;
         private LocationBLL locationBLL;
         private EmailService emailService;
         private ItemValidator itemValidator;
@@ -28,6 +29,7 @@ namespace LaundryManagement.BLL
             this.dal = new ShippingDAL();
             this.itemBLL = new ItemBLL();
             this.traceabilityBLL = new TraceabilityBLL();
+            this.logBLL = new LogBLL();
             this.locationBLL = new LocationBLL();
             this.mapper = new ShippingMapper();
             this.emailService = new EmailService();
@@ -116,6 +118,8 @@ namespace LaundryManagement.BLL
 
             //Send email
             SendEmail(shipping);
+
+            logBLL.Save(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been created");
         }
 
         public void Send(List<ShippingDTO> shippings)
@@ -124,6 +128,8 @@ namespace LaundryManagement.BLL
             {
                 shipping.Status = ShippingStatusEnum.Sent;
                 dal.Save(mapper.MapToEntity(shipping));
+
+                logBLL.Save(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been sent");
             }
         }
 

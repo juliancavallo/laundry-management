@@ -13,6 +13,7 @@ namespace LaundryManagement.BLL
     {
         private UserBLL userBLL;
         private TranslatorBLL translatorBLL;
+        private LogBLL logBLL;
 
         private EmailService emailService;
         private SeedService seedService;
@@ -23,6 +24,7 @@ namespace LaundryManagement.BLL
         {
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
+            logBLL = new LogBLL();
             seedService = new SeedService(Session.Settings.ConnectionString);
             emailService = new EmailService();
 
@@ -53,11 +55,16 @@ namespace LaundryManagement.BLL
             }
 
             Session.Login(userDTO);
+            logBLL.Save(MovementTypeEnum.Login, $"The user {userDTO.FullName} logged in successfully");
 
             return userDTO;
         }
 
-        public void Logout() => Session.Logout(translatorBLL.GetDefaultLanguage());
+        public void Logout() 
+        { 
+            logBLL.Save(MovementTypeEnum.Logout, $"The user {Session.Instance.User.FullName} logged out successfully");
+            Session.Logout(translatorBLL.GetDefaultLanguage());
+        }
 
         public bool IsLogged() => Session.Instance != null;
 
@@ -80,6 +87,8 @@ namespace LaundryManagement.BLL
             string message = string.Format(Session.Translations[Tags.PasswordResetEmailBody], newPassword);
 
             emailService.SendMail(dto.Email, Session.Translations[Tags.PasswordResetEmailSubject], message);
+
+            logBLL.Save(MovementTypeEnum.ResetPassword, $"The password for the user {dto.FullName} has been reset");
         }
 
         public void SeedData() => seedService.SeedData();

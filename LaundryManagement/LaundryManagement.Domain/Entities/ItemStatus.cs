@@ -8,12 +8,8 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Entities
 {
-    public class ItemStatus
+    public class ItemStatus: EnumType
     {
-        public int Id { get; set; }
-        public string Name { get; set; }
-
-
         public static Dictionary<ShippingStatusEnum, ItemStatusEnum> ItemStatusByShippingStatus
         {
             get
