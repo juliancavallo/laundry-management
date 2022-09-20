@@ -69,6 +69,7 @@ namespace LaundryManagement.UI
             this.lblUserName.Tag = "UserName";
             this.lblEmail.Tag = "Email";
             this.lblPassword.Tag = "Password";
+            this.lblLocation.Tag = "Location";
             this.lblConfirmPassword.Tag = "RepeatPassword";
             this.lblLanguage.Tag = "Language";
             this.btnSave.Tag = "Save";

@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.BLL.Mappers;
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
@@ -27,17 +28,6 @@ namespace LaundryManagement.BLL
             this.mapper = new UserMapper();
         }
 
-        public void Delete(UserDTO dto)
-        {
-            if (dto.Id == Session.Instance.User.Id)
-                throw new ValidationException(Session.Translations[Tags.DeleteLoggedUser], ValidationType.Warning);
-
-            var entity = mapper.MapToEntity(dto);
-            this.dal.Delete(entity);
-
-            logBLL.Save(MovementTypeEnum.UserDelete, $"The user {entity.FullName} has been deleted");
-        }
-
         public IList<UserDTO> GetAll()
         {
             var list = this.dal.GetAll().ToList();
@@ -53,25 +43,6 @@ namespace LaundryManagement.BLL
             var entity = this.dal.GetById(id);
             entity.Permissions = permissionDAL.GetPermissions(id);
             return mapper.MapToDTO(entity);
-        }
-
-        public void Save(UserDTO dto)
-        {
-            var existingUser = this.dal.GetAll().Where(x => x.UserName == dto.UserName || x.Email == dto.Email);
-            if (existingUser.Any(x => x.Id != dto.Id || dto.Id == 0))
-                throw new ValidationException(Session.Translations[Tags.UserDuplicate], ValidationType.Warning);
-
-            var entity = mapper.MapToEntity(dto);
-            this.dal.Save(entity);
-
-            if (Session.IsLogged() && Session.Instance.User.Id == entity.Id)
-            {
-                Session.Instance.User.Location = dto.Location;
-                Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
-                Session.ChangeLanguage(entity.Language);
-            }
-
-            logBLL.Save(MovementTypeEnum.UserCreate, $"The user {entity.FullName} has been created");
         }
 
         public IList<UserDTO> GetByFilter(UserFilter filter)
@@ -92,27 +63,13 @@ namespace LaundryManagement.BLL
 
             var dtoList = new List<UserDTO>();
 
-            foreach(var item in list)
+            foreach (var item in list)
             {
                 item.Permissions = permissionDAL.GetPermissions(item.Id);
                 dtoList.Add(mapper.MapToDTO(item));
             }
 
             return dtoList;
-        }
-
-        public string ResetPassword(string email, string newPassword)
-        {
-            var user = this.dal.GetAll().Where(x => x.Email == email).FirstOrDefault();
-            if (user == null)
-                throw new ValidationException(Session.Translations[Tags.NonexistentUser], ValidationType.Error);
-
-            user.Password = Encryptor.Hash(newPassword);
-            dal.Save(user);
-
-            logBLL.Save(MovementTypeEnum.ManualPasswordReset, $"The user {user.FullName} has reset his password manually");
-
-            return newPassword;
         }
 
         public IList<UserViewDTO> GetAllForView()
@@ -130,6 +87,82 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
+        public List<UserHistoryViewDTO> GetHistoryForView(int idUser)
+        {
+            return dal.GetHistory(idUser, null)
+                .Select(x => new UserHistoryViewDTO()
+                {
+                    Date = x.Date,
+                    Email = x.Email,
+                    Id = x.Id,
+                    LastName = x.LastName,
+                    Name = x.Name,
+                    UserName = x.UserName,
+                })
+                .ToList();
+        }
+
+        public UserHistoryDTO GetHistoryById(int idHistory)
+        {
+            return dal.GetHistory(null, idHistory)
+                .Select(x => mapper.MapToHistoryDTO(x))
+                .First();
+        }
+
+        public void Save(UserDTO dto)
+        {
+            var existingUser = this.dal.GetAll().Where(x => x.UserName == dto.UserName || x.Email == dto.Email);
+            if (existingUser.Any(x => x.Id != dto.Id || dto.Id == 0))
+                throw new ValidationException(Session.Translations[Tags.UserDuplicate], ValidationType.Warning);
+
+            var entity = mapper.MapToEntity(dto);
+            this.dal.Save(entity);
+
+            if (Session.IsLogged() && Session.Instance.User.Id == entity.Id)
+            {
+                Session.Instance.User.Location = dto.Location;
+                Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
+                Session.ChangeLanguage(entity.Language);
+            }
+
+            logBLL.Save(MovementTypeEnum.UserCreate, $"The user {entity.FullName} has been created");
+            SaveHistory(entity);
+        }
+
+        public string ResetPassword(string email, string newPassword)
+        {
+            var user = this.dal.GetAll().Where(x => x.Email == email).FirstOrDefault();
+            if (user == null)
+                throw new ValidationException(Session.Translations[Tags.NonexistentUser], ValidationType.Error);
+
+            user.Password = Encryptor.Hash(newPassword);
+            dal.Save(user);
+
+            logBLL.Save(MovementTypeEnum.ManualPasswordReset, $"The user {user.FullName} has reset his password manually");
+            SaveHistory(user);
+
+            return newPassword;
+        }
+
+        public void Delete(UserDTO dto)
+        {
+            if (dto.Id == Session.Instance.User.Id)
+                throw new ValidationException(Session.Translations[Tags.DeleteLoggedUser], ValidationType.Warning);
+
+            var entity = mapper.MapToEntity(dto);
+            this.dal.Delete(entity);
+
+            logBLL.Save(MovementTypeEnum.UserDelete, $"The user {entity.FullName} has been deleted");
+        }
+
+        public void ApplyHistory(UserHistoryDTO historyDTO)
+        {
+            var history = mapper.MapToHistory(historyDTO);
+            dal.ApplyHistory(history);
+
+            logBLL.Save(MovementTypeEnum.UserHistory, $"The user {historyDTO.UserName} has changed its state to IdUserHistory {historyDTO.Id}");
+        }
+
         public bool HasPermission(UserDTO userDto, string permissionCode)
         {
             foreach (var item in userDto.Permissions)
@@ -139,7 +172,25 @@ namespace LaundryManagement.BLL
             }
             return false;
         }
-        
+
+        private void SaveHistory(User user)
+        {
+            var history = new UserHistory()
+            {
+                Date = System.DateTime.Now,
+                Email = user.Email,
+                IdUser = user.Id,
+                Name = user.Name,
+                UserName = user.UserName,
+                LastName = user.LastName,
+                Language = user.Language,
+                Location = user.Location,
+                Password = user.Password
+            };
+
+            dal.SaveHistory(history);
+        }
+
         private bool CheckPermissionRecursively(ComponentDTO permission, string permissionCode)
         {
             bool exists = false;

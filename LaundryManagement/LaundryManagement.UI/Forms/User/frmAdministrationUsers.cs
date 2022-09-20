@@ -5,6 +5,7 @@ using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.User;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
@@ -167,11 +168,32 @@ namespace LaundryManagement.UI
             }
         }
 
+        private void btnHistory_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                FormValidation.ValidateGridSelectedRow(this.gridUsers);
+
+                var selectedId = ((UserViewDTO)this.gridUsers.CurrentRow.DataBoundItem).Id;
+
+                var frmUserHistory = new frmUserHistory(selectedId);
+                
+                frmUserHistory.Show();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
         public void UpdateLanguage(ILanguage language) => Translate();
 
         private void Translate() => FormValidation.Translate(Session.Translations, controls);
 
         private void frmAdministrationUsers_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
-
     }
 }

@@ -55,6 +55,46 @@ namespace LaundryManagement.BLL.Mappers
             return result;
         }
 
+        public UserHistoryDTO MapToHistoryDTO(UserHistory entity)
+        {
+            var result = new UserHistoryDTO()
+            {
+                Id = entity.Id,
+                Email = entity.Email,
+                Name = entity.Name,
+                Password = entity.Password,
+                UserName = entity.UserName,
+                LastName = entity.LastName,
+                Language = entity.Language,
+                Location = locationMapper.MapToDTO(entity.Location),
+                IdUser = entity.IdUser,
+                Date = entity.Date
+            };
+
+            return result;
+
+        }
+
+        public UserHistory MapToHistory(UserHistoryDTO dto)
+        {
+            var result = new UserHistory()
+            {
+                Id = dto.Id,
+                Email = dto.Email,
+                Name = dto.Name,
+                Password = dto.Password,
+                UserName = dto.UserName,
+                LastName = dto.LastName,
+                Language = dto.Language as Language,
+                Location = locationMapper.MapToEntity(dto.Location as LocationDTO),
+                IdUser = dto.IdUser,
+                Date = dto.Date
+            };
+
+            return result;
+
+        }
+
         public UserViewDTO MapToViewDTO(UserDTO dto)
         {
             return new UserViewDTO()

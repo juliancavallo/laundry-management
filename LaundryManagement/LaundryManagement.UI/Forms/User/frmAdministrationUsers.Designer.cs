@@ -36,6 +36,7 @@ namespace LaundryManagement.UI
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnViewRoles = new System.Windows.Forms.Button();
             this.btnEditRoles = new System.Windows.Forms.Button();
+            this.btnHistory = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridUsers)).BeginInit();
             this.SuspendLayout();
             // 
@@ -98,11 +99,22 @@ namespace LaundryManagement.UI
             this.btnEditRoles.UseVisualStyleBackColor = true;
             this.btnEditRoles.Click += new System.EventHandler(this.btnEditRoles_Click);
             // 
+            // btnHistory
+            // 
+            this.btnHistory.Location = new System.Drawing.Point(503, 428);
+            this.btnHistory.Name = "btnHistory";
+            this.btnHistory.Size = new System.Drawing.Size(138, 35);
+            this.btnHistory.TabIndex = 6;
+            this.btnHistory.Text = "History";
+            this.btnHistory.UseVisualStyleBackColor = true;
+            this.btnHistory.Click += new System.EventHandler(this.btnHistory_Click);
+            // 
             // frmAdministrationUsers
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(701, 482);
+            this.Controls.Add(this.btnHistory);
             this.Controls.Add(this.btnEditRoles);
             this.Controls.Add(this.btnViewRoles);
             this.Controls.Add(this.btnDelete);
@@ -126,5 +138,6 @@ namespace LaundryManagement.UI
         private Button btnDelete;
         private Button btnViewRoles;
         private Button btnEditRoles;
+        private Button btnHistory;
     }
 }
