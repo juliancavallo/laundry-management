@@ -25,6 +25,7 @@ namespace LaundryManagement.BLL
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
             logBLL = new LogBLL();
+
             seedService = new SeedService(Session.Settings.ConnectionString);
             emailService = new EmailService();
 
@@ -62,8 +63,11 @@ namespace LaundryManagement.BLL
 
         public void Logout() 
         { 
-            logBLL.Save(MovementTypeEnum.Logout, $"The user {Session.Instance.User.FullName} logged out successfully");
-            Session.Logout(translatorBLL.GetDefaultLanguage());
+            if(Session.Instance != null)
+            {
+                logBLL.Save(MovementTypeEnum.Logout, $"The user {Session.Instance.User.FullName} logged out successfully");
+                Session.Logout(translatorBLL.GetDefaultLanguage());
+            }
         }
 
         public bool IsLogged() => Session.Instance != null;

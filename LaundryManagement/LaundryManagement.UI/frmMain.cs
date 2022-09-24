@@ -6,6 +6,7 @@ using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
+using LaundryManagement.UI.Forms.Backups;
 using LaundryManagement.UI.Forms.Logs;
 using LaundryManagement.UI.Forms.Roadmap;
 using LaundryManagement.UI.Forms.Roles;
@@ -48,7 +49,7 @@ namespace LaundryManagement.UI
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
-                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock };
+                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups };
 
             PopulateLanguageMenu();
             Translate();
@@ -95,6 +96,7 @@ namespace LaundryManagement.UI
             this.menuLanguage.Tag = new MenuItemMetadataDTO { TagName = "Language", Permission = "" };
             this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
             this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
+            this.menuAdministrationBackups.Tag = new MenuItemMetadataDTO { TagName = "Backups", Permission = "ADM_BCK" };
         }
 
         public void ValidateForm()
@@ -150,6 +152,7 @@ namespace LaundryManagement.UI
                 ImagePath = Program.Configuration.GetSection("ImagePath").Value.ToString(),
                 PasswordPolicy = Program.Configuration.GetSection("PasswordPolicy").Get<PasswordPolicy>(),
                 EmailSettings = Program.Configuration.GetSection("EmailSettings").Get<EmailSettings>(),
+                BackupPath = Program.Configuration.GetSection("BackupPath").Value.ToString(),
             };
         }
 
@@ -233,7 +236,11 @@ namespace LaundryManagement.UI
 
         private void frmMain_Load(object sender, EventArgs e) => Session.SubscribeObserver(this);
 
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
+        private void frmMain_FormClosing(object sender, FormClosingEventArgs e) 
+        {
+            loginBLL.Logout();
+            Session.UnsubscribeObserver(this); 
+        }
 
         #region Menus
         private void menuLogout_Click(object sender, EventArgs e)
@@ -340,6 +347,13 @@ namespace LaundryManagement.UI
         private void menuReportsLogs_Click(object sender, EventArgs e)
         {
             var frm = new frmLogs();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void menuAdministrationBackups_Click(object sender, EventArgs e)
+        {
+            var frm = new frmBackupRestore();
             frm.MdiParent = this;
             frm.Show();
         }

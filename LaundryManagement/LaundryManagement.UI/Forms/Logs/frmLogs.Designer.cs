@@ -38,6 +38,7 @@
             this.lblDateFrom = new System.Windows.Forms.Label();
             this.txtMessage = new System.Windows.Forms.TextBox();
             this.lblMessage = new System.Windows.Forms.Label();
+            this.txtMessageView = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,6 +50,7 @@
             this.grid.RowTemplate.Height = 25;
             this.grid.Size = new System.Drawing.Size(691, 287);
             this.grid.TabIndex = 4;
+            this.grid.SelectionChanged += new System.EventHandler(this.grid_SelectionChanged);
             // 
             // btnSearch
             // 
@@ -125,11 +127,19 @@
             this.lblMessage.TabIndex = 13;
             this.lblMessage.Text = "label1";
             // 
+            // txtMessageView
+            // 
+            this.txtMessageView.Location = new System.Drawing.Point(24, 463);
+            this.txtMessageView.Name = "txtMessageView";
+            this.txtMessageView.Size = new System.Drawing.Size(689, 23);
+            this.txtMessageView.TabIndex = 14;
+            // 
             // frmLogs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(740, 455);
+            this.ClientSize = new System.Drawing.Size(740, 533);
+            this.Controls.Add(this.txtMessageView);
             this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.txtMessage);
             this.Controls.Add(this.lblDateFrom);
@@ -160,5 +170,6 @@
         private System.Windows.Forms.Label lblDateFrom;
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.Label lblMessage;
+        private System.Windows.Forms.TextBox txtMessageView;
     }
 }

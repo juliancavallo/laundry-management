@@ -20,6 +20,8 @@ namespace LaundryManagement.Domain.Enums
         ManualPasswordReset = 10,
         UserCreate = 11,
         UserDelete = 12,
-        UserHistory = 13
+        UserHistory = 13,
+        Backup = 14,
+        Restore = 15
     }
 }

@@ -50,6 +50,8 @@ namespace LaundryManagement.UI.Forms.Logs
 
             this.dateTimeFrom.Value = DateTime.Now.AddDays(-7);
             this.dateTimeTo.Value = DateTime.Now;
+            this.txtMessageView.Enabled = false;
+            this.txtMessageView.Multiline = true;
 
             this.Tag = "Logs";
             this.btnSearch.Tag = "Search";
@@ -104,6 +106,12 @@ namespace LaundryManagement.UI.Forms.Logs
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
+        }
+
+        private void grid_SelectionChanged(object sender, EventArgs e)
+        {
+            var row = this.grid.CurrentRow.DataBoundItem as LogViewDTO;
+            this.txtMessageView.Text = row.Message;
         }
     }
 }
