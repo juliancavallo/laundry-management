@@ -1,5 +1,6 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Extensions;
@@ -21,6 +22,7 @@ namespace LaundryManagement.UI.Forms.Shipping
         private ShippingBLL shippingBLL;
         private UserBLL userBLL;
         private ItemBLL itemBLL;
+        private LogBLL logBLL;
         private List<Control> controls;
 
         private List<ShippingDetailDTO> shippingDetailDTO;
@@ -31,6 +33,7 @@ namespace LaundryManagement.UI.Forms.Shipping
             shippingBLL = new ShippingBLL();
             itemBLL = new ItemBLL();    
             userBLL = new UserBLL();
+            logBLL = new LogBLL();
             shippingDetailDTO = new List<ShippingDetailDTO>();
 
 
@@ -184,11 +187,23 @@ namespace LaundryManagement.UI.Forms.Shipping
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
                 this.txtItem.Clear();
+
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementType.MovementByShippingType[shippingType], ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementType.MovementByShippingType[shippingType], ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
                 this.txtItem.Clear();
+                logBLL.LogError(MovementType.MovementByShippingType[shippingType], ex.Message);
             }
         }
 
@@ -268,11 +283,23 @@ namespace LaundryManagement.UI.Forms.Shipping
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
                 this.txtItem.Clear();
+
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementType.MovementByShippingType[shippingType], ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementType.MovementByShippingType[shippingType], ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
                 this.txtItem.Clear();
+                logBLL.LogError(MovementType.MovementByShippingType[shippingType], ex.Message);
             } 
         }
     }

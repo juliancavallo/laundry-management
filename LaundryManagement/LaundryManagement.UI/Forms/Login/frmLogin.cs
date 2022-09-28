@@ -16,11 +16,13 @@ namespace LaundryManagement.UI
     {
         private LoginBLL loginBLL;
         private TranslatorBLL translatorBLL;
+        private LogBLL logBLL;
         private IList<Control> controls;
         public frmLogin()
         {
             loginBLL = new LoginBLL();
             translatorBLL = new TranslatorBLL();
+            logBLL = new LogBLL();
 
             InitializeComponent();
             ApplySetup();
@@ -80,10 +82,22 @@ namespace LaundryManagement.UI
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.Login, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.Login, ex.Message);
+                        break;
+                }                
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                logBLL.LogError(MovementTypeEnum.Login, ex.Message);
             }
 
         }

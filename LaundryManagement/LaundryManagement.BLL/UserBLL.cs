@@ -125,7 +125,7 @@ namespace LaundryManagement.BLL
                 Session.ChangeLanguage(entity.Language);
             }
 
-            logBLL.Save(MovementTypeEnum.UserCreate, $"The user {entity.FullName} has been created");
+            logBLL.LogInfo(MovementTypeEnum.User, $"The user {entity.FullName} has been created");
             SaveHistory(entity);
         }
 
@@ -138,7 +138,7 @@ namespace LaundryManagement.BLL
             user.Password = Encryptor.Hash(newPassword);
             dal.Save(user);
 
-            logBLL.Save(MovementTypeEnum.ManualPasswordReset, $"The user {user.FullName} has reset his password manually");
+            logBLL.LogInfo(MovementTypeEnum.ManualPasswordReset, $"The user {user.FullName} has reset his password manually");
             SaveHistory(user);
 
             return newPassword;
@@ -152,7 +152,7 @@ namespace LaundryManagement.BLL
             var entity = mapper.MapToEntity(dto);
             this.dal.Delete(entity);
 
-            logBLL.Save(MovementTypeEnum.UserDelete, $"The user {entity.FullName} has been deleted");
+            logBLL.LogInfo(MovementTypeEnum.User, $"The user {entity.FullName} has been deleted");
         }
 
         public void ApplyHistory(UserHistoryDTO historyDTO)
@@ -160,7 +160,7 @@ namespace LaundryManagement.BLL
             var history = mapper.MapToHistory(historyDTO);
             dal.ApplyHistory(history);
 
-            logBLL.Save(MovementTypeEnum.UserHistory, $"The user {historyDTO.UserName} has changed its state to IdUserHistory {historyDTO.Id}");
+            logBLL.LogInfo(MovementTypeEnum.UserHistory, $"The user {historyDTO.UserName} has changed its state to IdUserHistory {historyDTO.Id}");
         }
 
         public bool HasPermission(UserDTO userDto, string permissionCode)

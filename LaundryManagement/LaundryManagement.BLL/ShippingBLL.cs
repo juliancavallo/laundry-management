@@ -119,7 +119,7 @@ namespace LaundryManagement.BLL
             //Send email
             SendEmail(shipping);
 
-            logBLL.Save(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been created");
+            logBLL.LogInfo(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been created");
         }
 
         public void Send(List<ShippingDTO> shippings)
@@ -129,7 +129,7 @@ namespace LaundryManagement.BLL
                 shipping.Status = ShippingStatusEnum.Sent;
                 dal.Save(mapper.MapToEntity(shipping));
 
-                logBLL.Save(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been sent");
+                logBLL.LogInfo(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been sent");
             }
         }
 

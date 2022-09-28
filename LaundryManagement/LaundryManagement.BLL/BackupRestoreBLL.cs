@@ -28,7 +28,7 @@ namespace LaundryManagement.BLL
 
             var files = new DirectoryInfo(Session.Settings.BackupPath).GetFiles().OrderBy(x => x.CreationTime).ToList();
 
-            while (files.Count > 10)
+            while (files.Count == 10)
             {
                 File.Delete(files.First().FullName);
                 files.Remove(files.First());
@@ -36,13 +36,13 @@ namespace LaundryManagement.BLL
 
             dal.Backup();
 
-            logBLL.Save(MovementTypeEnum.Backup, $"The user {Session.Instance.User.FullName} has made a backup of the database");
+            logBLL.LogInfo(MovementTypeEnum.Backup, $"The user {Session.Instance.User.FullName} has made a backup of the database");
         }
 
         public void Restore(string path)
         {
             dal.Restore(path);
-            logBLL.Save(MovementTypeEnum.Restore, $"The user {Session.Instance.User.FullName} has restored the backup from {path}");
+            logBLL.LogInfo(MovementTypeEnum.Restore, $"The user {Session.Instance.User.FullName} has restored the backup from {path}");
         }
 
         public IEnumerable<BackupDTO> GetBackups()

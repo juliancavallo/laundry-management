@@ -13,5 +13,6 @@ namespace LaundryManagement.Domain.Entities
         public User User { get; set; }
         public MovementType MovementType { get; set; }
         public string Message { get; set; }
+        public LogLevel LogLevel { get; set; } 
     }
 }

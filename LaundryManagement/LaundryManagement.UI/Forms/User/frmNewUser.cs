@@ -17,6 +17,7 @@ namespace LaundryManagement.UI
         private UserBLL userBLL;
         private TranslatorBLL translatorBLL;
         private LocationBLL locationBLL;
+        private LogBLL logBLL;
 
         private IList<Control> controls;
         private SecurityService securityService;
@@ -24,6 +25,7 @@ namespace LaundryManagement.UI
         {
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
+            logBLL = new LogBLL();
             locationBLL = new LocationBLL();
             userDTO = paramDTO;
             securityService = new SecurityService();
@@ -133,10 +135,21 @@ namespace LaundryManagement.UI
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.User, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.User, ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
-                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error); 
+                logBLL.LogError(MovementTypeEnum.User, ex.Message);
             }
         }
 

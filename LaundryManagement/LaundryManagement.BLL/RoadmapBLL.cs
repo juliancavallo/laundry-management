@@ -83,7 +83,7 @@ namespace LaundryManagement.BLL
             //Send email
             SendEmail(roadmap);
 
-            logBLL.Save(MovementTypeEnum.RoadMap, $"The roadmap {roadmap.Id} has been created");
+            logBLL.LogInfo(MovementTypeEnum.RoadMap, $"The roadmap {roadmap.Id} has been created");
         }
 
         public List<LocationDTO> GetLocations()

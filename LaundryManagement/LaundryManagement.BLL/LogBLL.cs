@@ -18,21 +18,38 @@ namespace LaundryManagement.BLL
         public LogBLL()
         {
             this.logDAL = new LogDAL();
-            this.logMapper  = new LogMapper();
+            this.logMapper = new LogMapper();
         }
 
-        public void Save(MovementTypeEnum movementType, string message) 
+        public void LogInfo(MovementTypeEnum movementType, string message) =>
+            this.Save(movementType, message, LogLevelEnum.Information);
+
+        public void LogWarning(MovementTypeEnum movementType, string message) =>
+            this.Save(movementType, message, LogLevelEnum.Warning);
+
+        public void LogError(MovementTypeEnum movementType, string message) =>
+            this.Save(movementType, message, LogLevelEnum.Error);
+
+        private void Save(MovementTypeEnum movementType, string message, LogLevelEnum logLevel)
         {
-            var dto = new LogDTO()
+            var globalLogLevel = (LogLevelEnum)Session.Settings.LogLevel;
+
+            bool shouldLog = logLevel >= globalLogLevel;
+
+            if (shouldLog)
             {
-                MovementType = movementType,
-                Message = message,
-                Date = DateTime.Now,
-                User = (UserDTO)Session.Instance.User
-            };
-            logDAL.Save(logMapper.MapToEntity(dto));
+                var dto = new LogDTO()
+                {
+                    MovementType = movementType,
+                    Message = message,
+                    Date = DateTime.Now,
+                    User = (UserDTO)Session.Instance.User,
+                    LogLevel = logLevel
+                };
+                logDAL.Save(logMapper.MapToEntity(dto));
+            }
         }
-        
+
         public List<LogViewDTO> GetForView(LogFilter filter)
         {
             var list = logDAL.Get().AsEnumerable();
@@ -51,6 +68,6 @@ namespace LaundryManagement.BLL
 
             return list.Select(x => logMapper.MapToViewDTO(x)).ToList();
         }
-        
+
     }
 }

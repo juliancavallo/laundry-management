@@ -20,6 +20,7 @@ namespace LaundryManagement.UI.Forms.Roles
     public partial class frmNewPermission : Form, ILanguageObserver
     {
         private PermissionBLL permissionBLL;
+        private LogBLL logBLL;
         private IList<Control> controls;
         private ComponentDTO componentDTO;
         private IList<ComponentDTO> childs;
@@ -30,6 +31,7 @@ namespace LaundryManagement.UI.Forms.Roles
             childs = new List<ComponentDTO>();
             
             permissionBLL = new PermissionBLL();
+            logBLL = new LogBLL();
 
             InitializeComponent();
             ApplySetup();
@@ -286,10 +288,21 @@ namespace LaundryManagement.UI.Forms.Roles
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.Permission, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.Permission, ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                logBLL.LogError(MovementTypeEnum.Permission, ex.Message);
             }
         }
 

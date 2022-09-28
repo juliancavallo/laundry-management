@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace LaundryManagement.Domain.Enums
+﻿namespace LaundryManagement.Domain.Enums
 {
     public enum MovementTypeEnum
     {
@@ -18,10 +12,11 @@ namespace LaundryManagement.Domain.Enums
         ResetPassword = 8,
         Logout = 9,
         ManualPasswordReset = 10,
-        UserCreate = 11,
-        UserDelete = 12,
-        UserHistory = 13,
-        Backup = 14,
-        Restore = 15
+        User = 11,
+        UserHistory = 12,
+        Backup = 13,
+        Restore = 14,
+        UserRoles = 15,
+        Permission = 16
     }
 }

@@ -17,5 +17,6 @@ namespace LaundryManagement.Domain.Entities
         public MovementTypeEnum MovementType { get; set; }
         public string MovementTypeName { get; set; }
         public string Message { get; set; }
+        public LogLevelEnum LogLevel { get; set; }
     }
 }

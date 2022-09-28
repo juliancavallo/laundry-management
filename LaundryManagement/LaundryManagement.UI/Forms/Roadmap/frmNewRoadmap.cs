@@ -22,6 +22,7 @@ namespace LaundryManagement.UI.Forms.Roadmap
         private ShippingBLL shippingBLL;
         private RoadmapBLL roadmapBLL;
         private LocationBLL locationBLL;
+        private LogBLL logBLL;
         private List<Control> controls;
 
         public frmNewRoadmap()
@@ -29,6 +30,7 @@ namespace LaundryManagement.UI.Forms.Roadmap
             shippingBLL = new ShippingBLL();
             locationBLL = new LocationBLL();
             roadmapBLL = new RoadmapBLL();
+            logBLL = new LogBLL();
 
             InitializeComponent();
             ApplySetup();
@@ -150,10 +152,21 @@ namespace LaundryManagement.UI.Forms.Roadmap
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.RoadMap, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.RoadMap, ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                logBLL.LogError(MovementTypeEnum.RoadMap, ex.Message);
             }
         }
 

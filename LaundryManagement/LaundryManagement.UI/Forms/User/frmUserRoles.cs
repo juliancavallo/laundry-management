@@ -17,6 +17,7 @@ namespace LaundryManagement.UI
     {
         private PermissionBLL permissionBLL;
         private UserBLL userBLL;
+        private LogBLL logBLL;
 
         private IList<Control> controls;
         private bool isEdit;
@@ -24,6 +25,7 @@ namespace LaundryManagement.UI
         public frmUserRoles(UserDTO paramDTO, bool edit)
         {
             permissionBLL = new PermissionBLL();
+            logBLL = new LogBLL();
             userBLL = new UserBLL();
             _userDTO = paramDTO;
             isEdit = edit;
@@ -88,10 +90,22 @@ namespace LaundryManagement.UI
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.UserRoles, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.UserRoles, ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                logBLL.LogError(MovementTypeEnum.UserRoles, ex.Message);
             }
         }
 
@@ -138,10 +152,21 @@ namespace LaundryManagement.UI
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.UserRoles, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.UserRoles, ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                logBLL.LogError(MovementTypeEnum.UserRoles, ex.Message);
             }
         }
 

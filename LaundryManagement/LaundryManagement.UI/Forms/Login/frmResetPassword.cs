@@ -15,12 +15,14 @@ namespace LaundryManagement.UI
     {
         private UserBLL userBLL;
         private TranslatorBLL translatorBLL;
+        private LogBLL logBLL;
         private IList<Control> controls;
         private SecurityService securityService;
         public frmResetPassword(ILanguage language)
         {
             userBLL = new UserBLL();
             translatorBLL = new TranslatorBLL();
+            logBLL = new LogBLL();
             securityService = new SecurityService();
 
             InitializeComponent();
@@ -76,10 +78,22 @@ namespace LaundryManagement.UI
             catch (ValidationException ex)
             {
                 FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+
+                switch (ex.ValidationType)
+                {
+                    case ValidationType.Warning:
+                        logBLL.LogWarning(MovementTypeEnum.ResetPassword, ex.Message);
+                        break;
+
+                    case ValidationType.Error:
+                        logBLL.LogError(MovementTypeEnum.ResetPassword, ex.Message);
+                        break;
+                }
             }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+                logBLL.LogError(MovementTypeEnum.ResetPassword, ex.Message);
             }
         }
 

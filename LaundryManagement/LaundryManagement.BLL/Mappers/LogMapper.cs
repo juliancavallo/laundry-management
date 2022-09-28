@@ -27,6 +27,7 @@ namespace LaundryManagement.BLL.Mappers
                 User = userMapper.MapToEntity(dto.User),
                 MovementType = new MovementType() {  Id = (int)dto.MovementType},
                 Message = dto.Message,
+                LogLevel = new LogLevel() { Id = (int)dto.LogLevel}
             };
         }
 
@@ -40,6 +41,7 @@ namespace LaundryManagement.BLL.Mappers
                 MovementType = (MovementTypeEnum)entity.MovementType.Id,
                 MovementTypeName = entity.MovementType.Name,
                 Message = entity.Message,
+                LogLevel = (LogLevelEnum)entity.LogLevel.Id
             };
         }
 

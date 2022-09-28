@@ -38,9 +38,12 @@ namespace LaundryManagement.DAL
 	                    l.IdMovementType,
 	                    mt.Name as MovementTypeName,
 	                    l.IdUser,
-	                    l.Message
+	                    l.Message,
+                        l.IdLogLevel,
+                        ll.Description as LogLevelName
                     FROM [Log] l
                     INNER JOIN MovementType mt ON mt.Id = l.IdMovementType
+                    INNER JOIN LogLevel ll ON ll.Id = l.IdLogLevel
                     ORDER BY l.Date DESC
                     ";
                 cmd.Connection = connection;
@@ -77,12 +80,14 @@ namespace LaundryManagement.DAL
                                ([Date]
                                ,[IdMovementType]
                                ,[IdUser]
-                               ,[Message])
+                               ,[Message],
+                                [IdLogLevel])
                          VALUES
                                ('{item.Date.ToString("yyyy-MM-ddTHH:mm:ss")}'
                                ,{item.MovementType.Id}
                                ,{item.User.Id}
-                               ,'{item.Message}')";
+                               ,'{item.Message}'
+                               ,{item.LogLevel.Id})";
 
                 cmd.Connection = connection;
                 cmd.ExecuteNonQuery();
@@ -111,6 +116,11 @@ namespace LaundryManagement.DAL
                     Name = reader["MovementTypeName"].ToString()
                 },
                 Message = reader["Message"].ToString(),
+                LogLevel = new LogLevel()
+                {
+                    Id = int.Parse(reader["IdLogLevel"].ToString()),
+                    Name = reader["LogLevelName"].ToString()
+                }
             };
         }
     }
