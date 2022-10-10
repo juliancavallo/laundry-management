@@ -16,6 +16,7 @@ namespace LaundryManagement.BLL
     public class RoadmapBLL
     {
         private RoadmapMapper mapper;
+        private ItemMapper itemMapper;
         private RoadmapDAL dal;
         private ShippingBLL shippingBLL;
         private LocationBLL locationBLL;
@@ -33,6 +34,7 @@ namespace LaundryManagement.BLL
             this.logBLL = new LogBLL();
             this.traceabilityBLL = new TraceabilityBLL();
             this.mapper = new RoadmapMapper();
+            this.itemMapper = new ItemMapper();
             this.emailService = new EmailService();
         }
 
@@ -49,9 +51,30 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
-        public List<RoadmapViewDTO> GetAllForView()
+        public List<RoadmapViewDTO> GetAllForView(RoadmapFilter filter)
         {
-            return this.GetAll().Select(x => mapper.MapToViewDTO(x)).ToList();
+            var list = this.GetAll().AsEnumerable();
+
+            if (filter.DateFrom != DateTime.MinValue)
+                list = list.Where(x => x.CreatedDate >= filter.DateFrom.Date);
+
+            if (filter.DateTo != DateTime.MinValue)
+                list = list.Where(x => x.CreatedDate <= filter.DateTo.Date.AddDays(1).AddTicks(-1));
+
+            return list.Select(x => mapper.MapToViewDTO(x)).ToList();
+        }
+
+        public List<ProcessDetailViewDTO> GetDetailForView(int roadmapId)
+        {
+            var detail = dal.GetDetailByRoadmapId(roadmapId);
+            var listView = detail.Select(x => itemMapper.MapToViewDTO(x)).ToList();
+
+            var result = new List<ProcessDetailViewDTO>();
+            foreach (var item in listView)
+            {
+                result.AddOrUpdate(item);
+            }
+            return result;
         }
 
         public void Send(RoadmapDTO roadmap) 
@@ -105,7 +128,7 @@ namespace LaundryManagement.BLL
                 var statusName = shippingBLL.GetStatusName((int)shipping.Status);
 
                 var message = string.Format(Session.Translations[Tags.ShippingEmailBody],
-                  roadmap.Id, Session.Translations[statusName], DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss"), Session.Instance.User.FullName);
+                  shipping.Id, Session.Translations[statusName], DateTime.Now.ToString("yyyy-MM-ddThh:mm:ss"), Session.Instance.User.FullName);
 
                 emailService.SendMail(
                     shipping.Responsible.Email,

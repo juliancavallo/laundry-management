@@ -233,7 +233,7 @@ namespace LaundryManagement.UI.Forms.Shipping
             try
             {
                 FormValidation.ValidateGridSelectedRow(this.gridItems);
-                var selectedItem = (ShippingDetailViewDTO)this.gridItems.CurrentRow.DataBoundItem;
+                var selectedItem = (ProcessDetailViewDTO)this.gridItems.CurrentRow.DataBoundItem;
 
                 shippingDetailDTO.RemoveAll(x => x.Item.Article.Id == selectedItem.ArticleId);
 

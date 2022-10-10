@@ -95,5 +95,17 @@ namespace LaundryManagement.BLL.Mappers
                 }
             };
         }
+
+        public ProcessDetailViewDTO MapToViewDTO(Item entity)
+        {
+            return new ProcessDetailViewDTO()
+            {
+                ArticleId = entity.Article.Id,
+                Color = entity.Article.Color.Name,
+                ItemType = entity.Article.Type.Name,
+                Size = entity.Article.Size.Name,
+                Quantity = 1
+            };
+        }
     }
 }

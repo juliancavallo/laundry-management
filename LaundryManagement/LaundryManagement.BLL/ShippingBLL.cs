@@ -53,10 +53,10 @@ namespace LaundryManagement.BLL
                 result = dal.GetAll();
 
             if (filter.DateFrom != DateTime.MinValue)
-                result = result.Where(x => x.CreatedDate > filter.DateFrom);
+                result = result.Where(x => x.CreatedDate > filter.DateFrom.Date);
 
             if (filter.DateTo != DateTime.MinValue)
-                result = result.Where(x => x.CreatedDate < filter.DateTo);
+                result = result.Where(x => x.CreatedDate < filter.DateTo.Date.AddDays(1).AddTicks(-1));
 
             if(filter.Origin != null)
                 result = result.Where(x => x.Origin.Equals(filter.Origin) || filter.Origin.IsChild(x.Origin.ParentLocation));
@@ -75,12 +75,12 @@ namespace LaundryManagement.BLL
                 .ToList();
         }
 
-        public List<ShippingDetailViewDTO> GetDetailForView(int shippingId)
+        public List<ProcessDetailViewDTO> GetDetailForView(int shippingId)
         {
             var detail = dal.GetDetailByShippingId(shippingId);
             var listView = detail.Select(x => mapper.MapToViewDTO(x)).ToList();
 
-            var result = new List<ShippingDetailViewDTO>();
+            var result = new List<ProcessDetailViewDTO>();
             foreach (var item in listView)
             {
                 result.AddOrUpdate(item);
@@ -133,9 +133,9 @@ namespace LaundryManagement.BLL
             }
         }
 
-        public List<ShippingDetailViewDTO> MapToView(List<ShippingDetailDTO> shippingDetailDTO)
+        public List<ProcessDetailViewDTO> MapToView(List<ShippingDetailDTO> shippingDetailDTO)
         {
-            var result = new List<ShippingDetailViewDTO>();
+            var result = new List<ProcessDetailViewDTO>();
             foreach(var item in shippingDetailDTO)
             {
                 result.AddOrUpdate(mapper.MapToViewDTO(item));

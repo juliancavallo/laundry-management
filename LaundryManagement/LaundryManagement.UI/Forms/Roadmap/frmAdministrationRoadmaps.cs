@@ -53,7 +53,7 @@ namespace LaundryManagement.UI.Forms.Roadmap
             try
             {
                 this.gridRoadmap.DataSource = null;
-                this.gridRoadmap.DataSource = roadmapBLL.GetAllForView();
+                this.gridRoadmap.DataSource = roadmapBLL.GetAllForView(new RoadmapFilter());
                 this.gridRoadmap.Columns["Id"].Visible = false;
             }
             catch (Exception ex)

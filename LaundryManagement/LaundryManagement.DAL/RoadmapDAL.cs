@@ -15,12 +15,14 @@ namespace LaundryManagement.DAL
         private LocationDAL locationDAL;
         private ShippingDAL shippingDAL;
         private UserDAL userDAL;
+        private ItemDAL itemDAL;
         public RoadmapDAL()
         {
             connection = new SqlConnection();
             shippingDAL = new ShippingDAL();
             locationDAL = new LocationDAL();
             userDAL = new UserDAL();    
+            itemDAL = new ItemDAL();
 
             connection.ConnectionString = Session.Settings.ConnectionString;
         }
@@ -63,6 +65,46 @@ namespace LaundryManagement.DAL
             {
                 reader?.Close();
                 connection.Close();
+            }
+        }
+
+        public List<Item> GetDetailByRoadmapId(int id)
+        {
+            var subConnection = new SqlConnection();
+            subConnection.ConnectionString = Session.Settings.ConnectionString;
+
+            SqlDataReader reader = null;
+            try
+            {
+                if (subConnection.State == System.Data.ConnectionState.Closed)
+                    subConnection.Open();
+
+                SqlCommand cmd = new SqlCommand(@$"
+                    SELECT DISTINCT sd.IdItem
+                    FROM Roadmap r 
+                    INNER JOIN RoadmapShippings rs ON r.Id = rs.IdRoadmap
+                    INNER JOIN ShippingDetail sd ON rs.IdShipping = sd.IdShipping
+                    WHERE r.Id = {id}");
+
+                cmd.Connection = subConnection;
+                reader = cmd.ExecuteReader();
+
+                List<Item> details = new List<Item>();
+                while (reader.Read())
+                {
+                    details.Add(this.MapDetailFromDatabase(reader));
+                }
+
+                return details;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                subConnection.Close();
             }
         }
 
@@ -178,6 +220,11 @@ namespace LaundryManagement.DAL
                 CreationUser = userDAL.GetById(int.Parse(reader["IdCreationUser"].ToString())),
                 Shippings = shippingDAL.GetByRoadmapId(id)
             };
+        }
+
+        private Item MapDetailFromDatabase(SqlDataReader reader)
+        {
+            return itemDAL.Get(id: int.Parse(reader["IdItem"].ToString()));
         }
     }
 }

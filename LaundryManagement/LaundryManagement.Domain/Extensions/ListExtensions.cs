@@ -9,7 +9,7 @@ namespace LaundryManagement.Domain.Extensions
 {
     public static class ListExtensions
     {
-        public static void AddOrUpdate(this IList<ShippingDetailViewDTO> list, ShippingDetailViewDTO item)
+        public static void AddOrUpdate(this IList<ProcessDetailViewDTO> list, ProcessDetailViewDTO item)
         {
             var addedItem = list.FirstOrDefault(x => x.ArticleId == item.ArticleId);
             if (addedItem == null)

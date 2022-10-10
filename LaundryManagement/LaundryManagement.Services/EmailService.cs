@@ -29,9 +29,9 @@ namespace LaundryManagement.Services
                 mail.Dispose();
                 smtp.Dispose();
             }
-            catch
+            catch(Exception ex)
             {
-                throw new Exception("The password recovery email could not be sent. Please contact the system administrator.");
+                throw new Exception("An error occurred while sending the mail. Please contact the system administrator.", ex);
             }
         }
     }

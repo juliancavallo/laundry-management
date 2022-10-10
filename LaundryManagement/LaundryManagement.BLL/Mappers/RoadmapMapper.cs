@@ -64,6 +64,5 @@ namespace LaundryManagement.BLL.Mappers
                 Id = dto.Id
             };
         }
-
     }
 }

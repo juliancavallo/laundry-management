@@ -49,7 +49,7 @@ namespace LaundryManagement.UI
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
-                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups };
+                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps };
 
             PopulateLanguageMenu();
             Translate();
@@ -88,7 +88,7 @@ namespace LaundryManagement.UI
             this.menuProcessesLaundryReception.Tag = new MenuItemMetadataDTO { TagName = "LaundryReception", Permission = "PRO_REC_LDY" };
             this.menuProcessesLaundryShipping.Tag = new MenuItemMetadataDTO { TagName = "LaundryShipping", Permission = "PRO_SHP_LDY" };
             this.menuProcessesRoadMap.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "PRO_ROA" };
-            this.menuReportsMovements.Tag = new MenuItemMetadataDTO { TagName = "Movements", Permission = "REP_MOV" };
+            //this.menuReportsMovements.Tag = new MenuItemMetadataDTO { TagName = "Movements", Permission = "REP_MOV" };
             this.menuReportsTraceability.Tag = new MenuItemMetadataDTO { TagName = "Traceability", Permission = "REP_TRA" };
             this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
             this.menuReportsClinicShippings.Tag = new MenuItemMetadataDTO { TagName = "ClinicShippings", Permission = "REP_SHP_CLI" };
@@ -97,6 +97,7 @@ namespace LaundryManagement.UI
             this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
             this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
             this.menuAdministrationBackups.Tag = new MenuItemMetadataDTO { TagName = "Backups", Permission = "ADM_BCK" };
+            this.menuReportsRoadmaps.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "REP_ROA" };
         }
 
         public void ValidateForm()
@@ -355,6 +356,13 @@ namespace LaundryManagement.UI
         private void menuAdministrationBackups_Click(object sender, EventArgs e)
         {
             var frm = new frmBackupRestore();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void menuReportsRoadmaps_Click(object sender, EventArgs e)
+        {
+            var frm = new frmRoadmapReport();
             frm.MdiParent = this;
             frm.Show();
         }

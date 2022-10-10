@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.DTOs
 {
-    public class ShippingDetailViewDTO
+    public class ProcessDetailViewDTO
     {
         public int ArticleId { get; set; }
         public string ItemType { get; set; }

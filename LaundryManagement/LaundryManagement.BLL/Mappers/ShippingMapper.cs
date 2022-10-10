@@ -76,9 +76,9 @@ namespace LaundryManagement.BLL.Mappers
             };
         }
 
-        public ShippingDetailViewDTO MapToViewDTO(ShippingDetailDTO dto)
+        public ProcessDetailViewDTO MapToViewDTO(ShippingDetailDTO dto)
         {
-            return new ShippingDetailViewDTO()
+            return new ProcessDetailViewDTO()
             {
                 ArticleId = dto.Item.Article.Id,
                 Color = dto.Item.Article.Color.Name,
@@ -88,9 +88,9 @@ namespace LaundryManagement.BLL.Mappers
             };
         }
 
-        public ShippingDetailViewDTO MapToViewDTO(ShippingDetail entity)
+        public ProcessDetailViewDTO MapToViewDTO(ShippingDetail entity)
         {
-            return new ShippingDetailViewDTO()
+            return new ProcessDetailViewDTO()
             {
                 ArticleId = entity.Item.Article.Id,
                 Color = entity.Item.Article.Color.Name,
