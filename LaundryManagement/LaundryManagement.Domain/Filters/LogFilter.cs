@@ -13,5 +13,6 @@ namespace LaundryManagement.Domain.Filters
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
         public MovementTypeEnum? MovementType { get; set; }
+        public LogLevelEnum? LogLevel { get; set; }
     }
 }

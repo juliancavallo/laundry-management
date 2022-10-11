@@ -12,5 +12,6 @@ namespace LaundryManagement.Domain.DTOs
         public string Movement { get; set; }
         public string Message { get; set; }
         public string User { get; set; }
+        public string Level { get; set; }
     }
 }

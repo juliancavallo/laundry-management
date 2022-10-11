@@ -28,7 +28,7 @@ namespace LaundryManagement.BLL
 
             var files = new DirectoryInfo(Session.Settings.BackupPath).GetFiles().OrderBy(x => x.CreationTime).ToList();
 
-            while (files.Count == 10)
+            while (files.Count > Session.Settings.BackupsLimit - 1)
             {
                 File.Delete(files.First().FullName);
                 files.Remove(files.First());

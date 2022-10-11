@@ -63,11 +63,24 @@ namespace LaundryManagement.BLL
             if (filter.MovementType.HasValue && filter.MovementType.Value != 0)
                 list = list.Where(x => x.MovementType.Id == (int)filter.MovementType);
 
+            if (filter.LogLevel.HasValue && filter.LogLevel.Value != 0)
+                list = list.Where(x => x.LogLevel.Id == (int)filter.LogLevel);
+
             if (!string.IsNullOrWhiteSpace(filter.Message))
                 list = list.Where(x => x.Message.Contains(filter.Message));
 
             return list.Select(x => logMapper.MapToViewDTO(x)).ToList();
         }
+
+        public List<EnumTypeDTO> GetAllLogLevels() =>
+            this.logDAL
+            .GetAllLogLevels()
+            .Select(x => new EnumTypeDTO()
+            {
+                Id = x.Id,
+                Name = x.Name,
+            })
+            .ToList();
 
     }
 }

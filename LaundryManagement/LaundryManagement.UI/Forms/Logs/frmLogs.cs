@@ -26,10 +26,10 @@ namespace LaundryManagement.UI.Forms.Logs
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.btnSearch, this.lblDateFrom, this.lblDateTo, this.lblMessage, this.lblMovementType };
+            controls = new List<Control>() { this, this.btnSearch, this.lblDateFrom, this.lblDateTo, this.lblMessage, this.lblMovementType, this.lblLevel };
             Translate();
 
-            PopulateComboMovmentTypes();
+            PopulateComboMovementTypes();
         }
 
         private void ApplySetup()
@@ -47,6 +47,7 @@ namespace LaundryManagement.UI.Forms.Logs
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.comboMovementType.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboLevel.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.dateTimeFrom.Value = DateTime.Now.AddDays(-7);
             this.dateTimeTo.Value = DateTime.Now;
@@ -59,6 +60,7 @@ namespace LaundryManagement.UI.Forms.Logs
             this.lblDateFrom.Tag = "DateFrom";
             this.lblMessage.Tag = "Message";
             this.lblMovementType.Tag = "Movement";
+            this.lblLevel.Tag = "Level";
         }
 
         public void UpdateLanguage(ILanguage language) => Translate();
@@ -69,15 +71,25 @@ namespace LaundryManagement.UI.Forms.Logs
 
         private void frmTraceabilityReport_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
-        private void PopulateComboMovmentTypes()
+        private void PopulateComboMovementTypes()
         {
-            var source  = movementTypeBLL.GetAll();
-            source.Add(new EnumTypeDTO() { Id = 0, Name = Session.Translations["All"] });
+            var allOption = new EnumTypeDTO() { Id = 0, Name = Session.Translations["All"] };
+
+            var movementSource  = movementTypeBLL.GetAll();
+            movementSource.Add(allOption);
             
             this.comboMovementType.DataSource = null;
-            this.comboMovementType.DataSource = source.OrderBy(x => x.Id).ToList();
+            this.comboMovementType.DataSource = movementSource.OrderBy(x => x.Id).ToList();
             this.comboMovementType.DisplayMember = "Name";
             this.comboMovementType.ValueMember = "Id";
+
+            var levelSource = logBLL.GetAllLogLevels();
+            levelSource.Add(allOption);
+
+            this.comboLevel.DataSource = null;
+            this.comboLevel.DataSource = levelSource.OrderBy(x => x.Id).ToList(); 
+            this.comboLevel.DisplayMember = "Name";
+            this.comboLevel.ValueMember = "Id";
         }
 
         private void ReloadGridEvent(LogFilter filter)
@@ -95,6 +107,7 @@ namespace LaundryManagement.UI.Forms.Logs
                 filter.DateTo = this.dateTimeTo.Value;
                 filter.Message = this.txtMessage.Text;
                 filter.MovementType = (MovementTypeEnum?)(int?)this.comboMovementType.SelectedValue;
+                filter.LogLevel = (LogLevelEnum?)(int?)this.comboLevel.SelectedValue;
                 
                 this.ReloadGridEvent(filter);
             }

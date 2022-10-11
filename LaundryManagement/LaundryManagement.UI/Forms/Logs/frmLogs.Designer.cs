@@ -39,6 +39,8 @@
             this.txtMessage = new System.Windows.Forms.TextBox();
             this.lblMessage = new System.Windows.Forms.Label();
             this.txtMessageView = new System.Windows.Forms.TextBox();
+            this.comboLevel = new System.Windows.Forms.ComboBox();
+            this.lblLevel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -134,11 +136,30 @@
             this.txtMessageView.Size = new System.Drawing.Size(689, 23);
             this.txtMessageView.TabIndex = 14;
             // 
+            // comboLevel
+            // 
+            this.comboLevel.FormattingEnabled = true;
+            this.comboLevel.Location = new System.Drawing.Point(269, 104);
+            this.comboLevel.Name = "comboLevel";
+            this.comboLevel.Size = new System.Drawing.Size(200, 23);
+            this.comboLevel.TabIndex = 15;
+            // 
+            // lblLevel
+            // 
+            this.lblLevel.AutoSize = true;
+            this.lblLevel.Location = new System.Drawing.Point(269, 86);
+            this.lblLevel.Name = "lblLevel";
+            this.lblLevel.Size = new System.Drawing.Size(38, 15);
+            this.lblLevel.TabIndex = 16;
+            this.lblLevel.Text = "label1";
+            // 
             // frmLogs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 533);
+            this.Controls.Add(this.lblLevel);
+            this.Controls.Add(this.comboLevel);
             this.Controls.Add(this.txtMessageView);
             this.Controls.Add(this.lblMessage);
             this.Controls.Add(this.txtMessage);
@@ -171,5 +192,7 @@
         private System.Windows.Forms.TextBox txtMessage;
         private System.Windows.Forms.Label lblMessage;
         private System.Windows.Forms.TextBox txtMessageView;
+        private System.Windows.Forms.ComboBox comboLevel;
+        private System.Windows.Forms.Label lblLevel;
     }
 }

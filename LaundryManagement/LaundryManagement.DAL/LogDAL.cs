@@ -67,6 +67,42 @@ namespace LaundryManagement.DAL
                 connection.Close();
             }
         }
+        public List<LogLevel> GetAllLogLevels()
+        {
+            SqlDataReader reader = null;
+            try
+            {
+                if (connection.State == System.Data.ConnectionState.Closed)
+                    connection.Open();
+
+                SqlCommand cmd = new SqlCommand(@"SELECT l.Id, l.Description FROM [LogLevel] l");
+
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                var levels = new List<LogLevel>();
+                while (reader.Read())
+                {
+                    levels.Add(new LogLevel()
+                    {
+                        Id = int.Parse(reader["Id"].ToString()),
+                        Name = reader["Description"].ToString(),
+                    });
+                }
+
+
+                return levels;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
 
         public void Save(Log item)
         {

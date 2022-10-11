@@ -10,6 +10,7 @@ namespace LaundryManagement.Domain.DTOs
         public IEmailSettingsDTO EmailSettings { get; set; }
         public string BackupPath { get; set; }
         public int LogLevel { get; set; }
+        public int BackupsLimit { get; set; }
     }
 
     public class PasswordPolicy : IPasswordPolicyDTO

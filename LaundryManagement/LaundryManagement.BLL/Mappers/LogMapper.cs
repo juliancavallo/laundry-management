@@ -52,7 +52,8 @@ namespace LaundryManagement.BLL.Mappers
                 Date = entity.Date,
                 Movement = entity.MovementType.Name,
                 User = entity.User.UserName,
-                Message = entity.Message
+                Message = entity.Message,
+                Level = entity.LogLevel.Name
             };
         }
     }
