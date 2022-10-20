@@ -16,20 +16,22 @@ namespace LaundryManagement.UI.Forms.Logs
     public partial class frmLogs : Form, ILanguageObserver
     {
         private LogBLL logBLL;
+        private UserBLL userBLL;
         private MovementTypeBLL movementTypeBLL;
         private IList<Control> controls;
         public frmLogs()
         {
             logBLL = new LogBLL();
             movementTypeBLL = new MovementTypeBLL();
+            userBLL = new UserBLL();
 
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.btnSearch, this.lblDateFrom, this.lblDateTo, this.lblMessage, this.lblMovementType, this.lblLevel };
+            controls = new List<Control>() { this, this.btnSearch, this.lblDateFrom, this.lblDateTo, this.lblMessage, this.lblMovementType, this.lblLevel, this.lblUser };
             Translate();
 
-            PopulateComboMovementTypes();
+            PopulateCombos();
         }
 
         private void ApplySetup()
@@ -48,11 +50,13 @@ namespace LaundryManagement.UI.Forms.Logs
             this.MinimizeBox = false;
             this.comboMovementType.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboLevel.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboUser.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.dateTimeFrom.Value = DateTime.Now.AddDays(-7);
             this.dateTimeTo.Value = DateTime.Now;
             this.txtMessageView.Enabled = false;
             this.txtMessageView.Multiline = true;
+            this.txtMessageView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 
             this.Tag = "Logs";
             this.btnSearch.Tag = "Search";
@@ -61,6 +65,7 @@ namespace LaundryManagement.UI.Forms.Logs
             this.lblMessage.Tag = "Message";
             this.lblMovementType.Tag = "Movement";
             this.lblLevel.Tag = "Level";
+            this.lblUser.Tag = "User";
         }
 
         public void UpdateLanguage(ILanguage language) => Translate();
@@ -71,13 +76,12 @@ namespace LaundryManagement.UI.Forms.Logs
 
         private void frmTraceabilityReport_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
-        private void PopulateComboMovementTypes()
+        private void PopulateCombos()
         {
             var allOption = new EnumTypeDTO() { Id = 0, Name = Session.Translations["All"] };
 
             var movementSource  = movementTypeBLL.GetAll();
             movementSource.Add(allOption);
-            
             this.comboMovementType.DataSource = null;
             this.comboMovementType.DataSource = movementSource.OrderBy(x => x.Id).ToList();
             this.comboMovementType.DisplayMember = "Name";
@@ -85,17 +89,26 @@ namespace LaundryManagement.UI.Forms.Logs
 
             var levelSource = logBLL.GetAllLogLevels();
             levelSource.Add(allOption);
-
             this.comboLevel.DataSource = null;
             this.comboLevel.DataSource = levelSource.OrderBy(x => x.Id).ToList(); 
             this.comboLevel.DisplayMember = "Name";
             this.comboLevel.ValueMember = "Id";
+
+            var users = userBLL.GetAllForView();
+            users.Add(new UserViewDTO() { Id = -1, FullName = Session.Translations["All"] });
+            this.comboUser.DataSource = null;
+            this.comboUser.DataSource = users.OrderBy(x => x.Id).ToList();
+            this.comboUser.DisplayMember = "FullName";
+            this.comboUser.ValueMember = "Id";
+
+
         }
 
         private void ReloadGridEvent(LogFilter filter)
         {
             this.grid.DataSource = null;
             this.grid.DataSource = logBLL.GetForView(filter);
+            this.txtMessageView.Clear();
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -108,6 +121,7 @@ namespace LaundryManagement.UI.Forms.Logs
                 filter.Message = this.txtMessage.Text;
                 filter.MovementType = (MovementTypeEnum?)(int?)this.comboMovementType.SelectedValue;
                 filter.LogLevel = (LogLevelEnum?)(int?)this.comboLevel.SelectedValue;
+                filter.IdUser = (int)this.comboUser.SelectedValue;
                 
                 this.ReloadGridEvent(filter);
             }

@@ -5,6 +5,7 @@ using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Domain.Filters;
+using LaundryManagement.Interfaces.Domain.DTOs;
 using LaundryManagement.Services;
 using System.Collections.Generic;
 using System.Linq;
@@ -163,7 +164,7 @@ namespace LaundryManagement.BLL
             logBLL.LogInfo(MovementTypeEnum.UserHistory, $"The user {historyDTO.UserName} has changed its state to IdUserHistory {historyDTO.Id}");
         }
 
-        public bool HasPermission(UserDTO userDto, string permissionCode)
+        public bool HasPermission(IUserDTO userDto, string permissionCode)
         {
             foreach (var item in userDto.Permissions)
             {

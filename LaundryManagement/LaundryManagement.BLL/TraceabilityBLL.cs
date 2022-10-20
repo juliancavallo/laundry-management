@@ -2,6 +2,7 @@
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
+using LaundryManagement.Domain.Filters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,9 +26,17 @@ namespace LaundryManagement.BLL
             traceabilityDAL.Save(entities);
         }
         
-        public List<TraceabilityViewDTO> GetForView(string code)
+        public List<TraceabilityViewDTO> GetForView(TraceabilityFilter filter)
         {
-            return traceabilityDAL.Get(code).Select(x => traceabilityMapper.MapToViewDTO(x)).ToList();
+            var list = traceabilityDAL.Get(filter.Code).AsEnumerable();
+
+            if (filter.MovementType.HasValue && filter.MovementType.Value != 0)
+                list = list.Where(x => x.MovementType.Id == (int)filter.MovementType);
+
+            if (filter.ItemStatus.HasValue && filter.ItemStatus.Value != 0)
+                list = list.Where(x => x.ItemStatus.Id == (int)filter.ItemStatus);
+
+            return list.Select(x => traceabilityMapper.MapToViewDTO(x)).ToList();
         }
         
     }

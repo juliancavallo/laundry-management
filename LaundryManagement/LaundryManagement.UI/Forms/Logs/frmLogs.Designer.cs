@@ -41,22 +41,24 @@
             this.txtMessageView = new System.Windows.Forms.TextBox();
             this.comboLevel = new System.Windows.Forms.ComboBox();
             this.lblLevel = new System.Windows.Forms.Label();
+            this.lblUser = new System.Windows.Forms.Label();
+            this.comboUser = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
             // grid
             // 
             this.grid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.grid.Location = new System.Drawing.Point(22, 156);
+            this.grid.Location = new System.Drawing.Point(22, 199);
             this.grid.Name = "grid";
             this.grid.RowTemplate.Height = 25;
-            this.grid.Size = new System.Drawing.Size(691, 287);
+            this.grid.Size = new System.Drawing.Size(691, 265);
             this.grid.TabIndex = 4;
             this.grid.SelectionChanged += new System.EventHandler(this.grid_SelectionChanged);
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(561, 98);
+            this.btnSearch.Location = new System.Drawing.Point(24, 148);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(152, 32);
             this.btnSearch.TabIndex = 5;
@@ -131,7 +133,8 @@
             // 
             // txtMessageView
             // 
-            this.txtMessageView.Location = new System.Drawing.Point(24, 463);
+            this.txtMessageView.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.txtMessageView.Location = new System.Drawing.Point(24, 482);
             this.txtMessageView.Name = "txtMessageView";
             this.txtMessageView.Size = new System.Drawing.Size(689, 23);
             this.txtMessageView.TabIndex = 14;
@@ -153,11 +156,30 @@
             this.lblLevel.TabIndex = 16;
             this.lblLevel.Text = "label1";
             // 
+            // lblUser
+            // 
+            this.lblUser.AutoSize = true;
+            this.lblUser.Location = new System.Drawing.Point(513, 86);
+            this.lblUser.Name = "lblUser";
+            this.lblUser.Size = new System.Drawing.Size(38, 15);
+            this.lblUser.TabIndex = 18;
+            this.lblUser.Text = "label1";
+            // 
+            // comboUser
+            // 
+            this.comboUser.FormattingEnabled = true;
+            this.comboUser.Location = new System.Drawing.Point(513, 104);
+            this.comboUser.Name = "comboUser";
+            this.comboUser.Size = new System.Drawing.Size(200, 23);
+            this.comboUser.TabIndex = 17;
+            // 
             // frmLogs
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(740, 533);
+            this.Controls.Add(this.lblUser);
+            this.Controls.Add(this.comboUser);
             this.Controls.Add(this.lblLevel);
             this.Controls.Add(this.comboLevel);
             this.Controls.Add(this.txtMessageView);
@@ -194,5 +216,7 @@
         private System.Windows.Forms.TextBox txtMessageView;
         private System.Windows.Forms.ComboBox comboLevel;
         private System.Windows.Forms.Label lblLevel;
+        private System.Windows.Forms.Label lblUser;
+        private System.Windows.Forms.ComboBox comboUser;
     }
 }

@@ -1,6 +1,5 @@
 ﻿using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
-using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
 using LaundryManagement.Interfaces.Domain.Entities;
@@ -67,7 +66,8 @@ namespace LaundryManagement.UI
 
         private void ApplyPermissions()
         {
-            this.btnEditRoles.Enabled = userBLL.HasPermission((UserDTO)Session.Instance.User, "ADM_ROL");
+            this.btnEditRoles.Enabled = userBLL.HasPermission(Session.Instance.User, "ADM_ROL");
+            this.btnHistory.Enabled = userBLL.HasPermission(Session.Instance.User, "ADM_USR_HIST");
         }
 
         private void frmAdministrationUsers_Load(object sender, EventArgs e)

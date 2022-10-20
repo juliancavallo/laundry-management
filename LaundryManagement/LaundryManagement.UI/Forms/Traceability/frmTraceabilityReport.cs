@@ -1,6 +1,8 @@
 ﻿using LaundryManagement.BLL;
+using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Domain.Filters;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using System;
@@ -18,16 +20,22 @@ namespace LaundryManagement.UI.Forms.Traceability
     public partial class frmTraceabilityReport : Form, ILanguageObserver
     {
         private TraceabilityBLL traceabilityBLL;
+        private MovementTypeBLL movementTypeBLL;
+        private ItemBLL itemBLL;
         private IList<Control> controls;
         public frmTraceabilityReport()
         {
             traceabilityBLL = new TraceabilityBLL();
+            movementTypeBLL = new MovementTypeBLL();
+            itemBLL = new ItemBLL();
 
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.lblItemCode, this.btnSearch };
+            controls = new List<Control>() { this, this.lblItemCode, this.btnSearch, this.lblMovementType, this.lblItemStatus };
             Translate();
+
+            PopulateCombos();
         }
 
         private void ApplySetup()
@@ -44,10 +52,14 @@ namespace LaundryManagement.UI.Forms.Traceability
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
+            this.comboMovementType.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboItemStatus.DropDownStyle = ComboBoxStyle.DropDownList;
 
             this.Tag = "Traceability";
             this.lblItemCode.Tag = "ItemCode";
             this.btnSearch.Tag = "Search";
+            this.lblItemStatus.Tag = "ItemStatus";
+            this.lblMovementType.Tag = "Movement";
         }
 
         public void UpdateLanguage(ILanguage language) => Translate();
@@ -58,10 +70,29 @@ namespace LaundryManagement.UI.Forms.Traceability
 
         private void frmTraceabilityReport_FormClosing(object sender, FormClosingEventArgs e) => Session.UnsubscribeObserver(this);
 
-        private void ReloadGridEvent(string code)
+        private void PopulateCombos()
+        {
+            var allOption = new EnumTypeDTO() { Id = 0, Name = Session.Translations["All"] };
+
+            var movementSource = movementTypeBLL.GetAll();
+            movementSource.Add(allOption);
+            this.comboMovementType.DataSource = null;
+            this.comboMovementType.DataSource = movementSource.OrderBy(x => x.Id).ToList();
+            this.comboMovementType.DisplayMember = "Name";
+            this.comboMovementType.ValueMember = "Id";
+
+            var itemStatusSource = itemBLL.GetAllItemStatus();
+            itemStatusSource.Add(new EnumTypeDTO() { Id = 0, Name = Session.Translations["All"] });
+            this.comboItemStatus.DataSource = null;
+            this.comboItemStatus.DataSource = itemStatusSource.OrderBy(x => x.Id).ToList();
+            this.comboItemStatus.DisplayMember = "Name";
+            this.comboItemStatus.ValueMember = "Id";
+        }
+
+        private void ReloadGridEvent(TraceabilityFilter filter)
         {
             this.grid.DataSource = null;
-            this.grid.DataSource = traceabilityBLL.GetForView(code);
+            this.grid.DataSource = traceabilityBLL.GetForView(filter);
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -70,7 +101,14 @@ namespace LaundryManagement.UI.Forms.Traceability
             {
                 FormValidation.ValidateTextBoxCompleted(new List<TextBox>() { this.txtCode });
 
-                this.ReloadGridEvent(txtCode.Text);
+                var filter = new TraceabilityFilter()
+                {
+                    Code = this.txtCode.Text,
+                    MovementType = (MovementTypeEnum?)(int?)this.comboMovementType.SelectedValue,
+                    ItemStatus = (ItemStatusEnum?)(int?)this.comboItemStatus.SelectedValue
+                };
+
+                this.ReloadGridEvent(filter);
             }
             catch (ValidationException ex)
             {

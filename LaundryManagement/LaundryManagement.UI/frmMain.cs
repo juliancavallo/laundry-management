@@ -49,7 +49,8 @@ namespace LaundryManagement.UI
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
-                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps };
+                this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps,
+                this.menuReportsLogs};
 
             PopulateLanguageMenu();
             Translate();
@@ -98,6 +99,7 @@ namespace LaundryManagement.UI
             this.menuLanguageManage.Tag = new MenuItemMetadataDTO { TagName = "Administration", Permission = "LAN" };
             this.menuAdministrationBackups.Tag = new MenuItemMetadataDTO { TagName = "Backups", Permission = "ADM_BCK" };
             this.menuReportsRoadmaps.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "REP_ROA" };
+            this.menuReportsLogs.Tag = new MenuItemMetadataDTO { TagName = "Logs", Permission = "REP_LOGS" };
         }
 
         public void ValidateForm()

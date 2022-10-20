@@ -69,6 +69,9 @@ namespace LaundryManagement.BLL
             if (!string.IsNullOrWhiteSpace(filter.Message))
                 list = list.Where(x => x.Message.Contains(filter.Message));
 
+            if(filter.IdUser > 0)
+                list = list.Where(x => x.User.Id == filter.IdUser);
+
             return list.Select(x => logMapper.MapToViewDTO(x)).ToList();
         }
 

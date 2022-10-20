@@ -7,13 +7,10 @@ using System.Threading.Tasks;
 
 namespace LaundryManagement.Domain.Filters
 {
-    public class LogFilter
+    public class TraceabilityFilter
     {
-        public string Message { get; set; }
-        public DateTime DateFrom { get; set; }
-        public DateTime DateTo { get; set; }
+        public string Code { get; set; }
         public MovementTypeEnum? MovementType { get; set; }
-        public LogLevelEnum? LogLevel { get; set; }
-        public int IdUser { get; set; }
+        public ItemStatusEnum? ItemStatus { get; set; }
     }
 }
