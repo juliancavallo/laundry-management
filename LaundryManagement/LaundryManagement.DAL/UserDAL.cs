@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using System.Collections.Generic;
 using System;
 using LaundryManagement.Services;
+using System.Text;
 
 namespace LaundryManagement.DAL
 {
@@ -28,7 +29,8 @@ namespace LaundryManagement.DAL
 
                 SqlCommand cmd = new SqlCommand(
                        $@"
-                            DELETE [User] WHERE Id = {entity.Id}
+                            DELETE [UserHistory] WHERE IdUser = {entity.Id};
+                            DELETE [User] WHERE Id = {entity.Id};
                         ");
                 cmd.Connection = connection;
                 cmd.ExecuteNonQuery();
@@ -58,6 +60,7 @@ namespace LaundryManagement.DAL
                           ,[UserName]
                           ,[FirstName]
                           ,[LastName]
+                          ,[CheckDigit]
                           ,l.Id as IdLanguage
 	                      ,l.Name as LanguageName
 	                      ,l.[Default] as LanguageDefault
@@ -103,6 +106,7 @@ namespace LaundryManagement.DAL
                         ,[UserName]
                         ,[FirstName]
                         ,[LastName]
+                        ,[CheckDigit]
                         , l.Id as IdLanguage
                         , l.Name as LanguageName
                         , l.[Default] as LanguageDefault
@@ -194,33 +198,40 @@ namespace LaundryManagement.DAL
             {
                 connection.Open();
 
-                SqlCommand cmd = null;
-            
+                SqlCommand cmd = new SqlCommand();
+                cmd.Connection = connection;
+                SqlParameter sqlParam = cmd.Parameters.AddWithValue("@CheckDigit", entity.CheckDigit);
+                sqlParam.DbType = System.Data.DbType.Binary;
+
                 if (entity.Id == 0)
                 {
-                    cmd = new SqlCommand(
+                    cmd.CommandText = 
                         $@"
-                            INSERT INTO [User] (Email, Password, UserName, FirstName, LastName, IdLanguage, IdLocation) 
-                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}', '{entity.Language.Id}', '{entity.Location.Id}')
-                        ");
+                            INSERT INTO [User] (Email, Password, UserName, FirstName, LastName, IdLanguage, IdLocation, CheckDigit) 
+                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.FirstName}', '{entity.LastName}', '{entity.Language.Id}', '{entity.Location.Id}', @CheckDigit);
+                            SELECT SCOPE_IDENTITY();
+                        ";
+                    decimal id = (decimal)cmd.ExecuteScalar();
+                    entity.Id = (int)id;
                 }
                 else
                 {
-                    cmd = new SqlCommand(
+                    cmd.CommandText = 
                         $@"
                             UPDATE [User] SET
 	                            Email = '{entity.Email}',
 	                            Password = '{entity.Password}',
-	                            FirstName = '{entity.Name}',
+	                            FirstName = '{entity.FirstName}',
 	                            LastName = '{entity.LastName}',
 	                            UserName = '{entity.UserName}',
                                 IdLanguage = '{entity.Language.Id}',
-                                IdLocation = '{entity.Location.Id}'
+                                IdLocation = '{entity.Location.Id}',
+                                CheckDigit = @CheckDigit
                             WHERE Id = {entity.Id}
-                            ");
+                            ";
+                    cmd.ExecuteNonQuery();
                 }
-                cmd.Connection = connection;
-                cmd.ExecuteNonQuery();
+
 
                 connection.Close();
             }
@@ -302,11 +313,12 @@ namespace LaundryManagement.DAL
             return new User()
             {
                 Id = int.Parse(reader["Id"].ToString()),
-                Name = reader["FirstName"].ToString(),
+                FirstName = reader["FirstName"].ToString(),
                 Email = reader["Email"].ToString(),
                 LastName = reader["LastName"].ToString(),
                 UserName = reader["UserName"].ToString(),
                 Password = reader["Password"].ToString(),
+                CheckDigit = Encoding.ASCII.GetBytes(reader["CheckDigit"].ToString()),
                 Language = new Language()
                 {
                     Id = int.Parse(reader["IdLanguage"].ToString()),

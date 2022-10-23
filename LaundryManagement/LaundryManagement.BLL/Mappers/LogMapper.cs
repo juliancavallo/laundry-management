@@ -24,7 +24,7 @@ namespace LaundryManagement.BLL.Mappers
             {
                 Id = dto.Id,
                 Date = dto.Date,
-                User = userMapper.MapToEntity(dto.User),
+                User = dto.User != null ? userMapper.MapToEntity(dto.User) : null,
                 MovementType = new MovementType() {  Id = (int)dto.MovementType},
                 Message = dto.Message,
                 LogLevel = new LogLevel() { Id = (int)dto.LogLevel}
@@ -37,7 +37,7 @@ namespace LaundryManagement.BLL.Mappers
             {
                 Id = entity.Id,
                 Date = entity.Date,
-                User = userMapper.MapToDTO(entity.User),
+                User = entity.User != null ? userMapper.MapToDTO(entity.User) : null,
                 MovementType = (MovementTypeEnum)entity.MovementType.Id,
                 MovementTypeName = entity.MovementType.Name,
                 Message = entity.Message,
@@ -51,7 +51,7 @@ namespace LaundryManagement.BLL.Mappers
             {
                 Date = entity.Date,
                 Movement = entity.MovementType.Name,
-                User = entity.User.UserName,
+                User = entity.User?.UserName ?? "No user",
                 Message = entity.Message,
                 Level = entity.LogLevel.Name
             };

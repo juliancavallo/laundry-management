@@ -12,12 +12,15 @@ namespace LaundryManagement.UI.Forms.User
 {
     public partial class frmUserHistory : Form, ILanguageObserver
     {
-        UserBLL userBLL;
+        private UserHistoryBLL userHistoryBLL;
+
         private IList<Control> controls;
         private int _userId;
+
         public frmUserHistory(int userId)
         {
-            userBLL = new UserBLL();
+            userHistoryBLL = new UserHistoryBLL();
+
             _userId = userId;
 
             InitializeComponent();
@@ -49,7 +52,7 @@ namespace LaundryManagement.UI.Forms.User
         private void ReloadGridEvent(object sender, EventArgs e)
         {
             this.gridHistory.DataSource = null;
-            this.gridHistory.DataSource = userBLL.GetHistoryForView(_userId);
+            this.gridHistory.DataSource = userHistoryBLL.GetHistoryForView(_userId);
             this.gridHistory.Columns["Id"].Visible = false;
         }
 
@@ -84,7 +87,7 @@ namespace LaundryManagement.UI.Forms.User
 
                 var selectedId = ((UserHistoryViewDTO)this.gridHistory.CurrentRow.DataBoundItem).Id;
 
-                var frmUserHistory = new frmUserHistoryDetail(userBLL.GetHistoryById(selectedId));
+                var frmUserHistory = new frmUserHistoryDetail(userHistoryBLL.GetHistoryById(selectedId));
 
                 frmUserHistory.Show();
             }

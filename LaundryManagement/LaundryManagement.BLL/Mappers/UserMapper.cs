@@ -24,7 +24,7 @@ namespace LaundryManagement.BLL.Mappers
             {
                 Id = dto.Id,
                 Email = dto.Email,
-                Name = dto.Name,
+                FirstName = dto.Name,
                 Password = dto.Password,
                 LastName = dto.LastName,
                 UserName = dto.UserName,
@@ -40,7 +40,7 @@ namespace LaundryManagement.BLL.Mappers
             {
                 Id = entity.Id,
                 Email = entity.Email,
-                Name = entity.Name,
+                Name = entity.FirstName,
                 Password = entity.Password,
                 UserName = entity.UserName,
                 LastName = entity.LastName,

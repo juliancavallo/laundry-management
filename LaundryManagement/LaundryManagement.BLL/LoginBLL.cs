@@ -42,7 +42,7 @@ namespace LaundryManagement.BLL
             if (userDTO == null)
                 throw new ValidationException(Session.Translations[Tags.NonexistentUser], ValidationType.Error);
 
-            if(Encryptor.Hash(dto.Password) != userDTO.Password)
+            if(Encryptor.HashToString(dto.Password) != userDTO.Password)
             {
                 RegisterAttempt(dto.Email);
 
@@ -85,7 +85,7 @@ namespace LaundryManagement.BLL
             Session.LoginAttempts.Remove(dto.Email);
 
             var newPassword = Encryptor.GenerateRandom();
-            dto.Password = Encryptor.Hash(newPassword);
+            dto.Password = Encryptor.HashToString(newPassword);
             userBLL.Save(dto);
 
             string message = string.Format(Session.Translations[Tags.PasswordResetEmailBody], newPassword);
@@ -94,7 +94,5 @@ namespace LaundryManagement.BLL
 
             logBLL.LogInfo(MovementTypeEnum.ResetPassword, $"The password for the user {dto.FullName} has been reset");
         }
-
-        public void SeedData() => seedService.SeedData();
     }
 }

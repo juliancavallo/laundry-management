@@ -35,5 +35,7 @@ namespace LaundryManagement.Domain.Enums
         public const string PasswordResetEmailSubject = "PasswordResetEmailSubject";
         public const string PasswordResetEmailBody = "PasswordResetEmailBody";
         public const string ShippingEmailBody = "ShippingEmailBody";
+        public const string IntegrityRecalculate = "IntegrityRecalculate";
+        public const string IntegrityLastBackup = "IntegrityLastBackup";
     }
 }

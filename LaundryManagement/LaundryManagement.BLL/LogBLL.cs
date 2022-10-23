@@ -43,7 +43,7 @@ namespace LaundryManagement.BLL
                     MovementType = movementType,
                     Message = message,
                     Date = DateTime.Now,
-                    User = (UserDTO)Session.Instance.User,
+                    User = (UserDTO)Session.Instance?.User,
                     LogLevel = logLevel
                 };
                 logDAL.Save(logMapper.MapToEntity(dto));

@@ -114,7 +114,7 @@ namespace LaundryManagement.UI
                     }
                 }
 
-                var password = validatePasswords ? Encryptor.Hash(this.txtPassword.Text.Trim()) : this.userDTO.Password;
+                var password = validatePasswords ? Encryptor.HashToString(this.txtPassword.Text.Trim()) : this.userDTO.Password;
 
                 var userDTO = new UserDTO()
                 {

@@ -17,6 +17,8 @@
         Backup = 13,
         Restore = 14,
         UserRoles = 15,
-        Permission = 16
+        Permission = 16,
+        CorruptedEntities = 17,
+        IntegrityRestore = 18,
     }
 }

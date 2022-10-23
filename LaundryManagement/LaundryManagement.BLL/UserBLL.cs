@@ -19,12 +19,19 @@ namespace LaundryManagement.BLL
         private PermissionDAL permissionDAL;
         private TranslatorBLL translatorBLL;
         private LogBLL logBLL;
+        private CheckDigitBLL checkDigitBLL;
+        private UserHistoryBLL userHistoryBLL;
+        private UserPermissionBLL userPermissionBLL;
 
         public UserBLL()
         {
             this.permissionDAL = new PermissionDAL();
             this.translatorBLL = new TranslatorBLL();
             this.logBLL = new LogBLL();
+            this.checkDigitBLL = new CheckDigitBLL();
+            this.userHistoryBLL = new UserHistoryBLL();
+            this.userPermissionBLL = new UserPermissionBLL();
+
             this.dal = new UserDAL();
             this.mapper = new UserMapper();
         }
@@ -54,7 +61,7 @@ namespace LaundryManagement.BLL
                 list = list.Where(x => x.UserName.Contains(filter.UserName));
 
             if (!string.IsNullOrWhiteSpace(filter.Name))
-                list = list.Where(x => x.Name.Contains(filter.Name));
+                list = list.Where(x => x.FirstName.Contains(filter.Name));
 
             if (!string.IsNullOrWhiteSpace(filter.LastName))
                 list = list.Where(x => x.LastName.Contains(filter.LastName));
@@ -83,31 +90,9 @@ namespace LaundryManagement.BLL
         public IList<UserViewDTO> GetShippingResponsibles(string permissionCode)
         {
             return this.GetAll()
-                .Where(x => HasPermission(x, permissionCode))
+                .Where(x => userPermissionBLL.HasPermission(x, permissionCode))
                 .Select(x => mapper.MapToViewDTO(x))
                 .ToList();
-        }
-
-        public List<UserHistoryViewDTO> GetHistoryForView(int idUser)
-        {
-            return dal.GetHistory(idUser, null)
-                .Select(x => new UserHistoryViewDTO()
-                {
-                    Date = x.Date,
-                    Email = x.Email,
-                    Id = x.Id,
-                    LastName = x.LastName,
-                    Name = x.Name,
-                    UserName = x.UserName,
-                })
-                .ToList();
-        }
-
-        public UserHistoryDTO GetHistoryById(int idHistory)
-        {
-            return dal.GetHistory(null, idHistory)
-                .Select(x => mapper.MapToHistoryDTO(x))
-                .First();
         }
 
         public void Save(UserDTO dto)
@@ -117,17 +102,16 @@ namespace LaundryManagement.BLL
                 throw new ValidationException(Session.Translations[Tags.UserDuplicate], ValidationType.Warning);
 
             var entity = mapper.MapToEntity(dto);
-            this.dal.Save(entity);
 
-            if (Session.IsLogged() && Session.Instance.User.Id == entity.Id)
-            {
-                Session.Instance.User.Location = dto.Location;
-                Session.SetTranslations(translatorBLL.GetTranslations(entity.Language));
-                Session.ChangeLanguage(entity.Language);
-            }
+            entity.CheckDigit = checkDigitBLL.GenerateHorizontalCheckDigit(entity);
+
+            this.dal.Save(entity);
+            checkDigitBLL.SaveVerticalCheckDigit(entity.GetType());
+
+            this.UpdateLoggedUser(dto);
 
             logBLL.LogInfo(MovementTypeEnum.User, $"The user {entity.FullName} has been created");
-            SaveHistory(entity);
+            userHistoryBLL.SaveHistory(entity);
         }
 
         public string ResetPassword(string email, string newPassword)
@@ -136,11 +120,14 @@ namespace LaundryManagement.BLL
             if (user == null)
                 throw new ValidationException(Session.Translations[Tags.NonexistentUser], ValidationType.Error);
 
-            user.Password = Encryptor.Hash(newPassword);
+            user.Password = Encryptor.HashToString(newPassword);
+            user.CheckDigit = checkDigitBLL.GenerateHorizontalCheckDigit(user);
+
             dal.Save(user);
+            checkDigitBLL.SaveVerticalCheckDigit(user.GetType());
 
             logBLL.LogInfo(MovementTypeEnum.ManualPasswordReset, $"The user {user.FullName} has reset his password manually");
-            SaveHistory(user);
+            userHistoryBLL.SaveHistory(user);
 
             return newPassword;
         }
@@ -153,63 +140,19 @@ namespace LaundryManagement.BLL
             var entity = mapper.MapToEntity(dto);
             this.dal.Delete(entity);
 
+            checkDigitBLL.SaveVerticalCheckDigit(entity.GetType());
+
             logBLL.LogInfo(MovementTypeEnum.User, $"The user {entity.FullName} has been deleted");
         }
 
-        public void ApplyHistory(UserHistoryDTO historyDTO)
+        private void UpdateLoggedUser(UserDTO dto)
         {
-            var history = mapper.MapToHistory(historyDTO);
-            dal.ApplyHistory(history);
-
-            logBLL.LogInfo(MovementTypeEnum.UserHistory, $"The user {historyDTO.UserName} has changed its state to IdUserHistory {historyDTO.Id}");
-        }
-
-        public bool HasPermission(IUserDTO userDto, string permissionCode)
-        {
-            foreach (var item in userDto.Permissions)
+            if (Session.IsLogged() && Session.Instance.User.Id == dto.Id)
             {
-                if (permissionCode == "" || CheckPermissionRecursively((ComponentDTO)item, permissionCode))
-                    return true;
+                Session.Instance.User.Location = dto.Location;
+                Session.SetTranslations(translatorBLL.GetTranslations((Language)dto.Language));
+                Session.ChangeLanguage(dto.Language);
             }
-            return false;
-        }
-
-        private void SaveHistory(User user)
-        {
-            var history = new UserHistory()
-            {
-                Date = System.DateTime.Now,
-                Email = user.Email,
-                IdUser = user.Id,
-                Name = user.Name,
-                UserName = user.UserName,
-                LastName = user.LastName,
-                Language = user.Language,
-                Location = user.Location,
-                Password = user.Password
-            };
-
-            dal.SaveHistory(history);
-        }
-
-        private bool CheckPermissionRecursively(ComponentDTO permission, string permissionCode)
-        {
-            bool exists = false;
-            if (permission.Permission == permissionCode)
-                exists = true;
-            else
-            {
-                if (permission is CompositeDTO)
-                {
-                    foreach (var child in permission.Children)
-                    {
-                        exists = CheckPermissionRecursively((ComponentDTO)child, permissionCode);
-                        if (exists) return true;
-                    }
-                }
-            }
-
-            return exists;
         }
     }
 }

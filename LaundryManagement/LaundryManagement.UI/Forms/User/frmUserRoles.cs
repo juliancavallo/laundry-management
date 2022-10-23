@@ -18,6 +18,7 @@ namespace LaundryManagement.UI
         private PermissionBLL permissionBLL;
         private UserBLL userBLL;
         private LogBLL logBLL;
+        private UserPermissionBLL userPermissionBLL;
 
         private IList<Control> controls;
         private bool isEdit;
@@ -27,6 +28,8 @@ namespace LaundryManagement.UI
             permissionBLL = new PermissionBLL();
             logBLL = new LogBLL();
             userBLL = new UserBLL();
+            userPermissionBLL = new UserPermissionBLL();
+
             _userDTO = paramDTO;
             isEdit = edit;
 
@@ -59,7 +62,7 @@ namespace LaundryManagement.UI
                 {
                     var newNode = new TreeNode(permission.Name);
                     newNode.Tag = permission;
-                    newNode.Checked = userBLL.HasPermission(_userDTO, permission.Permission);
+                    newNode.Checked = userPermissionBLL.HasPermission(_userDTO, permission.Permission);
 
                     if(permission is CompositeDTO)
                         AddChildrenToTree(permission.Children.Cast<ComponentDTO>(), newNode.Nodes);

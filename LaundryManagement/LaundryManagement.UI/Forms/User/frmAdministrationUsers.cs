@@ -14,10 +14,12 @@ namespace LaundryManagement.UI
     public partial class frmAdministrationUsers : Form, ILanguageObserver
     {
         UserBLL userBLL;
+        UserPermissionBLL userPermissionBLL;
         private IList<Control> controls;
         public frmAdministrationUsers()
         {
             userBLL = new UserBLL();
+            userPermissionBLL = new UserPermissionBLL();
 
             InitializeComponent();
             ApplySetup();
@@ -66,8 +68,8 @@ namespace LaundryManagement.UI
 
         private void ApplyPermissions()
         {
-            this.btnEditRoles.Enabled = userBLL.HasPermission(Session.Instance.User, "ADM_ROL");
-            this.btnHistory.Enabled = userBLL.HasPermission(Session.Instance.User, "ADM_USR_HIST");
+            this.btnEditRoles.Enabled = userPermissionBLL.HasPermission(Session.Instance.User, "ADM_ROL");
+            this.btnHistory.Enabled = userPermissionBLL.HasPermission(Session.Instance.User, "ADM_USR_HIST");
         }
 
         private void frmAdministrationUsers_Load(object sender, EventArgs e)
@@ -89,9 +91,21 @@ namespace LaundryManagement.UI
 
         private void btnNewUser_Click(object sender, EventArgs e)
         {
-            var frmNewUser = new frmNewUser(null);
-            frmNewUser.FormClosed += ReloadGridEvent;
-            frmNewUser.ShowDialog();
+            try
+            {
+
+                var frmNewUser = new frmNewUser(null);
+                frmNewUser.FormClosed += ReloadGridEvent;
+                frmNewUser.ShowDialog();
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)

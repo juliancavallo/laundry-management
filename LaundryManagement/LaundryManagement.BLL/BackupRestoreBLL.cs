@@ -42,7 +42,7 @@ namespace LaundryManagement.BLL
         public void Restore(string path)
         {
             dal.Restore(path);
-            logBLL.LogInfo(MovementTypeEnum.Restore, $"The user {Session.Instance.User.FullName} has restored the backup from {path}");
+            logBLL.LogInfo(MovementTypeEnum.Restore, $"The user {Session.Instance?.User?.FullName ?? "-No user-"} has restored the backup from {path}");
         }
 
         public IEnumerable<BackupDTO> GetBackups()

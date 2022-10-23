@@ -19,12 +19,12 @@ namespace LaundryManagement.UI.Forms.User
     public partial class frmUserHistoryDetail : Form, ILanguageObserver
     {
         public UserHistoryDTO _historyDTO;
-        private UserBLL userBLL;
+        private UserHistoryBLL userHistoryBLL;
 
         private IList<Control> controls;
         public frmUserHistoryDetail(UserHistoryDTO historyDTO)
         {
-            userBLL = new UserBLL();
+            userHistoryBLL = new UserHistoryBLL();
             _historyDTO = historyDTO;
 
             InitializeComponent();
@@ -68,7 +68,7 @@ namespace LaundryManagement.UI.Forms.User
         {
             try
             {
-                userBLL.ApplyHistory(_historyDTO);
+                userHistoryBLL.ApplyHistory(_historyDTO);
                 this.Close();
             }
             catch (ValidationException ex)

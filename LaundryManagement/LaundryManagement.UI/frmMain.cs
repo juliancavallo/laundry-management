@@ -27,17 +27,17 @@ namespace LaundryManagement.UI
     {
         private LoginBLL loginBLL;
         private TranslatorBLL translatorBLL;
-        private UserBLL userBLL;
+        private UserBLL userBLL; 
+        private UserPermissionBLL userPermissionBLL;
 
         private IList<Control> controls;
         private IList<ToolStripItem> toolStripItems;
         public frmMain()
         {
-            SetSettings();
-
             loginBLL = new LoginBLL();
             translatorBLL = new TranslatorBLL();
             userBLL = new UserBLL();
+            userPermissionBLL = new UserPermissionBLL();
 
             InitializeComponent();
             ApplySetup();
@@ -116,7 +116,7 @@ namespace LaundryManagement.UI
             foreach (ToolStripMenuItem item in this.menuStrip1.Items)
             {
                 var permission = ((MenuItemMetadataDTO)item.Tag).Permission;
-                item.Visible = loginBLL.IsLogged() && userBLL.HasPermission((UserDTO)Session.Instance.User, permission);
+                item.Visible = loginBLL.IsLogged() && userPermissionBLL.HasPermission((UserDTO)Session.Instance.User, permission);
 
                 bool hasChildren = false;
 
@@ -126,7 +126,7 @@ namespace LaundryManagement.UI
                     {
                         var castedSubitem = (ToolStripMenuItem)subitem;
                         var subpermission = ((MenuItemMetadataDTO)(castedSubitem).Tag).Permission;
-                        bool visible = loginBLL.IsLogged() && userBLL.HasPermission((UserDTO)Session.Instance.User, subpermission);
+                        bool visible = loginBLL.IsLogged() && userPermissionBLL.HasPermission((UserDTO)Session.Instance.User, subpermission);
                         castedSubitem.Visible = visible;
 
                         if(visible) 
@@ -145,20 +145,6 @@ namespace LaundryManagement.UI
             var frmLogin = new frmLogin();
             frmLogin.MdiParent = this;
             frmLogin.Show();
-        }
-
-        private void SetSettings()
-        {
-            Session.Settings = new SettingsDTO()
-            {
-                ConnectionString = Program.Configuration.GetSection("ConnectionString").Value.ToString(),
-                ImagePath = Program.Configuration.GetSection("ImagePath").Value.ToString(),
-                PasswordPolicy = Program.Configuration.GetSection("PasswordPolicy").Get<PasswordPolicy>(),
-                EmailSettings = Program.Configuration.GetSection("EmailSettings").Get<EmailSettings>(),
-                BackupPath = Program.Configuration.GetSection("BackupPath").Value.ToString(),
-                LogLevel = int.Parse(Program.Configuration.GetSection("LogLevel").Value),
-                BackupsLimit = int.Parse(Program.Configuration.GetSection("BackupsLimit").Value)
-            };
         }
 
         #region Language

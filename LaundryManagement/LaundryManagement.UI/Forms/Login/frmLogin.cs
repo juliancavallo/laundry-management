@@ -27,8 +27,6 @@ namespace LaundryManagement.UI
             InitializeComponent();
             ApplySetup();
 
-            loginBLL.SeedData();
-
             controls = new List<Control>() { this, this.lblEmail, this.lblPassword, this.lblResetPassword, this.btnLogin};
 
             Translate();

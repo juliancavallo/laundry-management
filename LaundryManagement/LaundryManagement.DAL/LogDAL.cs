@@ -116,12 +116,12 @@ namespace LaundryManagement.DAL
                                ([Date]
                                ,[IdMovementType]
                                ,[IdUser]
-                               ,[Message],
-                                [IdLogLevel])
+                               ,[Message]
+                               ,[IdLogLevel])
                          VALUES
                                ('{item.Date.ToString("yyyy-MM-ddTHH:mm:ss")}'
                                ,{item.MovementType.Id}
-                               ,{item.User.Id}
+                               ,{(item.User != null ? item.User.Id : "NULL")}
                                ,'{item.Message}'
                                ,{item.LogLevel.Id})";
 
@@ -141,10 +141,11 @@ namespace LaundryManagement.DAL
 
         private Log MapFromDatabase(SqlDataReader reader)
         {
+            var hasUser = reader["IdUser"] != DBNull.Value;
             return new Log()
             {
                 Id = int.Parse(reader["Id"].ToString()),
-                User = userDAL.GetById(int.Parse(reader["IdUser"].ToString())),
+                User = hasUser ? userDAL.GetById(int.Parse(reader["IdUser"].ToString())) : null,
                 Date = DateTime.Parse(reader["Date"].ToString()),
                 MovementType = new MovementType()
                 {

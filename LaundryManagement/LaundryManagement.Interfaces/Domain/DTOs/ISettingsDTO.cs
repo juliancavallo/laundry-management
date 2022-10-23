@@ -15,6 +15,8 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
         public string BackupPath { get; set; }
         public int LogLevel { get; set; }
         public int BackupsLimit { get; set; }
+        public string IntegrityAdminUser { get; set; }
+        public string IntegrityAdminPassword { get; set; }
     }
 
     public interface IPasswordPolicyDTO
