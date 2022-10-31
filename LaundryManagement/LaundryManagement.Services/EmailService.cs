@@ -24,7 +24,7 @@ namespace LaundryManagement.Services
                 SmtpClient smtp = new SmtpClient(Session.Settings.EmailSettings.Host, Session.Settings.EmailSettings.Port);
                 smtp.Credentials = new NetworkCredential(Session.Settings.EmailSettings.Address, Session.Settings.EmailSettings.ApplicationPassword);
                 smtp.EnableSsl = true;
-                smtp.Send(mail);
+                //smtp.Send(mail);
 
                 mail.Dispose();
                 smtp.Dispose();

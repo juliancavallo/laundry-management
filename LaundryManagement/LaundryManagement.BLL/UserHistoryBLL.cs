@@ -17,10 +17,12 @@ namespace LaundryManagement.BLL
         private UserMapper mapper;
         private UserDAL dal;
         private LogBLL logBLL;
+        private CheckDigitBLL checkDigitBLL;
 
         public UserHistoryBLL()
         {
             this.logBLL = new LogBLL();
+            this.checkDigitBLL = new CheckDigitBLL();
             this.dal = new UserDAL();
             this.mapper = new UserMapper();
         }
@@ -34,7 +36,7 @@ namespace LaundryManagement.BLL
                     Email = x.Email,
                     Id = x.Id,
                     LastName = x.LastName,
-                    Name = x.Name,
+                    Name = x.FirstName,
                     UserName = x.UserName,
                 })
                 .ToList();
@@ -52,6 +54,12 @@ namespace LaundryManagement.BLL
             var history = mapper.MapToHistory(historyDTO);
             dal.ApplyHistory(history);
 
+            var entity = dal.GetById(historyDTO.IdUser);
+            entity.CheckDigit = checkDigitBLL.GenerateHorizontalCheckDigit(entity);
+
+            this.dal.Save(entity);
+            checkDigitBLL.SaveVerticalCheckDigit(entity.GetType());
+
             logBLL.LogInfo(MovementTypeEnum.UserHistory, $"The user {historyDTO.UserName} has changed its state to IdUserHistory {historyDTO.Id}");
         }
 
@@ -62,7 +70,7 @@ namespace LaundryManagement.BLL
                 Date = System.DateTime.Now,
                 Email = user.Email,
                 IdUser = user.Id,
-                Name = user.FirstName,
+                FirstName = user.FirstName,
                 UserName = user.UserName,
                 LastName = user.LastName,
                 Language = user.Language,

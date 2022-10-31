@@ -158,5 +158,27 @@ namespace LaundryManagement.DAL
                 connection.Close();
             }
         }
+
+        public void DeleteVerticalCheckDigit(Type entityType)
+        {
+            try
+            {
+                if (connection.State == System.Data.ConnectionState.Closed)
+                    connection.Open();
+
+                SqlCommand cmd = new SqlCommand($@"DELETE [VerticalCheckDigit] WHERE TableName = '{entityType.Name}'");
+
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
     }
 }

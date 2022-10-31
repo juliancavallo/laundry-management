@@ -19,6 +19,7 @@ namespace LaundryManagement.UI.Forms.Integrity
     public partial class frmIntegrity : Form, ILanguageObserver
     {
         private CheckDigitBLL _checkDigitBLL;
+        private BackupRestoreBLL _backupRestoreBLL;
         private TranslatorBLL _translatorBLL;
         private bool _integrityRestored = false;
 
@@ -32,6 +33,7 @@ namespace LaundryManagement.UI.Forms.Integrity
 
             _checkDigitBLL = new CheckDigitBLL();
             _translatorBLL = new TranslatorBLL();
+            _backupRestoreBLL = new BackupRestoreBLL();
             _horizontalCorruptedEntities = horizontalCorruptedEntities;
             _verticalCorruptedEntities = verticalCorruptedEntities; 
 
@@ -185,7 +187,7 @@ namespace LaundryManagement.UI.Forms.Integrity
                 this.txtPassword.Enabled = false;
                 this.txtUser.Enabled = false;
                 this.btnValidateCredentials.Enabled = false;
-                this.radioLastBackup.Enabled = true;
+                this.radioLastBackup.Enabled = _backupRestoreBLL.GetBackups().Count() > 0;
                 this.radioRecalculate.Enabled = true;
                 this.btnAccept.Enabled = true;
 

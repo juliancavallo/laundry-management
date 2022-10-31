@@ -47,6 +47,9 @@ namespace LaundryManagement.BLL
             var checkDigits = new List<byte[]>();
             var list = _checkDigitDAL.GetAllRows(entityType, new string[] { "CheckDigit", "Id" });
 
+            if (list.Count == 0)
+                return null;
+
             checkDigits.AddRange(list.Select(x => x.CheckDigit));
 
             return Encryptor.HashToByteArrayFromList(checkDigits);
@@ -73,7 +76,9 @@ namespace LaundryManagement.BLL
             }
 
             if(corruptedEntities.Count > 0)
-                _logBLL.LogError(MovementTypeEnum.CorruptedEntities, $"There are {corruptedEntities.Count} corrupted entities");
+                _logBLL.LogError(
+                    MovementTypeEnum.CorruptedEntities, 
+                    $"There are {corruptedEntities.Count} corrupted entities");
 
             return corruptedEntities;
         }
@@ -93,12 +98,15 @@ namespace LaundryManagement.BLL
                 var generatedCheckDigit = this.GenerateVerticalCheckDigit(type);
                 var currentCheckDigit = verticalCheckDigits.FirstOrDefault(x => x.TableName == type.Name)?.CheckDigit;
                 
-                if (currentCheckDigit == null || !generatedCheckDigit.SequenceEqual(currentCheckDigit))
+                if ((currentCheckDigit == null ^ generatedCheckDigit == null)
+                 || !generatedCheckDigit.SequenceEqual(currentCheckDigit))
                     corruptedEntities.Add(type);
             }
 
             if (corruptedEntities.Count > 0)
-                _logBLL.LogError(MovementTypeEnum.CorruptedEntities, $"There are {corruptedEntities.Count} corrupted entities");
+                _logBLL.LogError(
+                    MovementTypeEnum.CorruptedEntities, 
+                    $"There are {corruptedEntities.Count} corrupted entities");
 
             return corruptedEntities;
         }

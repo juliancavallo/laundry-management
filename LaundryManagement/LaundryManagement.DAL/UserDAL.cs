@@ -254,7 +254,7 @@ namespace LaundryManagement.DAL
                 SqlCommand cmd = new SqlCommand(
                         $@"
                             INSERT INTO [UserHistory] (Email, Password, UserName, FirstName, LastName, IdLanguage, IdLocation, IdUser, Date) 
-                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.Name}', '{entity.LastName}', '{entity.Language.Id}', '{entity.Location.Id}', {entity.IdUser}, '{entity.Date.ToString("yyyy-MM-ddTHH:mm:ss")}')
+                            VALUES ('{entity.Email}', '{entity.Password}', '{entity.UserName}', '{entity.FirstName}', '{entity.LastName}', '{entity.Language.Id}', '{entity.Location.Id}', {entity.IdUser}, '{entity.Date.ToString("yyyy-MM-ddTHH:mm:ss")}')
                         ");
                 
                 cmd.Connection = connection;
@@ -285,7 +285,7 @@ namespace LaundryManagement.DAL
                         UPDATE [User] SET
 	                        Email = '{userHistory.Email}',
 	                        Password = '{userHistory.Password}',
-	                        FirstName = '{userHistory.Name}',
+	                        FirstName = '{userHistory.FirstName}',
 	                        LastName = '{userHistory.LastName}',
 	                        UserName = '{userHistory.UserName}',
                             IdLanguage = '{userHistory.Language.Id}',
@@ -334,7 +334,7 @@ namespace LaundryManagement.DAL
             return new UserHistory()
             {
                 Id = int.Parse(reader["Id"].ToString()),
-                Name = reader["FirstName"].ToString(),
+                FirstName = reader["FirstName"].ToString(),
                 Email = reader["Email"].ToString(),
                 LastName = reader["LastName"].ToString(),
                 UserName = reader["UserName"].ToString(),

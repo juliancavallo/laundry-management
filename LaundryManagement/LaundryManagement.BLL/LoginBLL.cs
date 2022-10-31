@@ -16,7 +16,6 @@ namespace LaundryManagement.BLL
         private LogBLL logBLL;
 
         private EmailService emailService;
-        private SeedService seedService;
 
         private int maxLoginAttempts;
 
@@ -26,7 +25,6 @@ namespace LaundryManagement.BLL
             translatorBLL = new TranslatorBLL();
             logBLL = new LogBLL();
 
-            seedService = new SeedService(Session.Settings.ConnectionString);
             emailService = new EmailService();
 
             maxLoginAttempts = Session.Settings.PasswordPolicy.MaxLoginAttempts;
@@ -49,7 +47,7 @@ namespace LaundryManagement.BLL
                 if (Session.LoginAttempts[dto.Email] == maxLoginAttempts)
                 {
                     this.ResetPassword(userDTO);
-                    throw new ValidationException(string.Format(Session.Translations[Tags.PasswordLimitMessage], dto.Email), ValidationType.Warning);
+                    throw new ValidationException(string.Format(Session.Translations[Tags.PasswordLimitMessage] + " - " + userDTO.Password, dto.Email), ValidationType.Warning);
                 }
                 
                 throw new ValidationException(Session.Translations[Tags.IncorrectPassword], ValidationType.Error);

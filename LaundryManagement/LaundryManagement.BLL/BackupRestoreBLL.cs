@@ -47,6 +47,9 @@ namespace LaundryManagement.BLL
 
         public IEnumerable<BackupDTO> GetBackups()
         {
+            if (!Directory.Exists(Session.Settings.BackupPath))
+                Directory.CreateDirectory(Session.Settings.BackupPath);
+
             var files = new DirectoryInfo(Session.Settings.BackupPath).GetFiles().OrderByDescending(x => x.CreationTime).ToList();
 
             return files.Select(x => new BackupDTO()

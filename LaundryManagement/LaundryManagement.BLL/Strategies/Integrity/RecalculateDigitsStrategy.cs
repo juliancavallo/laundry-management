@@ -36,7 +36,10 @@ namespace LaundryManagement.BLL.Strategies
             {
                 var newCheckDigit = _checkDigitBLL.GenerateVerticalCheckDigit(type);
 
-                _checkDigitDAL.SaveVerticalCheckDigit(type, newCheckDigit);
+                if (newCheckDigit == null)
+                    _checkDigitDAL.DeleteVerticalCheckDigit(type);
+                else
+                    _checkDigitDAL.SaveVerticalCheckDigit(type, newCheckDigit);
             }
         }
     }
