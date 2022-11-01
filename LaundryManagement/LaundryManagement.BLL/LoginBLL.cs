@@ -47,7 +47,7 @@ namespace LaundryManagement.BLL
                 if (Session.LoginAttempts[dto.Email] == maxLoginAttempts)
                 {
                     this.ResetPassword(userDTO);
-                    throw new ValidationException(string.Format(Session.Translations[Tags.PasswordLimitMessage] + " - " + userDTO.Password, dto.Email), ValidationType.Warning);
+                    throw new LoginAttemptsException(Session.Translations[Tags.PasswordLimitMessage]);
                 }
                 
                 throw new ValidationException(Session.Translations[Tags.IncorrectPassword], ValidationType.Error);

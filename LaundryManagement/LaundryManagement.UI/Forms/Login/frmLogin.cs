@@ -92,6 +92,19 @@ namespace LaundryManagement.UI
                         break;
                 }                
             }
+            catch(LoginAttemptsException ex)
+            {
+                logBLL.LogError(MovementTypeEnum.ResetPassword, ex.Message);
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+
+                frmResetPassword frm = new frmResetPassword(this.comboLanguages.SelectedItem as ILanguage);
+                frm.FormClosed += (sernder, e) =>
+                {
+                    this.txtEmail.Clear();
+                    this.txtPassword.Clear();
+                };
+                frm.ShowDialog();
+            }
             catch (Exception ex)
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
