@@ -17,5 +17,16 @@ namespace LaundryManagement.Domain.Extensions
             else
                 addedItem.Quantity += item.Quantity;
         }
+
+        public static void AddOrUpdate(this IList<ReceptionDetailViewDTO> list, ReceptionDetailViewDTO item)
+        {
+            var addedItem = list.FirstOrDefault(x => x.ArticleId == item.ArticleId);
+            if (addedItem == null)
+                list.Add(item);
+            else
+            {
+                addedItem.Quantity += item.Quantity;
+            }
+        }
     }
 }

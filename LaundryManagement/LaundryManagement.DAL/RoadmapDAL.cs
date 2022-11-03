@@ -108,6 +108,49 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public List<Roadmap> GetByReception(int idReception)
+        {
+            SqlDataReader reader = null;
+            try
+            {
+                connection.Open();
+
+                var userLocationId = Session.Instance.User.Location.Id;
+                SqlCommand cmd = new SqlCommand(@$"
+                    SELECT r.Id
+                      ,r.CreatedDate
+                      ,r.IdCreationUser
+                      ,r.IdRoadmapStatus 
+	                  ,rs.Name as StatusName
+                      ,r.IdLocationOrigin
+                      ,r.IdLocationDestination
+                  FROM [Roadmap] r
+                  INNER JOIN RoadmapStatus rs on r.IdRoadmapStatus = rs.Id
+                  INNER JOIN RoadmapReception rr on r.Id = rr.IdRoadmap
+                  WHERE rr.IdReception = {idReception}");
+
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                List<Roadmap> roadmaps = new List<Roadmap>();
+                while (reader.Read())
+                {
+                    roadmaps.Add(this.MapFromDatabase(reader));
+                }
+
+                return roadmaps;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
+                connection.Close();
+            }
+        }
+
         public int Save(Roadmap entity)
         {
             try

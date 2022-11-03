@@ -20,5 +20,6 @@
         Permission = 16,
         CorruptedEntities = 17,
         IntegrityRestore = 18,
+        Reception = 19
     }
 }

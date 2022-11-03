@@ -49,8 +49,7 @@ namespace LaundryManagement.UI
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuProcessesRoadMap = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuProcessesLaundryReception = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuProcessesClinicReception = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuProcessesReception = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.menuProcessesItemRemoval = new System.Windows.Forms.ToolStripMenuItem();
             this.menuProcessesItemCreation = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +59,7 @@ namespace LaundryManagement.UI
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.menuReportsLaundryShippings = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReportsClinicShippings = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuReportsRoadmaps = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator8 = new System.Windows.Forms.ToolStripSeparator();
             this.menuReportsLogs = new System.Windows.Forms.ToolStripMenuItem();
             this.menuReportsTraceability = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,7 +67,6 @@ namespace LaundryManagement.UI
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguageManage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuReportsRoadmaps = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -172,8 +171,7 @@ namespace LaundryManagement.UI
             this.toolStripSeparator1,
             this.menuProcessesRoadMap,
             this.toolStripSeparator2,
-            this.menuProcessesLaundryReception,
-            this.menuProcessesClinicReception,
+            this.menuProcessesReception,
             this.toolStripSeparator3,
             this.menuProcessesItemRemoval,
             this.menuProcessesItemCreation});
@@ -184,68 +182,63 @@ namespace LaundryManagement.UI
             // menuProcessesLaundryShipping
             // 
             this.menuProcessesLaundryShipping.Name = "menuProcessesLaundryShipping";
-            this.menuProcessesLaundryShipping.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesLaundryShipping.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesLaundryShipping.Text = "Laundry Shipping";
             this.menuProcessesLaundryShipping.Click += new System.EventHandler(this.menuProcessesLaundryShipping_Click);
             // 
             // menuProcessesClinicShipping
             // 
             this.menuProcessesClinicShipping.Name = "menuProcessesClinicShipping";
-            this.menuProcessesClinicShipping.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesClinicShipping.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesClinicShipping.Text = "Clinic Shipping";
             this.menuProcessesClinicShipping.Click += new System.EventHandler(this.menuProcessesClinicShipping_Click);
             // 
             // menuProcessesInternalShipping
             // 
             this.menuProcessesInternalShipping.Name = "menuProcessesInternalShipping";
-            this.menuProcessesInternalShipping.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesInternalShipping.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesInternalShipping.Text = "Internal Shipping";
             this.menuProcessesInternalShipping.Click += new System.EventHandler(this.menuProcessesInternalShipping_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
             // 
             // menuProcessesRoadMap
             // 
             this.menuProcessesRoadMap.Name = "menuProcessesRoadMap";
-            this.menuProcessesRoadMap.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesRoadMap.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesRoadMap.Text = "Road Map";
             this.menuProcessesRoadMap.Click += new System.EventHandler(this.menuProcessesRoadMap_Click);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(177, 6);
             // 
-            // menuProcessesLaundryReception
+            // menuProcessesReception
             // 
-            this.menuProcessesLaundryReception.Name = "menuProcessesLaundryReception";
-            this.menuProcessesLaundryReception.Size = new System.Drawing.Size(173, 22);
-            this.menuProcessesLaundryReception.Text = "Laundry Reception";
-            // 
-            // menuProcessesClinicReception
-            // 
-            this.menuProcessesClinicReception.Name = "menuProcessesClinicReception";
-            this.menuProcessesClinicReception.Size = new System.Drawing.Size(173, 22);
-            this.menuProcessesClinicReception.Text = "Clinic Reception";
+            this.menuProcessesReception.Name = "menuProcessesReception";
+            this.menuProcessesReception.Size = new System.Drawing.Size(180, 22);
+            this.menuProcessesReception.Text = "Reception";
+            this.menuProcessesReception.Click += new System.EventHandler(this.menuProcessesReception_Click);
             // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(170, 6);
+            this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
             // 
             // menuProcessesItemRemoval
             // 
             this.menuProcessesItemRemoval.Name = "menuProcessesItemRemoval";
-            this.menuProcessesItemRemoval.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesItemRemoval.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesItemRemoval.Text = "Item Removal";
             // 
             // menuProcessesItemCreation
             // 
             this.menuProcessesItemCreation.Name = "menuProcessesItemCreation";
-            this.menuProcessesItemCreation.Size = new System.Drawing.Size(173, 22);
+            this.menuProcessesItemCreation.Size = new System.Drawing.Size(180, 22);
             this.menuProcessesItemCreation.Text = "Item Creation";
             // 
             // menuReports
@@ -296,6 +289,13 @@ namespace LaundryManagement.UI
             this.menuReportsClinicShippings.Text = "Clinic Shippings";
             this.menuReportsClinicShippings.Click += new System.EventHandler(this.menuReportsClinicShippings_Click);
             // 
+            // menuReportsRoadmaps
+            // 
+            this.menuReportsRoadmaps.Name = "menuReportsRoadmaps";
+            this.menuReportsRoadmaps.Size = new System.Drawing.Size(180, 22);
+            this.menuReportsRoadmaps.Text = "Roadmaps";
+            this.menuReportsRoadmaps.Click += new System.EventHandler(this.menuReportsRoadmaps_Click);
+            // 
             // toolStripSeparator8
             // 
             this.toolStripSeparator8.Name = "toolStripSeparator8";
@@ -343,13 +343,6 @@ namespace LaundryManagement.UI
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
             // 
-            // menuReportsRoadmaps
-            // 
-            this.menuReportsRoadmaps.Name = "menuReportsRoadmaps";
-            this.menuReportsRoadmaps.Size = new System.Drawing.Size(180, 22);
-            this.menuReportsRoadmaps.Text = "Roadmaps";
-            this.menuReportsRoadmaps.Click += new System.EventHandler(this.menuReportsRoadmaps_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -389,8 +382,7 @@ namespace LaundryManagement.UI
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripSeparator toolStripSeparator1;
         private ToolStripSeparator toolStripSeparator2;
-        private ToolStripMenuItem menuProcessesLaundryReception;
-        private ToolStripMenuItem menuProcessesClinicReception;
+        private ToolStripMenuItem menuProcessesReception;
         private ToolStripSeparator toolStripSeparator3;
         private ToolStripMenuItem menuProcessesItemRemoval;
         private ToolStripMenuItem menuReportsMovements;

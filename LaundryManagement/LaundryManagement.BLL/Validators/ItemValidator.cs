@@ -6,16 +6,16 @@ namespace LaundryManagement.BLL.Validators
 {
     public class ItemValidator
     {
-        public void StatusValidation(ItemStatusEnum status)
+        public void StatusValidation(ItemStatusEnum actualStatus, ItemStatusEnum exceptedStatus)
         {
-            if (status != ItemStatusEnum.OnLocation)
+            if (actualStatus != exceptedStatus)
                 throw new ValidationException("The item is not in a valid state", ValidationType.Warning);
         }
 
-        public void LocationValidation(ItemDTO item, LocationDTO shippingLocation)
+        public void LocationValidation(ItemDTO item, LocationDTO location)
         {
-            if (item.ItemStatus == ItemStatusEnum.OnLocation && !item.Location.Equals(shippingLocation))
-                throw new ValidationException("The item is not in the current location", ValidationType.Warning);
+            if (!item.Location.Equals(location))
+                throw new ValidationException("The item is not in the correct location", ValidationType.Warning);
         }
 
         public void WashesValidation(ItemDTO item, ValidationResponseDTO validationResponse)

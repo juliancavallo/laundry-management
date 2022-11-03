@@ -40,15 +40,22 @@ namespace LaundryManagement.BLL
 
         public List<RoadmapDTO> GetAll()
         {
-            var locations = this.GetLocations();
+            //var locations = this.GetLocations();
             var list = this.dal.GetAll().AsEnumerable();
 
-            list = list.Where(x => locations.Select(l => l.Id).Contains(x.Destination.Id));
-            list = list.Where(x => x.Origin.Equals(Session.Instance.User.Location));
+            //list = list.Where(x => locations.Select(l => l.Id).Contains(x.Destination.Id));
+            //list = list.Where(x => x.Origin.Equals(Session.Instance.User.Location));
 
             return list
                 .Select(x => mapper.MapToDTO(x))
                 .ToList();
+        }
+
+        public RoadmapDTO GetById(int id)
+        {
+            var roadmap = this.dal.GetAll().First(x => x.Id == id);
+
+            return mapper.MapToDTO(roadmap);
         }
 
         public List<RoadmapViewDTO> GetAllForView(RoadmapFilter filter)
@@ -61,7 +68,29 @@ namespace LaundryManagement.BLL
             if (filter.DateTo != DateTime.MinValue)
                 list = list.Where(x => x.CreatedDate <= filter.DateTo.Date.AddDays(1).AddTicks(-1));
 
+            if (filter.IdLocationOrigin.HasValue)
+                list = list.Where(x => x.Origin.Id == filter.IdLocationOrigin);
+
+            if (filter.IdLocationDestination.HasValue)
+                list = list.Where(x => x.Destination.Id == filter.IdLocationDestination);
+
+            if (filter.Status.HasValue)
+                list = list.Where(x => x.Status == filter.Status);
+
             return list.Select(x => mapper.MapToViewDTO(x)).ToList();
+        }
+
+        public List<ReceptionRoadmapViewDTO> GetForCreateReception(RoadmapFilter filter)
+        {
+            var roadmaps = this.GetAllForView(filter);
+
+            return roadmaps.Select(x => new ReceptionRoadmapViewDTO()
+            {
+                CreatedDate = x.CreatedDate,
+                Id = x.Id,
+                Number = x.Number,
+                Selected = false
+            }).ToList();
         }
 
         public List<ProcessDetailViewDTO> GetDetailForView(int roadmapId)

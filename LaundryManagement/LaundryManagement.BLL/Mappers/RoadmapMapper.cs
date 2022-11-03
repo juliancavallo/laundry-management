@@ -13,11 +13,13 @@ namespace LaundryManagement.BLL.Mappers
     {
         private LocationMapper locationMapper;
         private UserMapper userMapper;
+        private ItemMapper itemMapper;
 
         public RoadmapMapper()
         {
             locationMapper = new LocationMapper();
             userMapper = new UserMapper();  
+            itemMapper = new ItemMapper();
         }
 
         public Roadmap MapToEntity(RoadmapDTO dto)
@@ -47,6 +49,10 @@ namespace LaundryManagement.BLL.Mappers
                 Shippings = entity.Shippings.Select(x => new ShippingDTO()
                 {
                     Id = x.Id,   
+                    ShippingDetail = x.ShippingDetail.Select(d => new ShippingDetailDTO()
+                    {
+                        Item = itemMapper.MapToDTO(d.Item)
+                    }).ToList()
                 }).ToList(),
                 CreationUser = userMapper.MapToDTO(entity.CreationUser)
             };

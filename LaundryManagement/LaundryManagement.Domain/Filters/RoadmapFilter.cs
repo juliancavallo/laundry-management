@@ -12,5 +12,8 @@ namespace LaundryManagement.Domain.Filters
     {
         public DateTime DateFrom { get; set; }
         public DateTime DateTo { get; set; }
+        public int? IdLocationOrigin { get; set; }
+        public int? IdLocationDestination { get; set; }
+        public RoadmapStatusEnum? Status { get; set; }
     }
 }

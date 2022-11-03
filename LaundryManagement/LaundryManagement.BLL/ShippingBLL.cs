@@ -133,6 +133,17 @@ namespace LaundryManagement.BLL
             }
         }
 
+        public void Receive(List<ShippingDTO> shippings)
+        {
+            foreach (var shipping in shippings)
+            {
+                shipping.Status = ShippingStatusEnum.Received;
+                dal.Save(mapper.MapToEntity(shipping));
+
+                logBLL.LogInfo(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been received");
+            }
+        }
+
         public List<ProcessDetailViewDTO> MapToView(List<ShippingDetailDTO> shippingDetailDTO)
         {
             var result = new List<ProcessDetailViewDTO>();
@@ -147,7 +158,7 @@ namespace LaundryManagement.BLL
         {
             var result = new ValidationResponseDTO();
 
-            itemValidator.StatusValidation(item.ItemStatus);
+            itemValidator.StatusValidation(item.ItemStatus, ItemStatusEnum.OnLocation);
             itemValidator.LocationValidation(item, originLocation);
 
             switch (shippingType)

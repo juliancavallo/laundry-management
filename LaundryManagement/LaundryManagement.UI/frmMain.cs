@@ -8,6 +8,7 @@ using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Backups;
 using LaundryManagement.UI.Forms.Logs;
+using LaundryManagement.UI.Forms.Reception;
 using LaundryManagement.UI.Forms.Roadmap;
 using LaundryManagement.UI.Forms.Roles;
 using LaundryManagement.UI.Forms.Shipping;
@@ -45,9 +46,9 @@ namespace LaundryManagement.UI
 
             controls = new List<Control>() { this };
             toolStripItems = new List<ToolStripItem>() { this.menuAdministration, this.menuAdministrationArticles, this.menuAdministrationCategories, 
-                this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesClinicReception, 
+                this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesReception, 
                 this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
-                this.menuProcessesLaundryReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
+                this.menuProcessesReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
                 this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps,
                 this.menuReportsLogs};
@@ -81,12 +82,11 @@ namespace LaundryManagement.UI
             this.menuAdministrationSizes.Tag = new MenuItemMetadataDTO { TagName = "Sizes", Permission = "ADM_SIZ" };
             this.menuAdministrationCategories.Tag = new MenuItemMetadataDTO { TagName = "Categories", Permission = "ADM_CAT" };
             this.menuAdministrationItemTypes.Tag = new MenuItemMetadataDTO { TagName = "ItemTypes", Permission = "ADM_TYP" };
-            this.menuProcessesClinicReception.Tag = new MenuItemMetadataDTO { TagName = "ClinicReception", Permission = "PRO_REC_CLI" };
+            this.menuProcessesReception.Tag = new MenuItemMetadataDTO { TagName = "Reception", Permission = "PRO_REC" };
             this.menuProcessesClinicShipping.Tag = new MenuItemMetadataDTO { TagName = "ClinicShipping", Permission = "PRO_SHP_CLI" };
             this.menuProcessesInternalShipping.Tag = new MenuItemMetadataDTO { TagName = "InternalShipping", Permission = "PRO_SHP_INT" };
             this.menuProcessesItemCreation.Tag = new MenuItemMetadataDTO { TagName = "ItemCreation", Permission = "PRO_ITM_NEW" };
             this.menuProcessesItemRemoval.Tag = new MenuItemMetadataDTO { TagName = "ItemRemoval", Permission = "PRO_ITM_DEL" };
-            this.menuProcessesLaundryReception.Tag = new MenuItemMetadataDTO { TagName = "LaundryReception", Permission = "PRO_REC_LDY" };
             this.menuProcessesLaundryShipping.Tag = new MenuItemMetadataDTO { TagName = "LaundryShipping", Permission = "PRO_SHP_LDY" };
             this.menuProcessesRoadMap.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "PRO_ROA" };
             //this.menuReportsMovements.Tag = new MenuItemMetadataDTO { TagName = "Movements", Permission = "REP_MOV" };
@@ -356,7 +356,14 @@ namespace LaundryManagement.UI
             frm.Show();
         }
 
-        #endregion
 
+        private void menuProcessesReception_Click(object sender, EventArgs e)
+        {
+            var frm = new frmAdministrationReceptions();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        #endregion
     }
 }
