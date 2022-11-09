@@ -70,7 +70,7 @@ namespace LaundryManagement.BLL
                 list = list.Where(x => x.Message.Contains(filter.Message));
 
             if(filter.IdUser > 0)
-                list = list.Where(x => x.User.Id == filter.IdUser);
+                list = list.Where(x => x.User != null && x.User.Id == filter.IdUser);
 
             return list.Select(x => logMapper.MapToViewDTO(x)).ToList();
         }

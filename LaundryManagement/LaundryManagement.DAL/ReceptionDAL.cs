@@ -77,7 +77,7 @@ namespace LaundryManagement.DAL
 
                 SqlCommand cmd = new SqlCommand(@$"
                     SELECT 
-                        s.IdItem
+                        r.IdItem
                     FROM ReceptionDetail r
                     WHERE r.IdReception = {id}");
 
@@ -129,9 +129,17 @@ namespace LaundryManagement.DAL
                 cmd.Connection = connection;
                 decimal newId = (decimal)cmd.ExecuteScalar();
 
-                if(entity.Id == 0)
+                cmd.CommandText = "INSERT INTO ReceptionDetail (IdItem, IdReception) VALUES ";
+                foreach (var item in entity.ReceptionDetail)
                 {
-                    cmd.CommandText = "INSERT INTO RoadmapReception (IdRoadmap, IdReception) VALUES ";
+                    cmd.CommandText += @$"({item.Item.Id}, {newId}),";
+                }
+                cmd.CommandText = cmd.CommandText.TrimEnd(',');
+                cmd.ExecuteNonQuery();
+
+                if (entity.Id == 0)
+                {
+                    cmd.CommandText = "INSERT INTO RoadmapReception (IdReception, IdRoadmap) VALUES ";
                     foreach(var item in entity.Roadmaps)
                     {
                         cmd.CommandText += @$"({newId}, {item.Id}),";

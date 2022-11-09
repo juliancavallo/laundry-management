@@ -29,6 +29,10 @@ namespace LaundryManagement.BLL.Mappers
                 ReceptionDetail = dto.ReceptionDetail.Select(x => new ReceptionDetail()
                 {
                     Item = itemMapper.MapToEntity(x.Item)
+                }),
+                Roadmaps = dto.Roadmaps.Select(x => new Roadmap()
+                {
+                    Id = x.Id
                 })
             };
         }

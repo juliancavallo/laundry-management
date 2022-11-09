@@ -58,7 +58,7 @@ namespace LaundryManagement.UI.Forms.Reception
             }
             catch (Exception ex)
             {
-
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
         }
 
@@ -66,7 +66,7 @@ namespace LaundryManagement.UI.Forms.Reception
         {
             var frm = new frmReceptionRoadmaps();
             frm.FormClosing += new FormClosingEventHandler((sender, e) => ReloadGridEvent());
-            frm.Show();
+            frm.ShowDialog();
         }
 
 

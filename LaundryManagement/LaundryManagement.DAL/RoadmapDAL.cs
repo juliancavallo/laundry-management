@@ -246,6 +246,32 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public void Receive(IEnumerable<int> ids)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand(
+                    $@"UPDATE [Roadmap] 
+                    SET [IdRoadmapStatus] = {(int)RoadmapStatusEnum.Received} 
+                    WHERE [Id] IN ({string.Join(',', ids)})");
+                
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         private Roadmap MapFromDatabase(SqlDataReader reader)
         {
             var id = int.Parse(reader["Id"].ToString());

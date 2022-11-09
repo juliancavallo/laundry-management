@@ -149,7 +149,8 @@ namespace LaundryManagement.UI.Forms.Reception
                 }
 
                 var frm = new frmNewReception(roadmapIds);
-                frm.Show();
+                frm.FormClosed += new FormClosedEventHandler((sender, e) => this.Close());
+                frm.ShowDialog();
             }
             catch (ValidationException ex)
             {

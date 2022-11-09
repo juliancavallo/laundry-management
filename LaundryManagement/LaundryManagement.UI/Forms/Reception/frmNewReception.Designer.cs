@@ -72,6 +72,7 @@
             this.txtItem.Name = "txtItem";
             this.txtItem.Size = new System.Drawing.Size(224, 23);
             this.txtItem.TabIndex = 10;
+            this.txtItem.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtItem_KeyUp);
             // 
             // gridItems
             // 

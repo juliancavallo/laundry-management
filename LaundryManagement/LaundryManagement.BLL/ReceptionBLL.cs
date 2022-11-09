@@ -59,44 +59,75 @@ namespace LaundryManagement.BLL
             return list.Select(x => mapper.MapToViewDTO(x)).ToList();
         }
 
-        public List<ReceptionDetailViewDTO> GetDetailByRoadmaps(IEnumerable<int> roadmapIds)
+        public List<ReceptionDetailViewDTO> GetDetailForView(int receptionId)
         {
+            var reception = dal.GetAll().First(x => x.Id == receptionId);
+
+            var detail = this.GetDetailByRoadmaps(reception.Roadmaps.Select(x => x.Id));
+            detail.ForEach(x =>
+            {
+                x.Quantity += reception.ReceptionDetail
+                    .Where(d => d.Item.Article.Id == x.ArticleId)
+                    .Count();
+            });
+
+            foreach(var item in reception.ReceptionDetail
+                .GroupBy(x => x.Item.Article.Id)
+                .Select(x => new 
+                {
+                    Key = x.Key,
+                    Items = x.AsEnumerable()
+                }))
+            {
+                if (!detail.Any(x => x.ArticleId == item.Key))
+                {
+                    detail.Add(new ReceptionDetailViewDTO()
+                    {
+                        ArticleId = item.Key,
+                        Color = item.Items.First().Item.Article.Color.Name,
+                        ExpectedQuantity = 0,
+                        Size = item.Items.First().Item.Article.Size.Name,
+                        ItemType = item.Items.First().Item.Article.Type.Name,
+                        Quantity = item.Items.Count()
+                    });
+                }
+            }
+
+
+
+            return detail;
+        }
+
+        public List<ReceptionDetailViewDTO> GetDetailByRoadmaps(IEnumerable<int> roadmapIds)
+         {
             var roadmaps = roadmapBLL.GetAll().Where(x => roadmapIds.Contains(x.Id));
 
             var items = roadmaps
                 .SelectMany(x => x.Shippings
                     .SelectMany(s => s.ShippingDetail))
-                .Select(x => x.Item)
-                .GroupBy(x => x.Article)
-                .Select(x => new 
-                { 
-                    x.Key, 
-                    Quantity = x.Count() 
-                }).ToList();
+                .Select(x => x.Item);
 
-            return items.Select(x => new ReceptionDetailViewDTO()
+            var groupedItems = items
+                .GroupBy(x => x.Article.Id)
+                .Select(x => new
+                {
+                    Article = items.First(i => i.Article.Id == x.Key).Article,
+                    Quantity = x.Count()
+                });
+
+            return groupedItems.Select(x => new ReceptionDetailViewDTO()
             {
-                ArticleId = x.Key.Id,
-                Color = x.Key.Color.Name,
+                ArticleId = x.Article.Id,
+                Color = x.Article.Color.Name,
                 ExpectedQuantity = x.Quantity,
-                Size = x.Key.Size.Name,
-                ItemType = x.Key.Type.Name
+                Size = x.Article.Size.Name,
+                ItemType = x.Article.Type.Name
             }).ToList();
-        }
-
-        public IEnumerable<ReceptionDetailViewDTO> MapToView(IEnumerable<ReceptionDetailDTO> receptionDetailDTO)
-        {
-            var result = new List<ReceptionDetailViewDTO>();
-            foreach (var item in receptionDetailDTO)
-            {
-                result.AddOrUpdate(mapper.MapToViewDTO(item));
-            }
-            return result;
         }
 
         public void Save(ReceptionDTO dto) 
         { 
-            //Roadmap
+            //Reception
             int id = dal.Save(mapper.MapToEntity(dto));
             dto.Id = id;
 
@@ -108,6 +139,7 @@ namespace LaundryManagement.BLL
             {
                 shippingBLL.Receive(roadmap.Shippings);
             }
+            roadmapBLL.Receive(dto.Roadmaps.Select(r => r.Id));
 
             //Traceability
             var traceabilityList = dto.ReceptionDetail.Select(x => new TraceabilityDTO()

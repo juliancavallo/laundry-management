@@ -51,7 +51,7 @@ namespace LaundryManagement.UI
                 this.menuProcessesReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsMovements, this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
                 this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps,
-                this.menuReportsLogs};
+                this.menuReportsLogs, this.menuReportsReceptions};
 
             PopulateLanguageMenu();
             Translate();
@@ -100,6 +100,7 @@ namespace LaundryManagement.UI
             this.menuAdministrationBackups.Tag = new MenuItemMetadataDTO { TagName = "Backups", Permission = "ADM_BCK" };
             this.menuReportsRoadmaps.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "REP_ROA" };
             this.menuReportsLogs.Tag = new MenuItemMetadataDTO { TagName = "Logs", Permission = "REP_LOGS" };
+            this.menuReportsReceptions.Tag = new MenuItemMetadataDTO { TagName = "Reception", Permission = "REP_REC" };
         }
 
         public void ValidateForm()
@@ -364,6 +365,13 @@ namespace LaundryManagement.UI
             frm.Show();
         }
 
+        private void menuReportsReceptions_Click(object sender, EventArgs e)
+        {
+            var frm = new frmReceptionReport();
+            frm.MdiParent = this;
+            frm.Show();
+        }
         #endregion
+
     }
 }

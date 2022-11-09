@@ -52,7 +52,8 @@ namespace LaundryManagement.BLL.Mappers
                     ShippingDetail = x.ShippingDetail.Select(d => new ShippingDetailDTO()
                     {
                         Item = itemMapper.MapToDTO(d.Item)
-                    }).ToList()
+                    }).ToList(),
+                    Type = (ShippingTypeEnum)x.Type.Id
                 }).ToList(),
                 CreationUser = userMapper.MapToDTO(entity.CreationUser)
             };

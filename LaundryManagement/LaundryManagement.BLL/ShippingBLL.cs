@@ -138,7 +138,14 @@ namespace LaundryManagement.BLL
             foreach (var shipping in shippings)
             {
                 shipping.Status = ShippingStatusEnum.Received;
-                dal.Save(mapper.MapToEntity(shipping));
+                dal.Save(new Shipping()
+                {
+                    Id = shipping.Id,
+                    Status = new ShippingStatus()
+                    {
+                        Id = (int)shipping.Status
+                    }
+                });
 
                 logBLL.LogInfo(MovementType.MovementByShippingType[shipping.Type], $"The shipping {shipping.Id} has been received");
             }

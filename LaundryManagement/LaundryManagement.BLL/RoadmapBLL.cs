@@ -58,6 +58,13 @@ namespace LaundryManagement.BLL
             return mapper.MapToDTO(roadmap);
         }
 
+        public IEnumerable<RoadmapDTO> GetByIds(IEnumerable<int> ids)
+        {
+            var roadmaps = this.dal.GetAll().Where(x => ids.Contains(x.Id));
+
+            return roadmaps.Select(x => mapper.MapToDTO(x));
+        }
+
         public List<RoadmapViewDTO> GetAllForView(RoadmapFilter filter)
         {
             var list = this.GetAll().AsEnumerable();
@@ -113,7 +120,7 @@ namespace LaundryManagement.BLL
             roadmap.Id = id;
 
             //Item Status
-            dal.UpdateItems(roadmap.Origin.Id, (int)ItemStatus.ItemStatusByRoadmapStatus[roadmap.Status], id);
+            dal.UpdateItems((int)ItemStatus.ItemStatusByRoadmapStatus[roadmap.Status], roadmap.Origin.Id, id);
 
             //ShippingStatus
             shippingBLL.Send(roadmap.Shippings);
@@ -136,6 +143,13 @@ namespace LaundryManagement.BLL
             SendEmail(roadmap);
 
             logBLL.LogInfo(MovementTypeEnum.RoadMap, $"The roadmap {roadmap.Id} has been created");
+        }
+
+        public void Receive(IEnumerable<int> ids)
+        {
+            dal.Receive(ids);
+
+            logBLL.LogInfo(MovementTypeEnum.RoadMap, $"The roadmaps {string.Join(',', ids)} has been received");
         }
 
         public List<LocationDTO> GetLocations()
