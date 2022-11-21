@@ -11,4 +11,11 @@
     <ProjectReference Include="..\LaundryManagement.Services\LaundryManagement.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="GrapeCity.Documents.Html" Version="5.2.0.804" />
+    <PackageReference Include="GrapeCity.Documents.Html.Windows.X64" Version="5.2.0.804" />
+    <PackageReference Include="GrapeCity.Documents.Pdf" Version="5.2.0.804" />
+    <PackageReference Include="Stubble.Core" Version="1.10.8" />
+  </ItemGroup>
+
 </Project>

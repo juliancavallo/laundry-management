@@ -12,6 +12,7 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
         public string ConnectionString { get; set; }
         public IPasswordPolicyDTO PasswordPolicy { get; set; }
         public IEmailSettingsDTO EmailSettings { get; set; }
+        public string ReportsPath { get; set; }
         public string BackupPath { get; set; }
         public int LogLevel { get; set; }
         public int BackupsLimit { get; set; }

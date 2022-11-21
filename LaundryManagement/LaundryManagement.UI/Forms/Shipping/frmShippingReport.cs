@@ -30,7 +30,8 @@ namespace LaundryManagement.UI.Forms.Shipping
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.btnViewDetail, this.btnSearch, this.lblDateFrom, this.lblDateTo };
+            controls = new List<Control>() { this, this.btnViewDetail, this.btnSearch, 
+                this.lblDateFrom, this.lblDateTo, this.btnExport };
             Translate();
         }
 
@@ -53,6 +54,7 @@ namespace LaundryManagement.UI.Forms.Shipping
             this.Tag = "Shippings";
             this.btnViewDetail.Tag = "ViewDetail";
             this.btnSearch.Tag = "Search";
+            this.btnExport.Tag = "ExportSelected";
             this.lblDateTo.Tag = "DateTo";
             this.lblDateFrom.Tag = "DateFrom";
 
@@ -124,6 +126,29 @@ namespace LaundryManagement.UI.Forms.Shipping
                 filter.DateTo = this.dateTo.Value;
 
                 this.ReloadGridEvent(filter);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+
+                FormValidation.ValidateGridSelectedRow(this.gridShippings);
+                var selectedRow = (ShippingViewDTO)this.gridShippings.CurrentRow.DataBoundItem;
+
+                shippingBLL.Export(selectedRow.Id);
+
+                FormValidation.ShowMessage($"The report has been saved to {Session.Settings.ReportsPath}", ValidationType.Info);
+
             }
             catch (ValidationException ex)
             {

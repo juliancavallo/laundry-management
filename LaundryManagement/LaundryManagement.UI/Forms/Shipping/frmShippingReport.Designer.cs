@@ -35,6 +35,7 @@
             this.lblDateFrom = new System.Windows.Forms.Label();
             this.lblDateTo = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.btnExport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.gridShippings)).BeginInit();
             this.SuspendLayout();
             // 
@@ -49,7 +50,7 @@
             // 
             // btnViewDetail
             // 
-            this.btnViewDetail.Location = new System.Drawing.Point(391, 398);
+            this.btnViewDetail.Location = new System.Drawing.Point(268, 398);
             this.btnViewDetail.Name = "btnViewDetail";
             this.btnViewDetail.Size = new System.Drawing.Size(175, 40);
             this.btnViewDetail.TabIndex = 1;
@@ -91,7 +92,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(123, 398);
+            this.btnSearch.Location = new System.Drawing.Point(39, 398);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(175, 40);
             this.btnSearch.TabIndex = 6;
@@ -99,11 +100,22 @@
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(492, 398);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(175, 40);
+            this.btnExport.TabIndex = 7;
+            this.btnExport.Text = "button1";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
             // frmShippingReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(698, 450);
+            this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.lblDateTo);
             this.Controls.Add(this.lblDateFrom);
@@ -130,5 +142,6 @@
         private System.Windows.Forms.Label lblDateFrom;
         private System.Windows.Forms.Label lblDateTo;
         private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.Button btnExport;
     }
 }

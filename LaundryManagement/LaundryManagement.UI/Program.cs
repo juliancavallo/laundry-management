@@ -40,6 +40,7 @@ namespace LaundryManagement.UI
                 ImagePath = Program.Configuration.GetSection("ImagePath").Value.ToString(),
                 PasswordPolicy = Program.Configuration.GetSection("PasswordPolicy").Get<PasswordPolicy>(),
                 EmailSettings = Program.Configuration.GetSection("EmailSettings").Get<EmailSettings>(),
+                ReportsPath = Program.Configuration.GetSection("ReportsPath").Value.ToString(),
                 BackupPath = Program.Configuration.GetSection("BackupPath").Value.ToString(),
                 LogLevel = int.Parse(Program.Configuration.GetSection("LogLevel").Value),
                 BackupsLimit = int.Parse(Program.Configuration.GetSection("BackupsLimit").Value),

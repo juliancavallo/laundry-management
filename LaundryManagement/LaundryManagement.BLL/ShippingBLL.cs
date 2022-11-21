@@ -21,6 +21,7 @@ namespace LaundryManagement.BLL
         private TraceabilityBLL traceabilityBLL;
         private LogBLL logBLL;
         private LocationBLL locationBLL;
+        private ShippingExportBLL exportBLL;
         private EmailService emailService;
         private ItemValidator itemValidator;
 
@@ -31,6 +32,7 @@ namespace LaundryManagement.BLL
             this.traceabilityBLL = new TraceabilityBLL();
             this.logBLL = new LogBLL();
             this.locationBLL = new LocationBLL();
+            this.exportBLL = new ShippingExportBLL();
             this.mapper = new ShippingMapper();
             this.emailService = new EmailService();
             itemValidator = new ItemValidator();
@@ -264,6 +266,17 @@ namespace LaundryManagement.BLL
             };
 
             return origin ? dictionaryOrigin[shippingType] : dictionaryDestination[shippingType];
+
+        }
+
+        public void Export(int id)
+        {
+            var shipping = this.GetByFilter(new ShippingFilter()
+            {
+                ShippingIds = new List<int> { id }
+            }).First();
+
+            this.exportBLL.Export(shipping);
 
         }
     }

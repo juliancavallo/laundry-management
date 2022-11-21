@@ -1,0 +1,104 @@
+<html>
+  <head>
+    <style>
+        html * {
+            font-family: 'Trebuchet MS', Arial, Helvetica, sans-serif;
+        }
+
+        h1 {
+            color: #1c1f21;
+            text-align: center;
+            padding: 6px;
+        }
+
+        thead {
+            display: table-header-group;
+        }
+
+        #summary, #detail {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        #summary td, #summary th, #detail td, #detail th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #summary tr:nth-child(even), #detail tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #summary th, #detail th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            color: white;
+        }
+
+        #summary th {
+            background-color: #bd8d69;
+        }
+
+        #detail th {
+            background-color: #6996bd;
+        }
+
+        #detail {
+            margin-top: 20px;
+        }
+    </style>
+  </head>
+
+  <body>
+      {{#Query}}
+      <h1>Shipping {{Id}}</h1>
+      <table id='summary'>
+          <thead>
+              <tr>
+                  <th>Shipping ID</th>
+                  <th>Origin</th>
+                  <th>Destination</th>
+                  <th>Status</th>
+                  <th>Type</th>
+                  <th>Creation date</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>{{Id}}</td>
+                  <td>{{Origin.CompleteName}}</td>
+                  <td>{{Destination.CompleteName}}</td>
+                  <td>{{StatusName}}</td>
+                  <td>{{TypeName}}</td>
+                  <td>{{CreatedDate}}</td>
+              </tr>
+          </tbody>
+      </table>
+      {{/Query}}
+      <table id='detail'>
+          <thead>
+              <tr>
+                  <th>Item Id</th>
+                  <th>Item Code</th>
+                  <th>Article Code</th>
+                  <th>Type</th>
+                  <th>Size</th>
+                  <th>Color</th>
+              </tr>
+          </thead>
+          <tbody>
+              {{#Detail}}
+              <tr>
+                  <td>{{Item.Id}}</td>
+                  <td>{{Item.Code}}</td>
+                  <td>{{Item.Article.Name}}</td>
+                  <td>{{Item.Article.Type.Name}}</td>
+                  <td>{{Item.Article.Size.Name}}</td>
+                  <td>{{Item.Article.Color.Name}}</td>
+              </tr>
+              {{/Detail}}
+          </tbody>
+      </table>
+  </body>
+</html>
