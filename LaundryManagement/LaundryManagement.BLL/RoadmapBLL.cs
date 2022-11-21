@@ -103,7 +103,7 @@ namespace LaundryManagement.BLL
         public List<ProcessDetailViewDTO> GetDetailForView(int roadmapId)
         {
             var detail = dal.GetDetailByRoadmapId(roadmapId);
-            var listView = detail.Select(x => itemMapper.MapToViewDTO(x)).ToList();
+            var listView = detail.Select(x => itemMapper.MapToProcessViewDTO(x)).ToList();
 
             var result = new List<ProcessDetailViewDTO>();
             foreach (var item in listView)

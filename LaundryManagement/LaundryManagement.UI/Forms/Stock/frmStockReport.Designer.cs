@@ -38,6 +38,7 @@
             this.lblItemType = new System.Windows.Forms.Label();
             this.lblLocation = new System.Windows.Forms.Label();
             this.lblStatus = new System.Windows.Forms.Label();
+            this.btnExport = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.grid)).BeginInit();
             this.SuspendLayout();
             // 
@@ -127,11 +128,22 @@
             this.lblStatus.TabIndex = 12;
             this.lblStatus.Text = "label1";
             // 
+            // btnExport
+            // 
+            this.btnExport.Location = new System.Drawing.Point(248, 456);
+            this.btnExport.Name = "btnExport";
+            this.btnExport.Size = new System.Drawing.Size(213, 32);
+            this.btnExport.TabIndex = 13;
+            this.btnExport.Text = "button1";
+            this.btnExport.UseVisualStyleBackColor = true;
+            this.btnExport.Click += new System.EventHandler(this.btnExport_Click);
+            // 
             // frmStockReport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(750, 461);
+            this.ClientSize = new System.Drawing.Size(750, 500);
+            this.Controls.Add(this.btnExport);
             this.Controls.Add(this.lblStatus);
             this.Controls.Add(this.lblLocation);
             this.Controls.Add(this.lblItemType);
@@ -164,5 +176,6 @@
         private System.Windows.Forms.Label lblItemType;
         private System.Windows.Forms.Label lblLocation;
         private System.Windows.Forms.Label lblStatus;
+        private System.Windows.Forms.Button btnExport;
     }
 }

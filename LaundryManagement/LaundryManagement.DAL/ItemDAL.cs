@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System;
 using LaundryManagement.Services;
 using System.Linq;
+using LaundryManagement.Domain.DTOs;
 
 namespace LaundryManagement.DAL
 {
@@ -178,6 +179,55 @@ namespace LaundryManagement.DAL
             }
             finally
             {
+                connection.Close();
+            }
+        }
+
+        public List<string> Import(List<ItemImportDTO> list)
+        {
+            SqlDataReader reader = null;
+            try
+            {
+                var insertedCodes = new List<string>();
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+                cmd.CommandText = @"declare @TempTable table (Code varchar(50))
+                                    declare @Inserted int";
+
+                foreach(var item in list)
+                {
+                    cmd.CommandText += $@"
+                        insert into Item (Code, IdArticle, Created, IdItemStatus, IdLocation, Washes)
+                        select '{item.Code}', a.Id, GETDATE(), 1, l.Id, 10
+                        from Location l, Article a
+                        where l.Name = '{item.Location}' and a.Name = '{item.Article}' and (select i.Id from Item i where i.Code = '{item.Code}') is null;
+
+                        select @Inserted = @@ROWCOUNT
+                        if(@Inserted = 1)
+	                        insert into @TempTable values ('{item.Code}')
+                        ";
+                }
+
+                cmd.CommandText += @"select * from @TempTable";
+
+                cmd.Connection = connection;
+                reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    insertedCodes.Add(reader["Code"].ToString());
+                }
+
+                return insertedCodes;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                reader?.Close();
                 connection.Close();
             }
         }

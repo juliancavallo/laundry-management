@@ -22,12 +22,14 @@ namespace LaundryManagement.UI.Forms.Stock
         private ItemBLL itemBLL;
         private LocationBLL locationBLL;
         private ItemTypeBLL itemTypeBLL;
+        private JsonExportBLL jsonExportBLL;
         private IList<Control> controls;
         public frmStockReport()
         {
             itemBLL = new ItemBLL();
             locationBLL = new LocationBLL();
             itemTypeBLL = new ItemTypeBLL();
+            jsonExportBLL = new JsonExportBLL();
 
             InitializeComponent();
             ApplySetup();
@@ -119,6 +121,28 @@ namespace LaundryManagement.UI.Forms.Stock
 
                 this.grid.DataSource = null;
                 this.grid.DataSource = itemBLL.GetByFilter(filter);
+            }
+            catch (ValidationException ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ex.ValidationType);
+            }
+            catch (Exception ex)
+            {
+                FormValidation.ShowMessage(ex.Message, ValidationType.Error);
+            }
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (this.grid.DataSource == null || ((List<ItemViewDTO>)this.grid.DataSource).Count == 0)
+                    FormValidation.ShowMessage("There are no items to export", ValidationType.Warning);
+                else
+                {
+                    jsonExportBLL.Export((List<ItemViewDTO>)this.grid.DataSource, $"Stock_{ DateTime.Now.ToString("yyyymmddhhmmss")}");
+                    FormValidation.ShowMessage($"The report has been saved to {Session.Settings.ReportsPath}", ValidationType.Info);
+                }
             }
             catch (ValidationException ex)
             {

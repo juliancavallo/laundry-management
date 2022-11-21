@@ -1,6 +1,7 @@
 ﻿using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
+using LaundryManagement.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -96,7 +97,20 @@ namespace LaundryManagement.BLL.Mappers
             };
         }
 
-        public ProcessDetailViewDTO MapToViewDTO(Item entity)
+        public ItemViewDTO MapToViewDTO(Item entity)
+        {
+            return new ItemViewDTO()
+            {
+                Code = entity.Code,
+                Article = entity.Article.Name,
+                ItemType = entity.Article.Type.Name,
+                Location = entity.Location.Name,
+                Status = Session.Translations[entity.ItemStatus.Name],
+                Washes = entity.Washes
+            };
+        }
+
+        public ProcessDetailViewDTO MapToProcessViewDTO(Item entity)
         {
             return new ProcessDetailViewDTO()
             {

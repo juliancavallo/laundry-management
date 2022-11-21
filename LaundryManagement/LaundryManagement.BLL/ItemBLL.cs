@@ -1,4 +1,5 @@
-﻿using LaundryManagement.BLL.Mappers;
+﻿using LaundryManagement.BLL.IO;
+using LaundryManagement.BLL.Mappers;
 using LaundryManagement.BLL.Validators;
 using LaundryManagement.DAL;
 using LaundryManagement.Domain.DTOs;
@@ -20,6 +21,7 @@ namespace LaundryManagement.BLL
         private ItemStatusDAL itemStatusDAL;
         private ItemMapper itemMapper;
         private ItemValidator itemValidator;
+        private JsonImportBLL jsonImportBLL;
 
         public ItemBLL()
         {
@@ -27,6 +29,7 @@ namespace LaundryManagement.BLL
             itemDAL = new ItemDAL();
             itemStatusDAL = new ItemStatusDAL();
             itemValidator = new ItemValidator();
+            jsonImportBLL = new JsonImportBLL();
         }
 
         public ItemDTO GetByCode(string code)
@@ -55,15 +58,7 @@ namespace LaundryManagement.BLL
 
 
             return items
-                .Select(x => new ItemViewDTO()
-                {
-                    Code = x.Code,
-                    Article = x.Article.Name,
-                    ItemType = x.Article.Type.Name,
-                    Location = x.Location.Name,
-                    Status = Session.Translations[x.ItemStatus.Name],
-                    Washes = x.Washes
-                })
+                .Select(x => this.itemMapper.MapToViewDTO(x))
                 .ToList();
         }
 
@@ -81,5 +76,21 @@ namespace LaundryManagement.BLL
 
         public void UpdateWashes(IList<int> list) => 
             itemDAL.UpdateWashes(list);
+
+        public List<ItemViewDTO> ImportStockFromJson(string json)
+        {
+            var result = jsonImportBLL.Import<List<ItemImportDTO>>(json);
+
+            if(result.Count == 0 || result.All(x => x.Article == null))
+                throw new ValidationException("Error converting file", ValidationType.Error);
+
+            var codes = itemDAL.Import(result);
+
+            return this.itemDAL
+                .GetAll()
+                .Where(x => codes.Contains(x.Code))
+                .Select(x => this.itemMapper.MapToViewDTO(x))
+                .ToList();
+        }
     }
 }

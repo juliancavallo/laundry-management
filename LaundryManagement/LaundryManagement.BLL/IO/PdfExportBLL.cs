@@ -11,12 +11,15 @@ namespace LaundryManagement.BLL
 {
     public class PdfExportBLL
     {
-        public void ExportToPDF(string reportName, string content)
+        public PdfExportBLL()
         {
             var reportsPath = Session.Settings.ReportsPath;
             if (!Directory.Exists(reportsPath))
                 Directory.CreateDirectory(reportsPath);
+        }
 
+        public void ExportToPDF(string reportName, string content)
+        {
             using (var re = new GcHtmlRenderer(content))
             {
                 var pdfSettings = new PdfSettings()
@@ -25,7 +28,7 @@ namespace LaundryManagement.BLL
                     IgnoreCSSPageSize = true
                 };
 
-                re.RenderToPdf(Path.GetFullPath(reportsPath) + reportName, pdfSettings);
+                re.RenderToPdf(Session.Settings.ReportsPath + reportName, pdfSettings);
             }
         }
     }
