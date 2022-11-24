@@ -143,16 +143,18 @@ namespace LaundryManagement.DAL
             {
                 connection.Open();
 
-                SqlCommand cmd = null;
-            
+                SqlCommand cmd = new SqlCommand();
+                SqlParameter sqlParam = cmd.Parameters.AddWithValue("@CheckDigit", entity.CheckDigit);
+                sqlParam.DbType = System.Data.DbType.Binary;
+
                 if (entity.Id == 0)
                 {
-                    cmd = new SqlCommand(
+                    cmd.CommandText =
                         $@"
-                            INSERT INTO [Shipping] (CreatedDate, IdLocationOrigin, IdLocationDestination, IdShippingType, IdShippingStatus, IdCreatedUser, IdResponsibleUser) 
-                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id}, {entity.CreationUser.Id}, {entity.Responsible.Id});
+                            INSERT INTO [Shipping] (CreatedDate, IdLocationOrigin, IdLocationDestination, IdShippingType, IdShippingStatus, IdCreatedUser, IdResponsibleUser, CheckDigit) 
+                            VALUES ('{entity.CreatedDate.ToString("yyyy-MM-ddTHH:mm:ss")}', {entity.Origin.Id}, {entity.Destination.Id}, {entity.Type.Id}, {entity.Status.Id}, {entity.CreationUser.Id}, {entity.Responsible.Id}, @CheckDigit);
                             SELECT SCOPE_IDENTITY();
-                        ");
+                        ";
 
                     cmd.Connection = connection;
                     decimal newId = (decimal)cmd.ExecuteScalar();
@@ -169,10 +171,10 @@ namespace LaundryManagement.DAL
                 }
                 else
                 {
-                    cmd = new SqlCommand(
+                    cmd.CommandText = (
                         $@"
                             UPDATE [Shipping] SET
-	                            IdShippingStatus = {entity.Status.Id}
+	                            IdShippingStatus = {entity.Status.Id}, CheckDigit = @CheckDigit
                             WHERE Id = {entity.Id};
                         ");
                     cmd.Connection = connection;

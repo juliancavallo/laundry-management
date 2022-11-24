@@ -38,6 +38,11 @@ namespace LaundryManagement.BLL.Mappers
                 }).ToList(),
                 CreationUser = userMapper.MapToEntity(dto.CreationUser),
                 Responsible = userMapper.MapToEntity(dto.Responsible),
+                IdCreatedUser = dto.CreationUser.Id,
+                IdLocationDestination = dto.Destination.Id,
+                IdLocationOrigin = dto.Origin.Id,
+                IdShippingStatus = (int)dto.Status,
+                IdShippingType = (int)dto.Type
             };
         }
 

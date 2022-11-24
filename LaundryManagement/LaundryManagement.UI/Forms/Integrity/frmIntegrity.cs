@@ -153,7 +153,11 @@ namespace LaundryManagement.UI.Forms.Integrity
 
                 _checkDigitBLL.RestoreIntegrity(selectedAction);
 
-                _integrityRestored = true;
+                _integrityRestored = CheckIntegrity();
+
+                if (!_integrityRestored)
+                    throw new ValidationException("The database integrity is corrupted. Please try again", ValidationType.Error);
+
                 this.Close();
             }
             catch (ValidationException ex)
@@ -200,6 +204,14 @@ namespace LaundryManagement.UI.Forms.Integrity
             {
                 FormValidation.ShowMessage(ex.Message, ValidationType.Error);
             }
+        }
+
+        private bool CheckIntegrity()
+        {
+            var horizontalCorruptedEntities = _checkDigitBLL.GetHorizontalCorruptedEntities();
+            var verticalCorruptedEntities = _checkDigitBLL.GetVerticalCorruptedEntities();
+
+            return horizontalCorruptedEntities.Count() == 0 && verticalCorruptedEntities.Count() == 0;
         }
     }
 }

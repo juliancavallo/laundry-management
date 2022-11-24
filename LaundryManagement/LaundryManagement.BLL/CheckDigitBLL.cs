@@ -97,10 +97,13 @@ namespace LaundryManagement.BLL
             {
                 var generatedCheckDigit = this.GenerateVerticalCheckDigit(type);
                 var currentCheckDigit = verticalCheckDigits.FirstOrDefault(x => x.TableName == type.Name)?.CheckDigit;
-                
-                if ((currentCheckDigit == null ^ generatedCheckDigit == null)
-                 || !generatedCheckDigit.SequenceEqual(currentCheckDigit))
+
+                bool onlyOneNullDigit = currentCheckDigit == null ^ generatedCheckDigit == null;
+                bool bothDigitsWithValue = generatedCheckDigit != null && currentCheckDigit != null;
+
+                if (onlyOneNullDigit || (bothDigitsWithValue && !generatedCheckDigit.SequenceEqual(currentCheckDigit)))
                     corruptedEntities.Add(type);
+
             }
 
             if (corruptedEntities.Count > 0)
