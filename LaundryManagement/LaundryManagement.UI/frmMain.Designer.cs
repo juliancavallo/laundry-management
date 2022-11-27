@@ -40,6 +40,7 @@ namespace LaundryManagement.UI
             this.menuAdministrationCategories = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAdministrationSizes = new System.Windows.Forms.ToolStripMenuItem();
             this.menuAdministrationItemTypes = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuAdministrationStockImport = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.menuAdministrationLocations = new System.Windows.Forms.ToolStripMenuItem();
             this.menuProcesses = new System.Windows.Forms.ToolStripMenuItem();
@@ -68,7 +69,6 @@ namespace LaundryManagement.UI
             this.menuLanguage = new System.Windows.Forms.ToolStripMenuItem();
             this.menuLanguageManage = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
-            this.menuAdministrationStockImport = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -82,7 +82,7 @@ namespace LaundryManagement.UI
             this.menuLanguage});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1274, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1108, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -107,62 +107,69 @@ namespace LaundryManagement.UI
             // menuAdministrationUsers
             // 
             this.menuAdministrationUsers.Name = "menuAdministrationUsers";
-            this.menuAdministrationUsers.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationUsers.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationUsers.Text = "Users";
             this.menuAdministrationUsers.Click += new System.EventHandler(this.menuAdministrationUsers_Click);
             // 
             // menuAdministrationRoles
             // 
             this.menuAdministrationRoles.Name = "menuAdministrationRoles";
-            this.menuAdministrationRoles.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationRoles.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationRoles.Text = "Roles";
             this.menuAdministrationRoles.Click += new System.EventHandler(this.menuAdministrationRoles_Click);
             // 
             // menuAdministrationBackups
             // 
             this.menuAdministrationBackups.Name = "menuAdministrationBackups";
-            this.menuAdministrationBackups.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationBackups.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationBackups.Text = "Backups";
             this.menuAdministrationBackups.Click += new System.EventHandler(this.menuAdministrationBackups_Click);
             // 
             // toolStripSeparator4
             // 
             this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator4.Size = new System.Drawing.Size(139, 6);
             // 
             // menuAdministrationArticles
             // 
             this.menuAdministrationArticles.Name = "menuAdministrationArticles";
-            this.menuAdministrationArticles.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationArticles.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationArticles.Text = "Articles";
             // 
             // menuAdministrationCategories
             // 
             this.menuAdministrationCategories.Name = "menuAdministrationCategories";
-            this.menuAdministrationCategories.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationCategories.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationCategories.Text = "Categories";
             // 
             // menuAdministrationSizes
             // 
             this.menuAdministrationSizes.Name = "menuAdministrationSizes";
-            this.menuAdministrationSizes.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationSizes.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationSizes.Text = "Sizes";
             // 
             // menuAdministrationItemTypes
             // 
             this.menuAdministrationItemTypes.Name = "menuAdministrationItemTypes";
-            this.menuAdministrationItemTypes.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationItemTypes.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationItemTypes.Text = "Item Types";
+            // 
+            // menuAdministrationStockImport
+            // 
+            this.menuAdministrationStockImport.Name = "menuAdministrationStockImport";
+            this.menuAdministrationStockImport.Size = new System.Drawing.Size(142, 22);
+            this.menuAdministrationStockImport.Text = "Stock Import";
+            this.menuAdministrationStockImport.Click += new System.EventHandler(this.menuAdministrationStockImport_Click);
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(177, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(139, 6);
             // 
             // menuAdministrationLocations
             // 
             this.menuAdministrationLocations.Name = "menuAdministrationLocations";
-            this.menuAdministrationLocations.Size = new System.Drawing.Size(180, 22);
+            this.menuAdministrationLocations.Size = new System.Drawing.Size(142, 22);
             this.menuAdministrationLocations.Text = "Locations";
             // 
             // menuProcesses
@@ -354,18 +361,11 @@ namespace LaundryManagement.UI
             this.toolStripSeparator6.Name = "toolStripSeparator6";
             this.toolStripSeparator6.Size = new System.Drawing.Size(114, 6);
             // 
-            // menuAdministrationStockImport
-            // 
-            this.menuAdministrationStockImport.Name = "menuAdministrationStockImport";
-            this.menuAdministrationStockImport.Size = new System.Drawing.Size(180, 22);
-            this.menuAdministrationStockImport.Text = "Stock Import";
-            this.menuAdministrationStockImport.Click += new System.EventHandler(this.menuAdministrationStockImport_Click);
-            // 
             // frmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1274, 723);
+            this.ClientSize = new System.Drawing.Size(1108, 679);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "frmMain";

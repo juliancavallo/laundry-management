@@ -34,7 +34,8 @@ namespace LaundryManagement.UI.Forms.Stock
             InitializeComponent();
             ApplySetup();
 
-            controls = new List<Control>() { this, this.lblItemCode, this.btnSearch, lblItemType, lblLocation, lblStatus };
+            controls = new List<Control>() { this, this.lblItemCode, this.btnSearch, 
+                lblItemType, lblLocation, lblStatus, this.btnExport };
             Translate();
             PopulateCombos();
         }
@@ -60,6 +61,7 @@ namespace LaundryManagement.UI.Forms.Stock
             this.lblStatus.Tag = "Status";
             this.lblLocation.Tag = "Location";
             this.lblItemType.Tag = "ItemType";
+            this.btnExport.Tag = "Export";
 
             this.comboItemType.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboItemStatus.DropDownStyle = ComboBoxStyle.DropDownList;

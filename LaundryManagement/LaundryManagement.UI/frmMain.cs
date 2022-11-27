@@ -62,7 +62,9 @@ namespace LaundryManagement.UI
             this.StartPosition = FormStartPosition.CenterScreen;
             this.IsMdiContainer = true;
 
-            this.BackgroundImage = Image.FromFile(Path.GetFullPath(@"..\..\..\") + Program.Configuration.GetSection("imagePath").Value.ToString());
+            var appPath = AppDomain.CurrentDomain.BaseDirectory;
+            var imagePath = Program.Configuration.GetSection("imagePath").Value.ToString();
+            this.BackgroundImage = Image.FromFile(Path.Combine(appPath, imagePath));
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;

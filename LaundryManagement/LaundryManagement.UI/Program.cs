@@ -4,6 +4,7 @@ using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Integrity;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.IO;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -18,18 +19,33 @@ namespace LaundryManagement.UI
         [STAThread]
         static void Main()
         {
-            var builder = new ConfigurationBuilder()
-              .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
-            Configuration = builder.Build();
+            try
+            {
+                var appPath = AppDomain.CurrentDomain.BaseDirectory;
+                var path = Path.Combine(appPath, "appsettings.json");
+                var builder = new ConfigurationBuilder()
+                  .AddJsonFile(path, optional: true, reloadOnChange: true);
+                Configuration = builder.Build();
 
-            Application.SetHighDpiMode(HighDpiMode.SystemAware);
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+                Application.SetHighDpiMode(HighDpiMode.SystemAware);
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
 
-            SetSettings();
-            CheckIntegrity();
+                SetSettings();
+                CheckIntegrity();
 
-            Application.Run(new frmMain());
+                Application.Run(new frmMain());
+            }
+            catch (Exception ex)
+            {
+                File.Create("Error.txt").Dispose();
+                using (StreamWriter sw = File.AppendText("Error.txt"))
+                {
+                    sw.WriteLine("Error Message: " + ex.Message);
+                    sw.WriteLine("Stack Trace: " + ex.StackTrace);
+
+                }
+            }
         }
 
         private static void SetSettings()

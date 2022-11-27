@@ -9,10 +9,18 @@
 
   <ItemGroup>
     <None Remove="appsettings.json" />
+    <None Remove="Resources\background.png" />
+    <None Remove="Resources\ReportTemplates\ShippingReport.html" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\background.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ReportTemplates\ShippingReport.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
