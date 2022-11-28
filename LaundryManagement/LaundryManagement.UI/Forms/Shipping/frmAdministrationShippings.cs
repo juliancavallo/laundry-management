@@ -61,8 +61,10 @@ namespace LaundryManagement.UI.Forms.Shipping
         {
             try
             {
+                var source = shippingBLL.GetForView(new ShippingFilter() { ShippingType = shippingType });
                 this.gridShippings.DataSource = null;
-                this.gridShippings.DataSource = shippingBLL.GetForView(new ShippingFilter() { ShippingType = shippingType});
+                this.gridShippings.DataSource = source;
+                if(source != null)
                 this.gridShippings.Columns["Id"].Visible = false;
             }
             catch (Exception ex)

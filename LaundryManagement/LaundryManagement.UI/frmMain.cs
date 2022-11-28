@@ -382,5 +382,11 @@ namespace LaundryManagement.UI
         }
         #endregion
 
+        private void frmMain_HelpRequested(object sender, HelpEventArgs hlpevent)
+        {
+            var appPath = AppDomain.CurrentDomain.BaseDirectory;
+            var helpFilePath = "Help/Helper.chm";
+            Help.ShowHelp(this, Path.Combine(appPath, helpFilePath));
+        }
     }
 }
