@@ -28,7 +28,7 @@ namespace LaundryManagement.BLL
                     IgnoreCSSPageSize = true
                 };
 
-                re.RenderToPdf(Session.Settings.ReportsPath + reportName, pdfSettings);
+                re.RenderToPdf(Path.Combine(Session.Settings.ReportsPath, reportName), pdfSettings);
             }
         }
     }

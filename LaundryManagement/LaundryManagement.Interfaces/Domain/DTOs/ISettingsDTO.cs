@@ -9,6 +9,8 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
     public interface ISettingsDTO
     {
         public string ImagePath { get; set; }
+        public string HelperPath { get; set; }
+        public string ReportTemplatesPath { get; set; }
         public string ConnectionString { get; set; }
         public IPasswordPolicyDTO PasswordPolicy { get; set; }
         public IEmailSettingsDTO EmailSettings { get; set; }

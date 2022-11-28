@@ -65,7 +65,7 @@ namespace LaundryManagement.UI.Forms.Shipping
                 this.gridShippings.DataSource = null;
                 this.gridShippings.DataSource = source;
                 if(source != null)
-                this.gridShippings.Columns["Id"].Visible = false;
+                    this.gridShippings.Columns["Id"].Visible = false;
             }
             catch (Exception ex)
             {

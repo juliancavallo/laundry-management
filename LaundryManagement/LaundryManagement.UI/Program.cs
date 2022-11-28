@@ -1,5 +1,6 @@
 using LaundryManagement.BLL;
 using LaundryManagement.Domain.DTOs;
+using LaundryManagement.Domain.Extensions;
 using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Integrity;
 using Microsoft.Extensions.Configuration;
@@ -21,8 +22,7 @@ namespace LaundryManagement.UI
         {
             try
             {
-                var appPath = AppDomain.CurrentDomain.BaseDirectory;
-                var path = Path.Combine(appPath, "appsettings.json");
+                var path = "appsettings.json".GetRelativePath();
                 var builder = new ConfigurationBuilder()
                   .AddJsonFile(path, optional: true, reloadOnChange: true);
                 Configuration = builder.Build();
@@ -54,6 +54,8 @@ namespace LaundryManagement.UI
             {
                 ConnectionString = Program.Configuration.GetSection("ConnectionString").Value.ToString(),
                 ImagePath = Program.Configuration.GetSection("ImagePath").Value.ToString(),
+                HelperPath = Program.Configuration.GetSection("HelperPath").Value.ToString(),
+                ReportTemplatesPath = Program.Configuration.GetSection("ReportTemplatesPath").Value.ToString(),
                 PasswordPolicy = Program.Configuration.GetSection("PasswordPolicy").Get<PasswordPolicy>(),
                 EmailSettings = Program.Configuration.GetSection("EmailSettings").Get<EmailSettings>(),
                 ReportsPath = Program.Configuration.GetSection("ReportsPath").Value.ToString(),

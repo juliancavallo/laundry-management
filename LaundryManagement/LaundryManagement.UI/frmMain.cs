@@ -4,6 +4,7 @@ using LaundryManagement.Domain.DTOs;
 using LaundryManagement.Domain.Entities;
 using LaundryManagement.Domain.Enums;
 using LaundryManagement.Domain.Exceptions;
+using LaundryManagement.Domain.Extensions;
 using LaundryManagement.Interfaces.Domain.Entities;
 using LaundryManagement.Services;
 using LaundryManagement.UI.Forms.Backups;
@@ -62,9 +63,7 @@ namespace LaundryManagement.UI
             this.StartPosition = FormStartPosition.CenterScreen;
             this.IsMdiContainer = true;
 
-            var appPath = AppDomain.CurrentDomain.BaseDirectory;
-            var imagePath = Program.Configuration.GetSection("imagePath").Value.ToString();
-            this.BackgroundImage = Image.FromFile(Path.Combine(appPath, imagePath));
+            this.BackgroundImage = Image.FromFile(Session.Settings.ImagePath.GetRelativePath());
             this.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -384,9 +383,7 @@ namespace LaundryManagement.UI
 
         private void frmMain_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
-            var appPath = AppDomain.CurrentDomain.BaseDirectory;
-            var helpFilePath = "Help/Helper.chm";
-            Help.ShowHelp(this, Path.Combine(appPath, helpFilePath));
+            Help.ShowHelp(this, Session.Settings.HelperPath.GetRelativePath());
         }
     }
 }
