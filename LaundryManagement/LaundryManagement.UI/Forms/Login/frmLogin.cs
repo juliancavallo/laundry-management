@@ -44,7 +44,7 @@ namespace LaundryManagement.UI
             this.txtPassword.TabIndex = 1;
             this.btnLogin.TabIndex = 2;
 
-            this.txtEmail.Text = "jcavallo11@gmail.com";
+            this.txtEmail.Text = "lavanderia@gmail.com";
             this.txtPassword.Text = "1234";
 
             this.Tag = "Login";

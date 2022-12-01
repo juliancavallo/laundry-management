@@ -51,11 +51,6 @@
                     "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 y x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.7.2"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.5.0.x64"
-                    {
-                    "Name" = "8:Entorno de ejecución de escritorio de .NET 5.0.16 (x64)"
-                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.5.0.x64"
-                    }
                     "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.5.0.x86"
                     {
                     "Name" = "8:Entorno de ejecución de escritorio de .NET 5.0.16 (x86)"
@@ -86,6 +81,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
             }
         }
     }
@@ -126,7 +129,7 @@
         {
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_67FF537766E94D10A5C4991B83393E0F"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:FALSE"
             "Condition" = "8:"
@@ -175,7 +178,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:LaundryManagement"
         "ProductCode" = "8:{11B6A4C3-EA3C-4FA6-979C-1EAFDAAC6FE2}"
-        "PackageCode" = "8:{E29A2B31-0A6A-49CD-8D1C-0C92E8B2E869}"
+        "PackageCode" = "8:{EDD086FB-ADF9-413B-8671-5D43810AA618}"
         "UpgradeCode" = "8:{02CEFB0B-B16C-4712-BBAD-715B27B0E3EC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -196,7 +199,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"
