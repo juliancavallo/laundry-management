@@ -19,7 +19,7 @@ namespace LaundryManagement.DAL
         public TranslationDAL()
         {
             connection = new SqlConnection();
-            connectionString = Session.Settings.ConnectionString;
+            connectionString = Session.Settings.DatabaseSettings.ConnectionString;
             connection.ConnectionString = connectionString;
         }
 

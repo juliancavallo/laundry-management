@@ -17,7 +17,7 @@ namespace LaundryManagement.DAL
         public PermissionDAL()
         {
             connection = new SqlConnection();
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
         }
 
         public IList<Component> GetAll()
@@ -305,7 +305,7 @@ namespace LaundryManagement.DAL
             SqlDataReader reader = null;
             try 
             { 
-                newConnection = new SqlConnection(Session.Settings.ConnectionString);
+                newConnection = new SqlConnection(Session.Settings.DatabaseSettings.ConnectionString);
                 newConnection.Open();
 
                 string permissionsString = string.Join(',', addedPermissions);
@@ -388,7 +388,7 @@ namespace LaundryManagement.DAL
             try
             {
 
-                connection2.ConnectionString = Session.Settings.ConnectionString; 
+                connection2.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString; 
                 connection2.Open();
 
                 SqlCommand cmd = new SqlCommand();

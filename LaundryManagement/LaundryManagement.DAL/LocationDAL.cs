@@ -16,7 +16,7 @@ namespace LaundryManagement.DAL
         {
             connection = new SqlConnection();
 
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
         }
 
         public void Delete(Location entity)
@@ -88,7 +88,7 @@ namespace LaundryManagement.DAL
         {
             var subConnection = new SqlConnection();
 
-            subConnection.ConnectionString = Session.Settings.ConnectionString;
+            subConnection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
             SqlDataReader reader = null;
             try
             {

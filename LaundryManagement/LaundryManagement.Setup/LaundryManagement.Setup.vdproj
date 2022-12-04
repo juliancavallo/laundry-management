@@ -51,10 +51,15 @@
                     "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 y x64)"
                     "ProductCode" = "8:.NETFramework,Version=v4.7.2"
                     }
-                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.5.0.x86"
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.NetCore.DesktopRuntime.5.0.x64"
                     {
-                    "Name" = "8:Entorno de ejecución de escritorio de .NET 5.0.16 (x86)"
-                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.5.0.x86"
+                    "Name" = "8:Entorno de ejecución de escritorio de .NET 5.0.16 (x64)"
+                    "ProductCode" = "8:Microsoft.NetCore.DesktopRuntime.5.0.x64"
+                    }
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:Microsoft.SqlServer.SqlLocalDB.15.0"
+                    {
+                    "Name" = "8:SQL Server 2019 Express LocalDB"
+                    "ProductCode" = "8:Microsoft.SqlServer.SqlLocalDB.15.0"
                     }
                 }
             }
@@ -178,7 +183,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:LaundryManagement"
         "ProductCode" = "8:{11B6A4C3-EA3C-4FA6-979C-1EAFDAAC6FE2}"
-        "PackageCode" = "8:{EDD086FB-ADF9-413B-8671-5D43810AA618}"
+        "PackageCode" = "8:{BA73AF54-6E05-45FB-9D7D-4686A591197A}"
         "UpgradeCode" = "8:{02CEFB0B-B16C-4712-BBAD-715B27B0E3EC}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"

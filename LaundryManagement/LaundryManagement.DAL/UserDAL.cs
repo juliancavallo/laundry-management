@@ -18,7 +18,7 @@ namespace LaundryManagement.DAL
             connection = new SqlConnection();
             locationDAL = new LocationDAL();
 
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
         }
 
         public void Delete(User entity)

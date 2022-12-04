@@ -11,7 +11,7 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
         public string ImagePath { get; set; }
         public string HelperPath { get; set; }
         public string ReportTemplatesPath { get; set; }
-        public string ConnectionString { get; set; }
+        public IDatabaseSettingsDTO DatabaseSettings { get; set; }
         public IPasswordPolicyDTO PasswordPolicy { get; set; }
         public IEmailSettingsDTO EmailSettings { get; set; }
         public string ReportsPath { get; set; }
@@ -38,5 +38,12 @@ namespace LaundryManagement.Interfaces.Domain.DTOs
         public string Host { get; set; }
         public int Port { get; set; }
         public string ApplicationPassword { get; set; }
+    }
+
+    public interface IDatabaseSettingsDTO
+    {
+        public string ConnectionString { get; set; }
+        public string Server { get; set; }
+        public string Database { get; set; }
     }
 }

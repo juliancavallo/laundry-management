@@ -14,7 +14,7 @@ namespace LaundryManagement.DAL
         {
             connection = new SqlConnection();
 
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
         }
 
         public IList<ItemStatus> GetAll()

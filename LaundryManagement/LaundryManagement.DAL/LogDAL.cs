@@ -20,7 +20,7 @@ namespace LaundryManagement.DAL
             userDAL = new UserDAL();    
             itemDAL = new ItemDAL();
 
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
         }
 
         public List<Log> Get()

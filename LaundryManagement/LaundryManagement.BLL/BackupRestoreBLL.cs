@@ -58,5 +58,8 @@ namespace LaundryManagement.BLL
                 BackupPath = x.FullName
             });
         }
+
+        public void CreateIfNotExists() =>
+            dal.CreateIfNotExists();
     }
 }

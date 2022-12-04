@@ -24,7 +24,7 @@ namespace LaundryManagement.DAL
             userDAL = new UserDAL();    
             itemDAL = new ItemDAL();
 
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
         }
 
         public List<Roadmap> GetAll()
@@ -71,7 +71,7 @@ namespace LaundryManagement.DAL
         public List<Item> GetDetailByRoadmapId(int id)
         {
             var subConnection = new SqlConnection();
-            subConnection.ConnectionString = Session.Settings.ConnectionString;
+            subConnection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
 
             SqlDataReader reader = null;
             try

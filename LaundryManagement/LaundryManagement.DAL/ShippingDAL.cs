@@ -23,7 +23,7 @@ namespace LaundryManagement.DAL
             locationDAL = new LocationDAL();
             userDAL = new UserDAL();    
 
-            connection.ConnectionString = Session.Settings.ConnectionString;
+            connection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
             GetQuery = @$"
                     SELECT 
 	                    s.Id,
@@ -99,7 +99,7 @@ namespace LaundryManagement.DAL
         public List<ShippingDetail> GetDetailByShippingId(int id)
         {
             var subConnection = new SqlConnection();
-            subConnection.ConnectionString = Session.Settings.ConnectionString;
+            subConnection.ConnectionString = Session.Settings.DatabaseSettings.ConnectionString;
 
             SqlDataReader reader = null;
             try
