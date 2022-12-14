@@ -105,7 +105,11 @@ namespace LaundryManagement.BLL
             checkDigitBLL.SaveVerticalCheckDigit(entity.GetType());
 
             //Item Status
-            dal.UpdateItems((int)ItemStatus.ItemStatusByShippingStatus[shipping.Status], shipping.Destination.Id, id);
+            var itemStatus = shipping.Type == ShippingTypeEnum.Internal ? ItemStatusEnum.OnLocation : ItemStatus.ItemStatusByShippingStatus[shipping.Status];
+            dal.UpdateItems(
+                (int)itemStatus, 
+                shipping.Type == ShippingTypeEnum.Internal ? shipping.Destination.Id : shipping.Origin.Id,
+                id);
 
             //Traceability
             var traceabilityList = shipping.ShippingDetail.Select(x => new TraceabilityDTO()
@@ -115,7 +119,7 @@ namespace LaundryManagement.BLL
                 Origin = shipping.Origin,
                 Item = x.Item,
                 User = shipping.CreationUser,
-                ItemStatus = ItemStatus.ItemStatusByShippingStatus[shipping.Status],
+                ItemStatus = itemStatus,
                 MovementType = MovementType.MovementByShippingType[shipping.Type],
             }).ToList();
 
@@ -246,8 +250,19 @@ namespace LaundryManagement.BLL
                     break;
 
                 case ShippingTypeEnum.Internal:
-                    list = list.Where(x => x.LocationType == userLocation.LocationType
-                    && (x.IsChild(userLocation) || userLocation.IsChild(x) || x.IsChild(x.ParentLocation))).ToList();
+                    var locationWithSameType = list.Where(x => x.LocationType == userLocation.LocationType);
+                    var userLocationChildren = locationWithSameType.Where(x => x.IsChild(userLocation));
+                    var userLocationParents = locationWithSameType.Where(x => userLocation.IsChild(x));
+                    var userLocationSiblings = locationWithSameType.Where(x => x.IsChild(x.ParentLocation));
+                    var level1Location = locationWithSameType.Where(x => !x.IsInternal);
+
+                    list = userLocationChildren
+                        .Concat(userLocationParents)
+                        .Concat(userLocationSiblings)
+                        .Concat(level1Location)
+                        .Distinct()
+                        .ToList();
+
                     break;
             }
 

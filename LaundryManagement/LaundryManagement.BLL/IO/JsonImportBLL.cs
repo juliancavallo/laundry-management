@@ -11,7 +11,7 @@ namespace LaundryManagement.BLL.IO
 {
     public class JsonImportBLL
     {
-        public T Import<T>(string json)
+        public T Deserialize<T>(string json)
         {
             try
             {

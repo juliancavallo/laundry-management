@@ -39,6 +39,12 @@
     <ProjectReference Include="..\LaundryManagement.Services\LaundryManagement.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Forms\Stock\frmStockDelete.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
 
 </Project>

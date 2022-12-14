@@ -48,11 +48,10 @@ namespace LaundryManagement.UI
             controls = new List<Control>() { this };
             toolStripItems = new List<ToolStripItem>() { this.menuAdministration, this.menuAdministrationArticles, this.menuAdministrationCategories, 
                 this.menuAdministrationItemTypes, this.menuAdministrationUsers, this.menuProcesses, this.menuProcessesReception, 
-                this.menuProcessesClinicShipping, this.menuProcessesInternalShipping, this.menuProcessesItemCreation, this.menuProcessesItemRemoval, 
                 this.menuProcessesReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
                 this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps,
-                this.menuReportsLogs, this.menuReportsReceptions, this.menuAdministrationStockImport};
+                this.menuReportsLogs, this.menuReportsReceptions, this.menuReportsInternalShipping, this.menuProcessStockImport, this.menuProcessStockDelete};
 
             PopulateLanguageMenu();
             Translate();
@@ -86,13 +85,12 @@ namespace LaundryManagement.UI
             this.menuProcessesReception.Tag = new MenuItemMetadataDTO { TagName = "Reception", Permission = "PRO_REC" };
             this.menuProcessesClinicShipping.Tag = new MenuItemMetadataDTO { TagName = "ClinicShipping", Permission = "PRO_SHP_CLI" };
             this.menuProcessesInternalShipping.Tag = new MenuItemMetadataDTO { TagName = "InternalShipping", Permission = "PRO_SHP_INT" };
-            this.menuProcessesItemCreation.Tag = new MenuItemMetadataDTO { TagName = "ItemCreation", Permission = "PRO_ITM_NEW" };
-            this.menuProcessesItemRemoval.Tag = new MenuItemMetadataDTO { TagName = "ItemRemoval", Permission = "PRO_ITM_DEL" };
             this.menuProcessesLaundryShipping.Tag = new MenuItemMetadataDTO { TagName = "LaundryShipping", Permission = "PRO_SHP_LDY" };
             this.menuProcessesRoadMap.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "PRO_ROA" };
             this.menuReportsTraceability.Tag = new MenuItemMetadataDTO { TagName = "Traceability", Permission = "REP_TRA" };
             this.menuReportsLaundryShippings.Tag = new MenuItemMetadataDTO { TagName = "LaundryShippings", Permission = "REP_SHP_LDY" };
             this.menuReportsClinicShippings.Tag = new MenuItemMetadataDTO { TagName = "ClinicShippings", Permission = "REP_SHP_CLI" };
+            this.menuReportsInternalShipping.Tag = new MenuItemMetadataDTO { TagName = "InternalShippings", Permission = "REP_SHP_INT" };
             this.menuReportsStock.Tag = new MenuItemMetadataDTO { TagName = "Stock", Permission = "REP_STK" };
             this.menuLanguage.Tag = new MenuItemMetadataDTO { TagName = "Language", Permission = "" };
             this.menuLogout.Tag = new MenuItemMetadataDTO { TagName = "Logout", Permission = "" };
@@ -101,7 +99,8 @@ namespace LaundryManagement.UI
             this.menuReportsRoadmaps.Tag = new MenuItemMetadataDTO { TagName = "RoadMap", Permission = "REP_ROA" };
             this.menuReportsLogs.Tag = new MenuItemMetadataDTO { TagName = "Logs", Permission = "REP_LOGS" };
             this.menuReportsReceptions.Tag = new MenuItemMetadataDTO { TagName = "Reception", Permission = "REP_REC" };
-            this.menuAdministrationStockImport.Tag = new MenuItemMetadataDTO { TagName = "StockImport", Permission = "REP_STK" };
+            this.menuProcessStockImport.Tag = new MenuItemMetadataDTO { TagName = "StockImport", Permission = "PRO_STK" };
+            this.menuProcessStockDelete.Tag = new MenuItemMetadataDTO { TagName = "StockDelete", Permission = "PRO_STK" };
         }
 
         public void ValidateForm()
@@ -375,15 +374,35 @@ namespace LaundryManagement.UI
 
         private void menuAdministrationStockImport_Click(object sender, EventArgs e)
         {
+        }
+
+        private void menuReportsInternalShipping_Click(object sender, EventArgs e)
+        {
+            var frm = new frmShippingReport(ShippingTypeEnum.Internal);
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
+        private void menuProcessStockImport_Click(object sender, EventArgs e)
+        {
             var frm = new frmStockImport();
             frm.MdiParent = this;
             frm.Show();
         }
+
+        private void menuProcessStockDelete_Click(object sender, EventArgs e)
+        {
+            var frm = new frmStockDelete();
+            frm.MdiParent = this;
+            frm.Show();
+        }
+
         #endregion
 
         private void frmMain_HelpRequested(object sender, HelpEventArgs hlpevent)
         {
             Help.ShowHelp(this, Session.Settings.HelperPath.GetRelativePath());
         }
+
     }
 }

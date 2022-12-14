@@ -183,6 +183,34 @@ namespace LaundryManagement.DAL
             }
         }
 
+        public void Delete(List<string> codes)
+        {
+            try
+            {
+                connection.Open();
+
+                SqlCommand cmd = new SqlCommand();
+
+                cmd.CommandText = $@"
+                    UPDATE Item SET IdItemStatus = 4
+                    WHERE Code in ({string.Join(',', codes)})
+                    ";
+
+                cmd.Connection = connection;
+                cmd.ExecuteNonQuery();
+
+                connection.Close();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
         public List<string> Import(List<ItemImportDTO> list)
         {
             SqlDataReader reader = null;

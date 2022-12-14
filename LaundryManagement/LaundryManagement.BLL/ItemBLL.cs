@@ -79,7 +79,7 @@ namespace LaundryManagement.BLL
 
         public List<ItemViewDTO> ImportStockFromJson(string json)
         {
-            var result = jsonImportBLL.Import<List<ItemImportDTO>>(json);
+            var result = jsonImportBLL.Deserialize<List<ItemImportDTO>>(json);
 
             if(result.Count == 0 || result.All(x => x.Article == null))
                 throw new ValidationException("Error converting file", ValidationType.Error);
@@ -92,5 +92,22 @@ namespace LaundryManagement.BLL
                 .Select(x => this.itemMapper.MapToViewDTO(x))
                 .ToList();
         }
+
+        public List<ItemViewDTO> ImportStockToDeleteFromJson(string json)
+        {
+            var codes = jsonImportBLL.Deserialize<List<string>>(json);
+
+            if (codes.Count == 0)
+                throw new ValidationException("Error converting file", ValidationType.Error);
+
+            return this.itemDAL
+                .GetAll()
+                .Where(x => codes.Contains(x.Code))
+                .Select(x => this.itemMapper.MapToViewDTO(x))
+                .ToList();
+        }
+
+        public void Delete(List<string> codes) => 
+            itemDAL.Delete(codes);
     }
 }

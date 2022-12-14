@@ -54,6 +54,8 @@ namespace LaundryManagement.UI.Forms.Roadmap
 
         private void ReloadGridEvent(RoadmapFilter filter)
         {
+            filter.IdLocationOrigin = Session.Instance.User.Location.Id;
+
             this.gridRoadmaps.DataSource = null;
             this.gridRoadmaps.DataSource = roadmapBLL.GetAllForView(filter);
             this.gridRoadmaps.Columns["Id"].Visible = false;
