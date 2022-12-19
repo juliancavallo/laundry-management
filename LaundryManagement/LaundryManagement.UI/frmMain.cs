@@ -51,7 +51,8 @@ namespace LaundryManagement.UI
                 this.menuProcessesReception, this.menuProcessesLaundryShipping, this.menuProcessesRoadMap, this.menuReports, this.menuReports, 
                 this.menuReportsLaundryShippings, this.menuLanguage, this.menuLogout, this.menuLanguageManage, 
                 this.menuReportsTraceability, this.menuReportsClinicShippings, this.menuReportsStock, this.menuAdministrationBackups, this.menuReportsRoadmaps,
-                this.menuReportsLogs, this.menuReportsReceptions, this.menuReportsInternalShipping, this.menuProcessStockImport, this.menuProcessStockDelete};
+                this.menuReportsLogs, this.menuReportsReceptions, this.menuReportsInternalShipping, this.menuProcessStockImport, this.menuProcessStockDelete,
+                this.menuProcessesClinicShipping, this.menuProcessesInternalShipping};
 
             PopulateLanguageMenu();
             Translate();

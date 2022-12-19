@@ -132,7 +132,7 @@ namespace LaundryManagement.BLL
             dto.Id = id;
 
             //Item Status
-            dal.UpdateItems(dto.Destination.Id, (int)ItemStatusEnum.OnLocation, id);
+            dal.UpdateItems((int)ItemStatusEnum.OnLocation, dto.Destination.Id, id);
 
             //Shippings
             foreach(var roadmap in dto.Roadmaps)
